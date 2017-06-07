@@ -134,7 +134,7 @@ int settings(char usrdr[30])
 				{
 					hidScanInput();
 					u32 kUp = hidKeysUp();
-					if (kUp & KEY_B)
+					if (kUp & KEY_B)//
 					{
 						break;
 					}
