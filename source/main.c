@@ -31,6 +31,7 @@ int settings(char usrdr[30])
 	{
 		fp = fopen(setfil, "w");
 		//fputs("test", fp);
+		fclose(fp);
 		return 0;
 	} else {
 		char settingsOption[16];
@@ -38,6 +39,7 @@ int settings(char usrdr[30])
 		userfile = fopen(usrfil, "r");
 		char dummy[30], username[30];
 		fscanf(userfile, "%s %s %s", dummy, dummy, username);
+		fclose(userfile);
 		consoleSelect(&bottomScreen);
 		printf("%s Opened Settings", username);
 		if (setsel == 0)
@@ -61,14 +63,22 @@ int settings(char usrdr[30])
 		{
 			hidScanInput();
 			u32 kDown = hidKeysDown();
+			u32 kHeld = hidKeysHeld();
+			u32 kUp = hidKeysUp();
+			u32 kDownOld = hidKeysDown();
+			u32 kHeldOld = hidKeysHeld();
+			u32 kUpOld = hidKeysHeld();
 			if (kDown & KEY_DOWN)
 			{
+				
 				sprintf(returnvalue, "DOWN");
 				while(true)
 				{
 					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
 					u32 kUp = hidKeysUp();
-					if (kUp & KEY_DOWN)
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						int MAX = 1;
 						if (setsel < MAX)
@@ -86,8 +96,10 @@ int settings(char usrdr[30])
 				while(true)
 				{
 					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
 					u32 kUp = hidKeysUp();
-					if (kUp & KEY_UP)
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						int MIN = 0;
 						if (setsel > MIN)
@@ -105,8 +117,10 @@ int settings(char usrdr[30])
 				while(true)
 				{
 					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
 					u32 kUp = hidKeysUp();
-					if (kUp & KEY_START)
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						break;
 					}
@@ -119,8 +133,10 @@ int settings(char usrdr[30])
 				while(true)
 				{
 					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
 					u32 kUp = hidKeysUp();
-					if (kUp & KEY_A)
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						break;
 					}
@@ -133,8 +149,10 @@ int settings(char usrdr[30])
 				while(true)
 				{
 					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
 					u32 kUp = hidKeysUp();
-					if (kUp & KEY_B)//
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						break;
 					}
@@ -143,15 +161,40 @@ int settings(char usrdr[30])
 			}
 		}
 		if (strcmp(returnvalue, "START") == 0)
+		{
+			gfxFlushBuffers();
+			gfxSwapBuffers();
+			gspWaitForVBlank();
 			return 2;
+		}
 		if (strcmp(returnvalue, "UP") == 0)
+		{
+			gfxFlushBuffers();
+			gfxSwapBuffers();
+			gspWaitForVBlank();
 			return 1;
+		}
 		if (strcmp(returnvalue, "DOWN") == 0)
+		{
+			gfxFlushBuffers();
+			gfxSwapBuffers();
+			gspWaitForVBlank();
 			return 1;
+		}
 		if (strcmp(returnvalue, "A") == 0)
+		{
+			gfxFlushBuffers();
+			gfxSwapBuffers();
+			gspWaitForVBlank();
 			return 1;
+		}
 		if (strcmp(returnvalue, "B") == 0)
+		{
+			gfxFlushBuffers();
+			gfxSwapBuffers();
+			gspWaitForVBlank();
 			return 0;
+		}
 	}
 }
 
@@ -195,6 +238,7 @@ int main(int argc, char **argv)
 	FILE *userdata;
 	if ((fp = fopen("sdmc:/ROT_Data/isset.rvf", "r")) == NULL)
 	{
+		fclose(fp);
 		bool usepass = false;
 		static char mybuf[60];
 		consoleSelect(&bottomScreen);
@@ -384,6 +428,7 @@ int main(int argc, char **argv)
 		{
 			if ((fp = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r")) == NULL)
 			{
+				fclose(fp);
 				printf("USER DATA NOT FOUND :(\n");
 				printf("Multi User Feature not added yet.\n");
 				break;
@@ -392,6 +437,7 @@ int main(int argc, char **argv)
 				userdata = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r");
 				char t1[4], t2[1], t3[30], t4[4], t5[1], t6[30];
 				fscanf(userdata, "%s %s %s %s %s %s", t1, t2, t3, t4, t5, t6);
+				fclose(userdata);
 				sprintf(sendusername, "%s", t3);
 				bool incorrect = true;
 				printf("Press A to open keyboard to enter password\n");
@@ -446,6 +492,7 @@ int main(int argc, char **argv)
 			userfile = fopen(tempvar, "r");
 			char dummy[30], username[30];
 			fscanf(userfile, "%s %s %s", dummy, dummy, username);
+			fclose(userfile);
 			consoleSelect(&topScreen);
 			consoleClear();
 			printf("###                                            ###");
@@ -499,9 +546,15 @@ int main(int argc, char **argv)
 					{
 						int result = settings(userdir);
 						if (result == 2)
+						{
 							killROT = true;
+							break;
+						}
 						if (result == 0)
 							break;
+						consoleSelect(&bottomScreen);
+						printf("result = %d", result);
+						consoleSelect(&topScreen);
 					}
 					break;
 				}
