@@ -20,6 +20,7 @@ int settings(char usrdr[30], int nope)
 {
 	FILE *fp;
 	char setfil[30];
+	char usrfil[30];
 	sprintf(setfil, "%s/settings.rsf", usrdr);
 	if ((fp = fopen(setfil, "r")) == NULL)
 	{
@@ -27,7 +28,12 @@ int settings(char usrdr[30], int nope)
 		//fputs("test", fp);
 		return 0;
 	} else {
-		printf("rip");
+		sprintf(usrfil
+		consoleSelect(&bottomScreen);
+		printf("%s
+		consoleSelect(&topScreen);
+		consoleClear();
+		
 		return 0;
 	}
 }
