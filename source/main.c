@@ -1,15 +1,10 @@
-/*
-	Both Screen Text example made by Aurelio Mannara for ctrulib
-	This code was modified for the last time on: 12/12/2014 23:20 UTC+1
-
-*/
-
 #include <3ds.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+
 int mkdir(const char *pathname, mode_t mode);
 
 char versiontxt[10] = "Alpha 1.4";
@@ -56,23 +51,17 @@ bool touchInBox(touchPosition touch, int x, int y, int w, int h)
 
 int main(int argc, char **argv)
 {
-	// Initialize services
 	gfxInitDefault();
 	hidInit();
 
-	//In this example we need one PrintConsole for each screen
 	PrintConsole topScreen, bottomScreen;
 
-	//Initialize console for both screen using the two different PrintConsole we have defined
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 
-	//Before doing any text printing we should select the PrintConsole in which we are willing to write, otherwise the library will print on the last selected/initialized one
-	//Let's start by printing something on the top screen
 	consoleSelect(&topScreen);
 	printf("ROT\n");
 
-	//Now write something else on the bottom screen
 	consoleSelect(&bottomScreen);
 	printf("Loading...\n");
 
@@ -98,19 +87,14 @@ int main(int argc, char **argv)
 		printf("Press A to continue with setup.");
 		while (true)
 		{
-			//Scan all the inputs. This should be done once for each frame
 			hidScanInput();
-
-			//hidKeysDown returns information about which buttons have been just pressed (and they weren't in the previous frame)
 			u32 kDown = hidKeysDown();
 
 			if (kDown & KEY_A) break; // break in order to return to hbmenu
 
-			// Flush and swap framebuffers
 			gfxFlushBuffers();
 			gfxSwapBuffers();
 
-			//Wait for VBlank
 			gspWaitForVBlank();
 		}
 		consoleClear();
@@ -161,7 +145,6 @@ int main(int argc, char **argv)
 				}
 			}
 
-			// Flush and swap framebuffers
 			gfxFlushBuffers();
 			gfxSwapBuffers();
 
@@ -270,11 +253,8 @@ int main(int argc, char **argv)
 	while (aptMainLoop())
 	{
 		FILE *userfile;
-		//Scan all the inputs. This should be done once for each frame
 		hidScanInput();
 		hidTouchRead(&touch);
-
-		//hidKeysDown returns information about which buttons have been just pressed (and they weren't in the previous frame)
 		
 		u32 kDown = hidKeysDown();
 		if (logged == false)
