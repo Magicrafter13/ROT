@@ -29,7 +29,7 @@ AccessControlInfo:
 
 SystemControlInfo:
   SaveDataSize: 128KB
-  RemasterVersion: A1.3
+  RemasterVersion: A1.4
   StackSize: 0x40000
   
 # DO NOT EDIT BELOW HERE OR PROGRAMS WILL NOT LAUNCH (most likely)

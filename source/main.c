@@ -12,7 +12,7 @@
 #include <sys/types.h>
 int mkdir(const char *pathname, mode_t mode);
 
-char versiontxt[10] = "Alpha 1.3";
+char versiontxt[10] = "Alpha 1.4";
 int versionnum = 0;
 touchPosition touch;
 int selection;
@@ -20,6 +20,22 @@ bool logged = false;
 bool multiuser = false;
 char sendusername[30];
 bool killROT = false;
+
+int settings(char usrdr[30], int nope)
+{
+	FILE *fp;
+	char setfil[30];
+	sprintf(setfil, "%s/settings.rsf", usrdr);
+	if ((fp = fopen(setfil, "r")) == NULL)
+	{
+		fp = fopen(setfil, "w");
+		//fputs("test", fp);
+		return 0;
+	} else {
+		printf("rip");
+		return 0;
+	}
+}
 
 static SwkbdCallbackResult MyCallback(void* user, const char** ppMessage, const char* text, size_t textlen)
 {
@@ -375,10 +391,9 @@ int main(int argc, char **argv)
 				}
 				if (kDown & KEY_X)
 				{
-					NULL;
+					settings(userdir, 0);
 					break;
 				}
-					//settings(userdir);
 				if (kDown & KEY_Y)
 				{
 					NULL;
