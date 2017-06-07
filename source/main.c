@@ -16,9 +16,13 @@ bool multiuser = false;
 char sendusername[30];
 bool killROT = false;
 
-int settings(char usrdr[30], int nope)
+int settings(char usrdr[30], int setsel)
 {
+	PrintConsole topScreen, bottomScreen;
+	consoleInit(GFX_TOP, &topScreen);
+	consoleInit(GFX_BOTTOM, &bottomScreen);
 	FILE *fp;
+	FILE *userfile;
 	char setfil[30];
 	char usrfil[30];
 	sprintf(setfil, "%s/settings.rsf", usrdr);
@@ -28,13 +32,111 @@ int settings(char usrdr[30], int nope)
 		//fputs("test", fp);
 		return 0;
 	} else {
-		sprintf(usrfil
+		char settingsOption[16];
+		sprintf(usrfil, "%s/userdata.ruf", usrdr);
+		userfile = fopen(usrfil, "r");
+		char dummy[30], username[30];
+		fscanf(userfile, "%s %s %s", dummy, dummy, username);
 		consoleSelect(&bottomScreen);
-		printf("%s
+		printf("%s Opened Settings", username);
+		if (setsel == 0)
+		{
+			sprintf(settingsOption, "Change Password ");
+		}
 		consoleSelect(&topScreen);
 		consoleClear();
-		
-		return 0;
+		printf("\n\n\n\n\n\n\n\n\n\n\n\n");
+		printf("        [A] Select   [B] Back to mainmenu         ");
+		printf("               ####################               ");
+		printf("---------------##%s##---------------", settingsOption);
+		printf("               ####################               ");
+		printf("                   [Start] Exit                   ");
+		char returnvalue[30];
+		while(true)
+		{
+			hidScanInput();
+			u32 kDown = hidKeysDown();
+			if (kDown & KEY_DOWN)
+			{
+				sprintf(returnvalue, "DOWN");
+				while(true)
+				{
+					hidScanInput();
+					u32 kUp = hidKeysUp();
+					if (kUp & KEY_DOWN)
+					{
+						break;
+					}
+				}
+				break;
+			}
+			if (kDown & KEY_UP)
+			{
+				sprintf(returnvalue, "UP");
+				while(true)
+				{
+					hidScanInput();
+					u32 kUp = hidKeysUp();
+					if (kUp & KEY_UP)
+					{
+						break;
+					}
+				}
+				break;
+			}
+			if (kDown & KEY_START)
+			{
+				sprintf(returnvalue, "START");
+				while(true)
+				{
+					hidScanInput();
+					u32 kUp = hidKeysUp();
+					if (kUp & KEY_START)
+					{
+						break;
+					}
+				}
+				break;
+			}
+			if (kDown & KEY_A)
+			{
+				sprintf(returnvalue, "A");
+				while(true)
+				{
+					hidScanInput();
+					u32 kUp = hidKeysUp();
+					if (kUp & KEY_A)
+					{
+						break;
+					}
+				}
+				break;
+			}
+			if (kDown & KEY_B)
+			{
+				sprintf(returnvalue, "B");
+				while(true)
+				{
+					hidScanInput();
+					u32 kUp = hidKeysUp();
+					if (kUp & KEY_B)
+					{
+						break;
+					}
+				}
+				break;
+			}
+		}
+		if (strcmp(returnvalue, "START") == 0)
+			return 1;
+		if (strcmp(returnvalue, "UP") == 0)
+			NULL;
+		if (strcmp(returnvalue, "DOWN") == 0)
+			NULL;
+		if (strcmp(returnvalue, "A") == 0)
+			NULL;
+		if (strcmp(returnvalue, "B") == 0)
+			return 0;
 	}
 }
 
@@ -59,7 +161,7 @@ int main(int argc, char **argv)
 {
 	gfxInitDefault();
 	hidInit();
-
+	
 	PrintConsole topScreen, bottomScreen;
 
 	consoleInit(GFX_TOP, &topScreen);
@@ -377,7 +479,8 @@ int main(int argc, char **argv)
 				}
 				if (kDown & KEY_X)
 				{
-					settings(userdir, 0);
+					if (settings(userdir, 0) == 1)
+						killROT = true;
 					break;
 				}
 				if (kDown & KEY_Y)
