@@ -15,8 +15,9 @@ bool logged = false;
 bool multiuser = false;
 char sendusername[30];
 bool killROT = false;
+int setsel = 0;
 
-int settings(char usrdr[30], int setsel)
+int settings(char usrdr[30])
 {
 	PrintConsole topScreen, bottomScreen;
 	consoleInit(GFX_TOP, &topScreen);
@@ -43,6 +44,10 @@ int settings(char usrdr[30], int setsel)
 		{
 			sprintf(settingsOption, "Change Password ");
 		}
+		if (setsel == 1)
+		{
+			sprintf(settingsOption, "Change Username ");
+		}
 		consoleSelect(&topScreen);
 		consoleClear();
 		printf("\n\n\n\n\n\n\n\n\n\n\n\n");
@@ -65,6 +70,11 @@ int settings(char usrdr[30], int setsel)
 					u32 kUp = hidKeysUp();
 					if (kUp & KEY_DOWN)
 					{
+						int MAX = 1;
+						if (setsel < MAX)
+						{
+							setsel += 1;
+						}
 						break;
 					}
 				}
@@ -79,6 +89,11 @@ int settings(char usrdr[30], int setsel)
 					u32 kUp = hidKeysUp();
 					if (kUp & KEY_UP)
 					{
+						int MIN = 0;
+						if (setsel > MIN)
+						{
+							setsel -= 1;
+						}
 						break;
 					}
 				}
@@ -128,13 +143,13 @@ int settings(char usrdr[30], int setsel)
 			}
 		}
 		if (strcmp(returnvalue, "START") == 0)
-			return 1;
+			return 2;
 		if (strcmp(returnvalue, "UP") == 0)
-			NULL;
+			return 1;
 		if (strcmp(returnvalue, "DOWN") == 0)
-			NULL;
+			return 1;
 		if (strcmp(returnvalue, "A") == 0)
-			NULL;
+			return 1;
 		if (strcmp(returnvalue, "B") == 0)
 			return 0;
 	}
@@ -435,7 +450,7 @@ int main(int argc, char **argv)
 			consoleClear();
 			printf("###                                            ###");
 			printf(" ###                                          ### ");
-			printf("  ###               [B] Logoff               ###  ");
+			printf("  ###            [Select] Log-off            ###  ");
 			printf("   ###                                      ###   ");
 			printf("    ###                                    ###    ");
 			printf("     ###                                  ###     ");
@@ -472,15 +487,22 @@ int main(int argc, char **argv)
 					break;
 				}
 					//do thing: function(userdir);
-				if (kDown & KEY_B)
+				if (kDown & KEY_SELECT)
 				{
 					logged = false;
 					break;
 				}
 				if (kDown & KEY_X)
 				{
-					if (settings(userdir, 0) == 1)
-						killROT = true;
+					setsel = 0;
+					while(true)
+					{
+						int result = settings(userdir);
+						if (result == 2)
+							killROT = true;
+						if (result == 0)
+							break;
+					}
 					break;
 				}
 				if (kDown & KEY_Y)
