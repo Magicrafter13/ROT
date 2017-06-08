@@ -17,8 +17,105 @@ char sendusername[30];
 bool killROT = false;
 int setsel = 0;
 
+int changePassword(char usrdr[30])
+{
+	PrintConsole topScreen, bottomScreen;
+	consoleInit(GFX_TOP, &topScreen);
+	consoleInit(GFX_BOTTOM, &bottomScreen);
+	FILE /* *fp,*/ *userFile, *settingsFile;
+	char setfil[30], usrfil[30];
+	sprintf(setfil, "%s/settings.rsf", usrdr);
+	sprintf(usrfil, "%s/userdata.ruf", usrdr);
+	settingsFile = fopen(setfil, "r");
+	userFile = fopen(usrfil, "r");
+	//do something with files
+	fclose(settingsFile);
+	fclose(userFile);
+	//Main changePassword code:
+	{
+		consoleSelect(&bottomScreen);
+		printf("changePassword opened\n");
+		consoleSelect(&topScreen);
+		consoleClear();
+		printf("Feature will be added in future release.\n");
+		printf("Will return to settings menu in 5 seconds.\n");
+		for(int I = 0; I < 300; I++)
+			gspWaitForVBlank();
+	}
+	return 0;
+}
+
+int changeUsername(char usrdr[30])
+{
+	PrintConsole topScreen, bottomScreen;
+	consoleInit(GFX_TOP, &topScreen);
+	consoleInit(GFX_BOTTOM, &bottomScreen);
+	FILE /* *fp,*/ *userFile, *settingsFile;
+	char setfil[30], usrfil[30];
+	sprintf(setfil, "%s/settings.rsf", usrdr);
+	sprintf(usrfil, "%s/userdata.ruf", usrdr);
+	settingsFile = fopen(setfil, "r");
+	userFile = fopen(usrfil, "r");
+	//do something with files
+	fclose(settingsFile);
+	fclose(userFile);
+	//Main changeUsername code:
+	{
+		consoleSelect(&bottomScreen);
+		printf("changeUsername opened\n");
+		consoleSelect(&topScreen);
+		consoleClear();
+		printf("Feature will be added in future release.\n");
+		printf("Will return to settings menu in 5 seconds.\n");
+		for(int I = 0; I < 300; I++)
+			gspWaitForVBlank();
+	}
+	return 0;
+}
+
+int settingsOption(char usrdr[30])
+{
+	int returnvalue = 0;
+	if (setsel == 0)
+	{
+		while (true)
+		{
+			int result = (changePassword(usrdr));
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 1;
+				break;
+			}
+		}
+	}
+	if (setsel == 1)
+	{
+		while (true)
+		{
+			int result = (changeUsername(usrdr));
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 1;
+				break;
+			}
+		}
+	}
+	return returnvalue;
+}
+
 int settings(char usrdr[30])
 {
+	int ireturnvalue;
 	PrintConsole topScreen, bottomScreen;
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
@@ -34,7 +131,7 @@ int settings(char usrdr[30])
 		fclose(fp);
 		return 0;
 	} else {
-		char settingsOption[16];
+		char setOption[16];
 		sprintf(usrfil, "%s/userdata.ruf", usrdr);
 		userfile = fopen(usrfil, "r");
 		char dummy[30], username[30];
@@ -44,18 +141,18 @@ int settings(char usrdr[30])
 		printf("%s Opened Settings", username);
 		if (setsel == 0)
 		{
-			sprintf(settingsOption, "Change Password ");
+			sprintf(setOption, "Change Password ");
 		}
 		if (setsel == 1)
 		{
-			sprintf(settingsOption, "Change Username ");
+			sprintf(setOption, "Change Username ");
 		}
 		consoleSelect(&topScreen);
 		consoleClear();
 		printf("\n\n\n\n\n\n\n\n\n\n\n\n");
 		printf("        [A] Select   [B] Back to mainmenu         ");
 		printf("               ####################               ");
-		printf("---------------##%s##---------------", settingsOption);
+		printf("---------------##%s##---------------", setOption);
 		printf("               ####################               ");
 		printf("                   [Start] Exit                   ");
 		char returnvalue[30];
@@ -63,8 +160,6 @@ int settings(char usrdr[30])
 		{
 			hidScanInput();
 			u32 kDown = hidKeysDown();
-			u32 kHeld = hidKeysHeld();
-			u32 kUp = hidKeysUp();
 			u32 kDownOld = hidKeysDown();
 			u32 kHeldOld = hidKeysHeld();
 			u32 kUpOld = hidKeysHeld();
@@ -138,6 +233,17 @@ int settings(char usrdr[30])
 					u32 kUp = hidKeysUp();
 					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
+						while(true)
+						{
+							int result = settingsOption(usrdr);
+							if (result == 0)
+								break;
+							if (result == 1)
+							{
+								sprintf(returnvalue, "START");
+								break;
+							}
+						}
 						break;
 					}
 				}
@@ -165,37 +271,38 @@ int settings(char usrdr[30])
 			gfxFlushBuffers();
 			gfxSwapBuffers();
 			gspWaitForVBlank();
-			return 2;
+			ireturnvalue = 2;
 		}
 		if (strcmp(returnvalue, "UP") == 0)
 		{
 			gfxFlushBuffers();
 			gfxSwapBuffers();
 			gspWaitForVBlank();
-			return 1;
+			ireturnvalue = 1;
 		}
 		if (strcmp(returnvalue, "DOWN") == 0)
 		{
 			gfxFlushBuffers();
 			gfxSwapBuffers();
 			gspWaitForVBlank();
-			return 1;
+			ireturnvalue = 1;
 		}
 		if (strcmp(returnvalue, "A") == 0)
 		{
 			gfxFlushBuffers();
 			gfxSwapBuffers();
 			gspWaitForVBlank();
-			return 1;
+			ireturnvalue = 1;
 		}
 		if (strcmp(returnvalue, "B") == 0)
 		{
 			gfxFlushBuffers();
 			gfxSwapBuffers();
 			gspWaitForVBlank();
-			return 0;
+			ireturnvalue = 0;
 		}
 	}
+	return ireturnvalue;
 }
 
 static SwkbdCallbackResult MyCallback(void* user, const char** ppMessage, const char* text, size_t textlen)
@@ -466,6 +573,9 @@ int main(int argc, char **argv)
 						swkbdSetFilterCallback(&swkbd, MyCallback, NULL);
 						swkbdSetHintText(&swkbd, "password");
 						button = swkbdInputText(&swkbd, mybuf, sizeof(mybuf));
+						consoleSelect(&bottomScreen);
+						printf("%d\n", button);
+						consoleSelect(&topScreen);
 						/*printf("mybuf = %s \n", mybuf);
 						printf("t6 = %s \n", t6);*/
 						if (strcmp(mybuf, t6) == 0)
@@ -552,9 +662,6 @@ int main(int argc, char **argv)
 						}
 						if (result == 0)
 							break;
-						consoleSelect(&bottomScreen);
-						printf("result = %d", result);
-						consoleSelect(&topScreen);
 					}
 					break;
 				}
