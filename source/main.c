@@ -7,7 +7,7 @@
 
 int mkdir(const char *pathname, mode_t mode);
 
-char versiontxt[10] = "Alpha 1.5";
+char versiontxt[10] = "Alpha 1.6";
 int versionnum = 0;
 touchPosition touch;
 int selection;
@@ -266,7 +266,7 @@ int settings(char usrdr[30])
 		fclose(fp);
 		return 0;
 	} else {
-		char setOption[16];
+		char setOption[17], setOptionP1[17], setOptionN1[17], setOptionP2[17], setOptionN2[17];
 		sprintf(usrfil, "%s/userdata.ruf", usrdr);
 		userfile = fopen(usrfil, "r");
 		char dummy[30], username[30];
@@ -276,32 +276,56 @@ int settings(char usrdr[30])
 		printf("%s Opened Settings", username);
 		if (setsel == 0)
 		{
-			sprintf(setOption, "Change Password ");
+			strcpy(setOption, "Change Password ");
+			strcpy(setOptionP1, "                ");
+			strcpy(setOptionN1, "Change Username ");
+			strcpy(setOptionP2, "                ");
+			strcpy(setOptionN2, "Delete Save Data");
 		}
 		if (setsel == 1)
 		{
-			sprintf(setOption, "Change Username ");
+			strcpy(setOption, "Change Username ");
+			strcpy(setOptionP1, "Change Password ");
+			strcpy(setOptionN1, "Delete Save Data");
+			strcpy(setOptionP2, "                ");
+			strcpy(setOptionN2, "      DLC       ");
 		}
 		if (setsel == 2)
 		{
-			sprintf(setOption, "Delete Save Data");
+			strcpy(setOption, "Delete Save Data");
+			strcpy(setOptionP1, "Change Password ");
+			strcpy(setOptionN1, "      DLC       ");
+			strcpy(setOptionP2, "Change Password ");
+			strcpy(setOptionN2, "  Toggle Debug  ");
 		}
 		if (setsel == 3)
 		{
-			sprintf(setOption, "      DLC       ");
+			strcpy(setOption, "      DLC       ");
+			strcpy(setOptionP1, "Delete Save Data");
+			strcpy(setOptionN1, "  Toggle Debug  ");
+			strcpy(setOptionP2, "Change Username ");
+			strcpy(setOptionN2, "                ");
 		}
 		if (setsel == 4)
 		{
-			sprintf(setOption, "  Toggle Debug  ");
+			strcpy(setOption, "  Toggle Debug  ");
+			strcpy(setOptionP1, "      DLC       ");
+			strcpy(setOptionN1, "                ");
+			strcpy(setOptionP2, "Delete Save Data");
+			strcpy(setOptionN2, "                ");
 		}
 		consoleSelect(&topScreen);
 		consoleClear();
-		printf("\n\n\n\n\n\n\n\n\n\n\n\n");
+		printf("\n\n\n\n\n\n\n\n");
+		printf("                 \x1b[2;37m%s\x1b[0m\n\n", setOptionP2);
+		printf("                 %s\n\n", setOptionP1);
 		printf("        [A] Select   [B] Back to mainmenu         ");
-		printf("               ####################               ");
-		printf("---------------##%s##---------------", setOption);
-		printf("               ####################               ");
+		printf("               \x1b[47;30m                    \x1b[0m               ");
+		printf("===============\x1b[47;30m  %s  \x1b[0m===============", setOption);
+		printf("               \x1b[47;30m                    \x1b[0m               ");
 		printf("                   [Start] Exit                   ");
+		printf("                 %s\n\n", setOptionN1);
+		printf("                 \x1b[2;37m%s\x1b[0m\n\n", setOptionN2);
 		char returnvalue[30];
 		while(true)
 		{
