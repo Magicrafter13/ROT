@@ -17,6 +17,90 @@ char sendusername[30];
 bool killROT = false;
 int setsel = 0;
 
+int debugView(char usrdr[30])
+{
+	PrintConsole topScreen, bottomScreen;
+	consoleInit(GFX_TOP, &topScreen);
+	consoleInit(GFX_BOTTOM, &bottomScreen);
+	FILE /* *fp, */ *userFile, *settingsFile;
+	char setfil[30], usrfil[30];
+	sprintf(setfil, "%s/settings.rsf", usrdr);
+	sprintf(usrfil, "%s/userdata.ruf", usrdr);
+	settingsFile = fopen(setfil, "r");
+	userFile = fopen(usrfil, "r");
+	//do something with files
+	fclose(settingsFile);
+	fclose(userFile);
+	//Main deleteData code:
+	{
+		consoleSelect(&bottomScreen);
+		printf("debugView opened\n");
+		consoleSelect(&topScreen);
+		consoleClear();
+		printf("Feature will be added in future release.\n");
+		printf("Will return to settings menu in 5 seconds.\n");
+		for(int I = 0; I < 300; I++)
+			gspWaitForVBlank();
+	}
+	return 0;
+}
+
+int DLC(char usrdr[30])
+{
+	PrintConsole topScreen, bottomScreen;
+	consoleInit(GFX_TOP, &topScreen);
+	consoleInit(GFX_BOTTOM, &bottomScreen);
+	FILE /* *fp, */ *userFile, *settingsFile;
+	char setfil[30], usrfil[30];
+	sprintf(setfil, "%s/settings.rsf", usrdr);
+	sprintf(usrfil, "%s/userdata.ruf", usrdr);
+	settingsFile = fopen(setfil, "r");
+	userFile = fopen(usrfil, "r");
+	//do something with files
+	fclose(settingsFile);
+	fclose(userFile);
+	//Main deleteData code:
+	{
+		consoleSelect(&bottomScreen);
+		printf("DLC opened\n");
+		consoleSelect(&topScreen);
+		consoleClear();
+		printf("Feature will be added in future release.\n");
+		printf("Will return to settings menu in 5 seconds.\n");
+		for(int I = 0; I < 300; I++)
+			gspWaitForVBlank();
+	}
+	return 0;
+}
+
+int deleteData(char usrdr[30])
+{
+	PrintConsole topScreen, bottomScreen;
+	consoleInit(GFX_TOP, &topScreen);
+	consoleInit(GFX_BOTTOM, &bottomScreen);
+	FILE /* *fp, */ *userFile, *settingsFile;
+	char setfil[30], usrfil[30];
+	sprintf(setfil, "%s/settings.rsf", usrdr);
+	sprintf(usrfil, "%s/userdata.ruf", usrdr);
+	settingsFile = fopen(setfil, "r");
+	userFile = fopen(usrfil, "r");
+	//do something with files
+	fclose(settingsFile);
+	fclose(userFile);
+	//Main deleteData code:
+	{
+		consoleSelect(&bottomScreen);
+		printf("deleteData opened\n");
+		consoleSelect(&topScreen);
+		consoleClear();
+		printf("Feature will be added in future release.\n");
+		printf("Will return to settings menu in 5 seconds.\n");
+		for(int I = 0; I < 300; I++)
+			gspWaitForVBlank();
+	}
+	return 0;
+}
+
 int changePassword(char usrdr[30])
 {
 	PrintConsole topScreen, bottomScreen;
@@ -110,6 +194,57 @@ int settingsOption(char usrdr[30])
 			}
 		}
 	}
+	if (setsel == 2)
+	{
+		while (true)
+		{
+			int result = (deleteData(usrdr));
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 1;
+				break;
+			}
+		}
+	}
+	if (setsel == 3)
+	{
+		while(true)
+		{
+			int result = (DLC(usrdr));
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 1;
+				break;
+			}
+		}
+	}
+	if (setsel == 4)
+	{
+		while(true)
+		{
+			int result = (debugView(usrdr));
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 1;
+				break;
+			}
+		}
+	}
 	return returnvalue;
 }
 
@@ -147,6 +282,18 @@ int settings(char usrdr[30])
 		{
 			sprintf(setOption, "Change Username ");
 		}
+		if (setsel == 2)
+		{
+			sprintf(setOption, "Delete Save Data");
+		}
+		if (setsel == 3)
+		{
+			sprintf(setOption, "      DLC       ");
+		}
+		if (setsel == 4)
+		{
+			sprintf(setOption, "  Toggle Debug  ");
+		}
 		consoleSelect(&topScreen);
 		consoleClear();
 		printf("\n\n\n\n\n\n\n\n\n\n\n\n");
@@ -175,7 +322,7 @@ int settings(char usrdr[30])
 					u32 kUp = hidKeysUp();
 					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
-						int MAX = 1;
+						int MAX = 4;
 						if (setsel < MAX)
 						{
 							setsel += 1;
