@@ -7,7 +7,7 @@
 
 int mkdir(const char *pathname, mode_t mode);
 
-char versiontxt[10] = "Alpha 1.4";
+char versiontxt[10] = "Alpha 1.5";
 int versionnum = 0;
 touchPosition touch;
 int selection;
