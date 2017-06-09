@@ -17,6 +17,7 @@ bool multiuser = false;
 char sendusername[30];
 bool killROT = false;
 int setsel = 0;
+int mensel = 0;
 FILE *userFile, *settingsFile;
 char setfil[30], usrfil[30];
 
@@ -24,7 +25,42 @@ PrintConsole topScreen, bottomScreen;
 
 int menuOption()
 {
-	return 0;
+	int returnvalue = 0;
+	if (mensel == 0)
+	{
+		while (true)
+		{
+			int result = games();
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 1;
+				break;
+			}
+		}
+	}
+	if (mensel == 1)
+	{
+		while (true)
+		{
+			int result = tools();
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 1;
+				break;
+			}
+		}
+	}
+	return returnvalue;
 }
 
 int settingsOption()

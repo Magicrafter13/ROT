@@ -5,3 +5,5 @@ int DLC();
 int deleteData();
 int changePassword();
 int changeUsername();
+int games();
+int tools();
