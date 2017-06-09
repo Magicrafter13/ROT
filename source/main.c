@@ -11,26 +11,28 @@ int mkdir(const char *pathname, mode_t mode);
 char versiontxt[10] = "Alpha 1.7";
 int versionnum = 0;
 touchPosition touch;
-int selection;
-bool logged = false;
-bool multiuser = false;
-char sendusername[30];
-bool killROT = false;
-int setsel = 0;
-int mensel = 0;
+bool logged = false, multiuser = false, killROT = false;
+char sendusername[21];
+int setsel = 0, mensel = 0, result = 0, returnvalue = 0;
+int SMAX, SMIN, MMAX, MMIN;
 FILE *userFile, *settingsFile;
-char setfil[30], usrfil[30];
+char setfil[53], usrfil[53];
+FILE *userfile;
+FILE *fp;
+char userdir[30];
+char tempvar[30], dummy[5], username[21], menOption[40];
+//sdmc:/3ds/ROT_Data/01234567890123456789/userdata.ruf max username length 20
 
 PrintConsole topScreen, bottomScreen;
 
 int menuOption()
 {
-	int returnvalue = 0;
+	returnvalue = 0;
 	if (mensel == 0)
 	{
 		while (true)
 		{
-			int result = games();
+			result = games();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -47,7 +49,7 @@ int menuOption()
 	{
 		while (true)
 		{
-			int result = tools();
+			result = tools();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -65,12 +67,12 @@ int menuOption()
 
 int settingsOption()
 {
-	int returnvalue = 0;
+	returnvalue = 0;
 	if (setsel == 0)
 	{
 		while (true)
 		{
-			int result = changePassword();
+			result = changePassword();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -87,7 +89,7 @@ int settingsOption()
 	{
 		while (true)
 		{
-			int result = changeUsername();
+			result = changeUsername();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -104,7 +106,7 @@ int settingsOption()
 	{
 		while (true)
 		{
-			int result = deleteData();
+			result = deleteData();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -121,7 +123,7 @@ int settingsOption()
 	{
 		while(true)
 		{
-			int result = DLC();
+			result = DLC();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -138,7 +140,7 @@ int settingsOption()
 	{
 		while(true)
 		{
-			int result = debugView();
+			result = debugView();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -244,8 +246,8 @@ int settings()
 					u32 kUp = hidKeysUp();
 					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
-						int MAX = 4;
-						if (setsel < MAX)
+						SMAX = 4;
+						if (setsel < SMAX)
 						{
 							setsel += 1;
 						}
@@ -265,8 +267,8 @@ int settings()
 					u32 kUp = hidKeysUp();
 					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
-						int MIN = 0;
-						if (setsel > MIN)
+						SMIN = 0;
+						if (setsel > SMIN)
 						{
 							setsel -= 1;
 						}
@@ -304,7 +306,7 @@ int settings()
 					{
 						while(true)
 						{
-							int result = settingsOption();
+							result = settingsOption();
 							if (result == 0)
 								break;
 							if (result == 1)
@@ -410,7 +412,7 @@ int main(int argc, char **argv)
 	consoleSelect(&topScreen);
 	printf("\x1b[29;15Hby Matthew Rease");
 	
-	FILE *fp;
+	
 	if ((fp = fopen("sdmc:/ROT_Data/isset.rvf", "r")) == NULL)
 	{
 		fclose(fp);
@@ -599,7 +601,7 @@ int main(int argc, char **argv)
 	// Main loop
 	while (aptMainLoop())
 	{
-		FILE *userfile;
+		
 		hidScanInput();
 		hidTouchRead(&touch);
 		u32 kDown = hidKeysDown();
@@ -619,7 +621,7 @@ int main(int argc, char **argv)
 				sprintf(sendusername, "%s", t3);
 				bool incorrect = true;
 				printf("Press A to open keyboard to enter password\n");
-				static char mybuf[30];
+				static char mybuf[21];
 				bool didit = false;
 				while (incorrect)
 				{
@@ -659,7 +661,6 @@ int main(int argc, char **argv)
 		}else{
 			
 			//Main Program
-			char userdir[30];
 			if (multiuser)
 			{
 				sprintf(userdir, "sdmc:/3ds/ROT_Data/%s", sendusername);
@@ -672,14 +673,11 @@ int main(int argc, char **argv)
 			userFile = fopen(usrfil, "r");
 			consoleSelect(&bottomScreen);
 			//printf("&userdir/userdata.ruf");
-			char tempvar[30];
 			sprintf(tempvar, "%s/userdata.ruf", userdir);
 			userfile = fopen(tempvar, "r");
-			char dummy[30], username[30];
 			fscanf(userfile, "%s %s %s", dummy, dummy, username);
 			consoleSelect(&topScreen);
 			consoleClear();
-			char menOption[40];
 			if (mensel == 0)
 			{
 				strcpy(menOption, "\x1b[31m         Games          \x1b[0m");
@@ -687,6 +685,14 @@ int main(int argc, char **argv)
 			if (mensel == 1)
 			{
 				strcpy(menOption, "\x1b[32m        Tool Box        \x1b[0m");
+			}
+			if (mensel == 2)
+			{
+				strcpy(menOption, "\x1b[33m        XP Store        \x1b[0m");
+			}
+			if (mensel == 3)
+			{
+				strcpy(menOption, "\x1b[34m        Credits         \x1b[0m");
 			}
 			printf("###                                            ###");
 			printf(" ###                                          ### ");
@@ -737,7 +743,7 @@ int main(int argc, char **argv)
 						{
 							while(true)
 							{
-								int result = mail(userdir);
+								result = mail(userdir);
 								if (result == 2)
 								{
 									killROT = true;
@@ -782,8 +788,8 @@ int main(int argc, char **argv)
 						u32 kUp = hidKeysUp();
 						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 						{
-							int MAX = 1;
-							if (mensel < MAX)
+							MMAX = 1;
+							if (mensel < MMAX)
 							{
 								mensel += 1;
 							}
@@ -802,8 +808,8 @@ int main(int argc, char **argv)
 						u32 kUp = hidKeysUp();
 						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 						{
-							int MIN = 0;
-							if (mensel > MIN)
+							MMIN = 0;
+							if (mensel > MMIN)
 							{
 								mensel -= 1;
 							}
@@ -840,7 +846,7 @@ int main(int argc, char **argv)
 						{
 							while(true)
 							{
-								int result = menuOption();
+								result = menuOption();
 								if (result == 0)
 									break;
 								if (result == 2)
@@ -867,7 +873,7 @@ int main(int argc, char **argv)
 						{
 							while(true)
 							{
-								int result = settings();
+								result = settings();
 								if (result == 0)
 									break;
 								if (result == 2)
