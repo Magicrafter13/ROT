@@ -601,7 +601,6 @@ int main(int argc, char **argv)
 	// Main loop
 	while (aptMainLoop())
 	{
-		
 		hidScanInput();
 		hidTouchRead(&touch);
 		u32 kDown = hidKeysDown();
@@ -676,6 +675,9 @@ int main(int argc, char **argv)
 			sprintf(tempvar, "%s/userdata.ruf", userdir);
 			userfile = fopen(tempvar, "r");
 			fscanf(userfile, "%s %s %s", dummy, dummy, username);
+			fclose(settingsFile);
+			fclose(userFile);
+			fclose(userfile);
 			consoleSelect(&topScreen);
 			consoleClear();
 			if (mensel == 0)
