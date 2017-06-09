@@ -679,6 +679,15 @@ int main(int argc, char **argv)
 			fscanf(userfile, "%s %s %s", dummy, dummy, username);
 			consoleSelect(&topScreen);
 			consoleClear();
+			char menOption[40];
+			if (mensel == 0)
+			{
+				strcpy(menOption, "\x1b[31m         Games          \x1b[0m");
+			}
+			if (mensel == 1)
+			{
+				strcpy(menOption, "\x1b[32m        Tool Box        \x1b[0m");
+			}
 			printf("###                                            ###");
 			printf(" ###                                          ### ");
 			printf("  ###            [Select] Log-off            ###  ");
@@ -693,7 +702,7 @@ int main(int argc, char **argv)
 			printf("           ############################           ");
 			printf("           ##                        ##           ");
 			printf("           ##                        ##           ");
-			printf(" [<] Left  ##                        ## Right [>] ");
+			printf(" [<] Left  ##%s## Right [>] ", menOption);
 			printf("           ##                        ##           ");
 			printf("           ##                        ##           ");
 			printf("           ############################           ");
@@ -773,10 +782,10 @@ int main(int argc, char **argv)
 						u32 kUp = hidKeysUp();
 						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 						{
-							int MAX = 0;
-							if (setsel < MAX)
+							int MAX = 1;
+							if (mensel < MAX)
 							{
-								setsel += 1;
+								mensel += 1;
 							}
 							break;
 						}
@@ -794,9 +803,9 @@ int main(int argc, char **argv)
 						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 						{
 							int MIN = 0;
-							if (setsel > MIN)
+							if (mensel > MIN)
 							{
-								setsel -= 1;
+								mensel -= 1;
 							}
 							break;
 						}

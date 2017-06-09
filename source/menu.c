@@ -14,7 +14,7 @@ int games()
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 	{
 		consoleSelect(&bottomScreen);
-		printf("debugView opened\n");
+		printf("games opened\n");
 		consoleSelect(&topScreen);
 		consoleClear();
 		printf("Feature will be added in future release.\n");
@@ -31,7 +31,7 @@ int tools()
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 	{
 		consoleSelect(&bottomScreen);
-		printf("DLC opened\n");
+		printf("tools opened\n");
 		consoleSelect(&topScreen);
 		consoleClear();
 		printf("Feature will be added in future release.\n");
