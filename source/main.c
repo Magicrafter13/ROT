@@ -4,6 +4,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include "header.h"
 
 int mkdir(const char *pathname, mode_t mode);
 
@@ -16,21 +17,21 @@ bool multiuser = false;
 char sendusername[30];
 bool killROT = false;
 int setsel = 0;
+FILE *userFile, *settingsFile;
+char setfil[30], usrfil[30];
 
-int debugView(char usrdr[30])
+PrintConsole topScreen, bottomScreen;
+
+int toggleMultiUser()
 {
-	PrintConsole topScreen, bottomScreen;
+	return 0;
+}
+
+int debugView()
+{
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
-	FILE /* *fp, */ *userFile, *settingsFile;
-	char setfil[30], usrfil[30];
-	sprintf(setfil, "%s/settings.rsf", usrdr);
-	sprintf(usrfil, "%s/userdata.ruf", usrdr);
-	settingsFile = fopen(setfil, "r");
-	userFile = fopen(usrfil, "r");
 	//do something with files
-	fclose(settingsFile);
-	fclose(userFile);
 	//Main deleteData code:
 	{
 		consoleSelect(&bottomScreen);
@@ -45,20 +46,11 @@ int debugView(char usrdr[30])
 	return 0;
 }
 
-int DLC(char usrdr[30])
+int DLC()
 {
-	PrintConsole topScreen, bottomScreen;
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
-	FILE /* *fp, */ *userFile, *settingsFile;
-	char setfil[30], usrfil[30];
-	sprintf(setfil, "%s/settings.rsf", usrdr);
-	sprintf(usrfil, "%s/userdata.ruf", usrdr);
-	settingsFile = fopen(setfil, "r");
-	userFile = fopen(usrfil, "r");
 	//do something with files
-	fclose(settingsFile);
-	fclose(userFile);
 	//Main deleteData code:
 	{
 		consoleSelect(&bottomScreen);
@@ -73,20 +65,11 @@ int DLC(char usrdr[30])
 	return 0;
 }
 
-int deleteData(char usrdr[30])
+int deleteData()
 {
-	PrintConsole topScreen, bottomScreen;
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
-	FILE /* *fp, */ *userFile, *settingsFile;
-	char setfil[30], usrfil[30];
-	sprintf(setfil, "%s/settings.rsf", usrdr);
-	sprintf(usrfil, "%s/userdata.ruf", usrdr);
-	settingsFile = fopen(setfil, "r");
-	userFile = fopen(usrfil, "r");
 	//do something with files
-	fclose(settingsFile);
-	fclose(userFile);
 	//Main deleteData code:
 	{
 		consoleSelect(&bottomScreen);
@@ -101,20 +84,11 @@ int deleteData(char usrdr[30])
 	return 0;
 }
 
-int changePassword(char usrdr[30])
+int changePassword()
 {
-	PrintConsole topScreen, bottomScreen;
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
-	FILE /* *fp,*/ *userFile, *settingsFile;
-	char setfil[30], usrfil[30];
-	sprintf(setfil, "%s/settings.rsf", usrdr);
-	sprintf(usrfil, "%s/userdata.ruf", usrdr);
-	settingsFile = fopen(setfil, "r");
-	userFile = fopen(usrfil, "r");
 	//do something with files
-	fclose(settingsFile);
-	fclose(userFile);
 	//Main changePassword code:
 	{
 		consoleSelect(&bottomScreen);
@@ -129,20 +103,11 @@ int changePassword(char usrdr[30])
 	return 0;
 }
 
-int changeUsername(char usrdr[30])
+int changeUsername()
 {
-	PrintConsole topScreen, bottomScreen;
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
-	FILE /* *fp,*/ *userFile, *settingsFile;
-	char setfil[30], usrfil[30];
-	sprintf(setfil, "%s/settings.rsf", usrdr);
-	sprintf(usrfil, "%s/userdata.ruf", usrdr);
-	settingsFile = fopen(setfil, "r");
-	userFile = fopen(usrfil, "r");
 	//do something with files
-	fclose(settingsFile);
-	fclose(userFile);
 	//Main changeUsername code:
 	{
 		consoleSelect(&bottomScreen);
@@ -157,14 +122,19 @@ int changeUsername(char usrdr[30])
 	return 0;
 }
 
-int settingsOption(char usrdr[30])
+int menuOption()
+{
+	return 0;
+}
+
+int settingsOption()
 {
 	int returnvalue = 0;
 	if (setsel == 0)
 	{
 		while (true)
 		{
-			int result = (changePassword(usrdr));
+			int result = changePassword();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -181,7 +151,7 @@ int settingsOption(char usrdr[30])
 	{
 		while (true)
 		{
-			int result = (changeUsername(usrdr));
+			int result = changeUsername();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -198,7 +168,7 @@ int settingsOption(char usrdr[30])
 	{
 		while (true)
 		{
-			int result = (deleteData(usrdr));
+			int result = deleteData();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -215,7 +185,7 @@ int settingsOption(char usrdr[30])
 	{
 		while(true)
 		{
-			int result = (DLC(usrdr));
+			int result = DLC();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -232,7 +202,7 @@ int settingsOption(char usrdr[30])
 	{
 		while(true)
 		{
-			int result = (debugView(usrdr));
+			int result = debugView();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -248,17 +218,12 @@ int settingsOption(char usrdr[30])
 	return returnvalue;
 }
 
-int settings(char usrdr[30])
+int settings()
 {
 	int ireturnvalue;
-	PrintConsole topScreen, bottomScreen;
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 	FILE *fp;
-	FILE *userfile;
-	char setfil[30];
-	char usrfil[30];
-	sprintf(setfil, "%s/settings.rsf", usrdr);
 	if ((fp = fopen(setfil, "r")) == NULL)
 	{
 		fp = fopen(setfil, "w");
@@ -267,11 +232,8 @@ int settings(char usrdr[30])
 		return 0;
 	} else {
 		char setOption[17], setOptionP1[17], setOptionN1[17], setOptionP2[17], setOptionN2[17];
-		sprintf(usrfil, "%s/userdata.ruf", usrdr);
-		userfile = fopen(usrfil, "r");
 		char dummy[30], username[30];
-		fscanf(userfile, "%s %s %s", dummy, dummy, username);
-		fclose(userfile);
+		fscanf(userFile, "%s %s %s", dummy, dummy, username);
 		consoleSelect(&bottomScreen);
 		printf("%s Opened Settings", username);
 		if (setsel == 0)
@@ -319,11 +281,11 @@ int settings(char usrdr[30])
 		printf("\n\n\n\n\n\n\n\n");
 		printf("                 \x1b[2;37m%s\x1b[0m\n\n", setOptionP2);
 		printf("                 %s\n\n", setOptionP1);
-		printf("        [A] Select   [B] Back to mainmenu         ");
+		printf("        [A] Select   [B] Back to mainmenu         \n");
 		printf("               \x1b[47;30m                    \x1b[0m               ");
 		printf("===============\x1b[47;30m  %s  \x1b[0m===============", setOption);
 		printf("               \x1b[47;30m                    \x1b[0m               ");
-		printf("                   [Start] Exit                   ");
+		printf("                   [Start] Exit                   \n");
 		printf("                 %s\n\n", setOptionN1);
 		printf("                 \x1b[2;37m%s\x1b[0m\n\n", setOptionN2);
 		char returnvalue[30];
@@ -406,7 +368,7 @@ int settings(char usrdr[30])
 					{
 						while(true)
 						{
-							int result = settingsOption(usrdr);
+							int result = settingsOption();
 							if (result == 0)
 								break;
 							if (result == 1)
@@ -513,7 +475,6 @@ int main(int argc, char **argv)
 	printf("\x1b[29;15Hby Matthew Rease");
 	
 	FILE *fp;
-	FILE *userdata;
 	if ((fp = fopen("sdmc:/ROT_Data/isset.rvf", "r")) == NULL)
 	{
 		fclose(fp);
@@ -667,7 +628,6 @@ int main(int argc, char **argv)
 		printf("%s %s %s %s %s %s", name1, name2, name3, pass1, pass2, pass3);*/
 		consoleClear();
 		consoleSelect(&bottomScreen);
-		consoleClear();
 		printf("Option: ");
 		consoleSelect(&topScreen);
 		printf("Press \x1b[40;31mA \x1b[40;37mto begin the walkthrough. Not added yet.\n");
@@ -680,11 +640,17 @@ int main(int argc, char **argv)
 			if (kDown & KEY_A)
 			{
 				walkthrough = true;
+				consoleSelect(&bottomScreen);
+				printf("A\n");
+				consoleSelect(&topScreen);
 				break;
 			}
 			if (kDown & KEY_B)
 			{
 				walkthrough = false;
+				consoleSelect(&bottomScreen);
+				printf("B\n");
+				consoleSelect(&topScreen);
 				break;
 			}
 		}
@@ -700,7 +666,6 @@ int main(int argc, char **argv)
 		FILE *userfile;
 		hidScanInput();
 		hidTouchRead(&touch);
-		
 		u32 kDown = hidKeysDown();
 		if (logged == false)
 		{
@@ -712,10 +677,9 @@ int main(int argc, char **argv)
 				break;
 			} else {
 				printf("Data found\n");
-				userdata = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r");
+				userFile = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r");
 				char t1[4], t2[1], t3[30], t4[4], t5[1], t6[30];
-				fscanf(userdata, "%s %s %s %s %s %s", t1, t2, t3, t4, t5, t6);
-				fclose(userdata);
+				fscanf(userFile, "%s %s %s %s %s %s", t1, t2, t3, t4, t5, t6);
 				sprintf(sendusername, "%s", t3);
 				bool incorrect = true;
 				printf("Press A to open keyboard to enter password\n");
@@ -766,6 +730,10 @@ int main(int argc, char **argv)
 			}else{
 				sprintf(userdir, "sdmc:/3ds/ROT_Data");
 			}
+			sprintf(setfil, "%s/settings.rsf", userdir);
+			sprintf(usrfil, "%s/userdata.ruf", userdir);
+			settingsFile = fopen(setfil, "r");
+			userFile = fopen(usrfil, "r");
 			consoleSelect(&bottomScreen);
 			//printf("&userdir/userdata.ruf");
 			char tempvar[30];
@@ -773,7 +741,6 @@ int main(int argc, char **argv)
 			userfile = fopen(tempvar, "r");
 			char dummy[30], username[30];
 			fscanf(userfile, "%s %s %s", dummy, dummy, username);
-			fclose(userfile);
 			consoleSelect(&topScreen);
 			consoleClear();
 			printf("###                                            ###");
@@ -810,14 +777,136 @@ int main(int argc, char **argv)
 			{
 				hidScanInput();
 				u32 kDown = hidKeysDown();
-				if (kDown & KEY_A){
-					NULL;
+				u32 kDownOld = hidKeysDown();
+				u32 kHeldOld = hidKeysHeld();
+				u32 kUpOld = hidKeysHeld();
+				if (kDown & KEY_Y)
+				{
+					while(true)
+					{
+						hidScanInput();
+						u32 kDown = hidKeysDown();
+						u32 kHeld = hidKeysHeld();
+						u32 kUp = hidKeysUp();
+						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						{
+							while(true)
+							{
+								int result = mail(userdir);
+								if (result == 2)
+								{
+									killROT = true;
+									break;
+								}
+								if (result == 0)
+								{
+									break;
+								}
+							}
+							consoleInit(GFX_TOP, &topScreen);
+							consoleInit(GFX_BOTTOM, &bottomScreen);
+							break;
+						}
+					}
 					break;
 				}
-					//do thing: function(userdir);
 				if (kDown & KEY_SELECT)
 				{
+					while(true)
+					{
+						hidScanInput();
+						u32 kDown = hidKeysDown();
+						u32 kHeld = hidKeysHeld();
+						u32 kUp = hidKeysUp();
+						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						{
+							break;
+						}
+					}
 					logged = false;
+					break;
+				}
+				if (kDown & KEY_RIGHT)
+				{
+					
+					while(true)
+					{
+						hidScanInput();
+						u32 kDown = hidKeysDown();
+						u32 kHeld = hidKeysHeld();
+						u32 kUp = hidKeysUp();
+						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						{
+							int MAX = 0;
+							if (setsel < MAX)
+							{
+								setsel += 1;
+							}
+							break;
+						}
+					}
+					break;
+				}
+				if (kDown & KEY_LEFT)
+				{
+					while(true)
+					{
+						hidScanInput();
+						u32 kDown = hidKeysDown();
+						u32 kHeld = hidKeysHeld();
+						u32 kUp = hidKeysUp();
+						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						{
+							int MIN = 0;
+							if (setsel > MIN)
+							{
+								setsel -= 1;
+							}
+							break;
+						}
+					}
+					break;
+				}
+				if (kDown & KEY_START)
+				{
+					while(true)
+					{
+						hidScanInput();
+						u32 kDown = hidKeysDown();
+						u32 kHeld = hidKeysHeld();
+						u32 kUp = hidKeysUp();
+						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						{
+							killROT = true;
+							break;
+						}
+					}
+					break;
+				}
+				if (kDown & KEY_A)
+				{
+					while(true)
+					{
+						hidScanInput();
+						u32 kDown = hidKeysDown();
+						u32 kHeld = hidKeysHeld();
+						u32 kUp = hidKeysUp();
+						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						{
+							while(true)
+							{
+								int result = menuOption();
+								if (result == 0)
+									break;
+								if (result == 2)
+								{
+									killROT = true;
+									break;
+								}
+							}
+							break;
+						}
+					}
 					break;
 				}
 				if (kDown & KEY_X)
@@ -825,38 +914,26 @@ int main(int argc, char **argv)
 					setsel = 0;
 					while(true)
 					{
-						int result = settings(userdir);
-						if (result == 2)
+						hidScanInput();
+						u32 kDown = hidKeysDown();
+						u32 kHeld = hidKeysHeld();
+						u32 kUp = hidKeysUp();
+						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 						{
-							killROT = true;
+							while(true)
+							{
+								int result = settings();
+								if (result == 0)
+									break;
+								if (result == 2)
+								{
+									killROT = true;
+									break;
+								}
+							}
 							break;
 						}
-						if (result == 0)
-							break;
 					}
-					break;
-				}
-				if (kDown & KEY_Y)
-				{
-					NULL;
-					break;
-				}
-					//mail(userdir);
-				if (kDown & KEY_LEFT)
-				{
-					NULL;
-					break;
-				}
-					//moveMenu(left, curMenuItem);
-				if (kDown & KEY_RIGHT)
-				{
-					NULL;
-					break;
-				}
-					//moveMenu(right, curMenuItem);
-				if (kDown & KEY_START)
-				{
-					killROT = true;
 					break;
 				}
 			}
