@@ -21,6 +21,9 @@ FILE *userfile;
 FILE *fp;
 char userdir[30];
 char tempvar[30], dummy[5], username[21], menOption[40];
+int settingsVersion = 01;
+int debugTF = 1;
+int selGame = 0;
 //sdmc:/3ds/ROT_Data/01234567890123456789/userdata.ruf max username length 20
 
 PrintConsole topScreen, bottomScreen;
@@ -32,10 +35,11 @@ int menuOption()
 	{
 		while (true)
 		{
-			result = games();
+			result = games(userdir, selGame);
 			if (result == 0)
 			{
 				returnvalue = 0;
+				selGame = 0;
 				break;
 			}
 			if (result == 2)
@@ -156,222 +160,237 @@ int settingsOption()
 	return returnvalue;
 }
 
+int newSettingsFile()
+{
+	sprintf(setfil, "%s/settings.rsf", userdir);
+	settingsFile = fopen(setfil, "w");
+	fprintf(settingsFile, "%d\n", settingsVersion);
+	fprintf(settingsFile, "%s\n", "true"); //debugTrueOrFalse
+	fclose(settingsFile);
+	return 0;
+}
+
 int settings()
 {
 	int ireturnvalue;
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 	FILE *fp;
+	sprintf(setfil, "%s/settings.rsf", userdir);
 	if ((fp = fopen(setfil, "r")) == NULL)
 	{
-		fp = fopen(setfil, "w");
-		//fputs("test", fp);
-		fclose(fp);
-		return 0;
-	} else {
-		char setOption[17], setOptionP1[17], setOptionN1[17], setOptionP2[17], setOptionN2[17];
-		char dummy[30], username[30];
-		fscanf(userFile, "%s %s %s", dummy, dummy, username);
-		consoleSelect(&bottomScreen);
-		printf("%s Opened Settings", username);
-		if (setsel == 0)
+		newSettingsFile();
+	}
+	int oldversion;
+	fscanf(fp, "%d %d", &oldversion, &debugTF);
+	fclose(fp);
+	if (oldversion != settingsVersion)
+	{
+		newSettingsFile();
+		return 1;
+	}
+	char setOption[17], setOptionP1[17], setOptionN1[17], setOptionP2[17], setOptionN2[17];
+	char dummy[30], username[30];
+	fscanf(userFile, "%s %s %s", dummy, dummy, username);
+	consoleSelect(&bottomScreen);
+	printf("%s Opened Settings", username);
+	if (setsel == 0)
+	{
+		strcpy(setOption, "Change Password ");
+		strcpy(setOptionP1, "                ");
+		strcpy(setOptionN1, "Change Username ");
+		strcpy(setOptionP2, "                ");
+		strcpy(setOptionN2, "Delete Save Data");
+	}
+	if (setsel == 1)
+	{
+		strcpy(setOption, "Change Username ");
+		strcpy(setOptionP1, "Change Password ");
+		strcpy(setOptionN1, "Delete Save Data");
+		strcpy(setOptionP2, "                ");
+		strcpy(setOptionN2, "      DLC       ");
+	}
+	if (setsel == 2)
+	{
+		strcpy(setOption, "Delete Save Data");
+		strcpy(setOptionP1, "Change Password ");
+		strcpy(setOptionN1, "      DLC       ");
+		strcpy(setOptionP2, "Change Password ");
+		strcpy(setOptionN2, "  Toggle Debug  ");
+	}
+	if (setsel == 3)
+	{
+		strcpy(setOption, "      DLC       ");
+		strcpy(setOptionP1, "Delete Save Data");
+		strcpy(setOptionN1, "  Toggle Debug  ");
+		strcpy(setOptionP2, "Change Username ");
+		strcpy(setOptionN2, "                ");
+	}
+	if (setsel == 4)
+	{
+		strcpy(setOption, "  Toggle Debug  ");
+		strcpy(setOptionP1, "      DLC       ");
+		strcpy(setOptionN1, "                ");
+		strcpy(setOptionP2, "Delete Save Data");
+		strcpy(setOptionN2, "                ");
+	}
+	consoleSelect(&topScreen);
+	consoleClear();
+	printf("\n\n\n\n\n\n\n\n");
+	printf("                 \x1b[2;37m%s\x1b[0m\n\n", setOptionP2);
+	printf("                 %s\n\n", setOptionP1);
+	printf("        [A] Select   [B] Back to mainmenu         \n");
+	printf("               \x1b[47;30m                    \x1b[0m               ");
+	printf("===============\x1b[47;30m  %s  \x1b[0m===============", setOption);
+	printf("               \x1b[47;30m                    \x1b[0m               ");
+	printf("                   [Start] Exit                   \n");
+	printf("                 %s\n\n", setOptionN1);
+	printf("                 \x1b[2;37m%s\x1b[0m\n\n", setOptionN2);
+	char returnvalue[30];
+	while(true)
+	{
+		hidScanInput();
+		u32 kDown = hidKeysDown();
+		u32 kDownOld = hidKeysDown();
+		u32 kHeldOld = hidKeysHeld();
+		u32 kUpOld = hidKeysHeld();
+		if (kDown & KEY_DOWN)
 		{
-			strcpy(setOption, "Change Password ");
-			strcpy(setOptionP1, "                ");
-			strcpy(setOptionN1, "Change Username ");
-			strcpy(setOptionP2, "                ");
-			strcpy(setOptionN2, "Delete Save Data");
-		}
-		if (setsel == 1)
-		{
-			strcpy(setOption, "Change Username ");
-			strcpy(setOptionP1, "Change Password ");
-			strcpy(setOptionN1, "Delete Save Data");
-			strcpy(setOptionP2, "                ");
-			strcpy(setOptionN2, "      DLC       ");
-		}
-		if (setsel == 2)
-		{
-			strcpy(setOption, "Delete Save Data");
-			strcpy(setOptionP1, "Change Password ");
-			strcpy(setOptionN1, "      DLC       ");
-			strcpy(setOptionP2, "Change Password ");
-			strcpy(setOptionN2, "  Toggle Debug  ");
-		}
-		if (setsel == 3)
-		{
-			strcpy(setOption, "      DLC       ");
-			strcpy(setOptionP1, "Delete Save Data");
-			strcpy(setOptionN1, "  Toggle Debug  ");
-			strcpy(setOptionP2, "Change Username ");
-			strcpy(setOptionN2, "                ");
-		}
-		if (setsel == 4)
-		{
-			strcpy(setOption, "  Toggle Debug  ");
-			strcpy(setOptionP1, "      DLC       ");
-			strcpy(setOptionN1, "                ");
-			strcpy(setOptionP2, "Delete Save Data");
-			strcpy(setOptionN2, "                ");
-		}
-		consoleSelect(&topScreen);
-		consoleClear();
-		printf("\n\n\n\n\n\n\n\n");
-		printf("                 \x1b[2;37m%s\x1b[0m\n\n", setOptionP2);
-		printf("                 %s\n\n", setOptionP1);
-		printf("        [A] Select   [B] Back to mainmenu         \n");
-		printf("               \x1b[47;30m                    \x1b[0m               ");
-		printf("===============\x1b[47;30m  %s  \x1b[0m===============", setOption);
-		printf("               \x1b[47;30m                    \x1b[0m               ");
-		printf("                   [Start] Exit                   \n");
-		printf("                 %s\n\n", setOptionN1);
-		printf("                 \x1b[2;37m%s\x1b[0m\n\n", setOptionN2);
-		char returnvalue[30];
-		while(true)
-		{
-			hidScanInput();
-			u32 kDown = hidKeysDown();
-			u32 kDownOld = hidKeysDown();
-			u32 kHeldOld = hidKeysHeld();
-			u32 kUpOld = hidKeysHeld();
-			if (kDown & KEY_DOWN)
+			
+			sprintf(returnvalue, "DOWN");
+			while(true)
 			{
-				
-				sprintf(returnvalue, "DOWN");
-				while(true)
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+					SMAX = 4;
+					if (setsel < SMAX)
 					{
-						SMAX = 4;
-						if (setsel < SMAX)
+						setsel += 1;
+					}
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_UP)
+		{
+			sprintf(returnvalue, "UP");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					SMIN = 0;
+					if (setsel > SMIN)
+					{
+						setsel -= 1;
+					}
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_START)
+		{
+			sprintf(returnvalue, "START");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_A)
+		{
+			sprintf(returnvalue, "A");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					while(true)
+					{
+						result = settingsOption();
+						if (result == 0)
+							break;
+						if (result == 1)
 						{
-							setsel += 1;
+							sprintf(returnvalue, "START");
+							break;
 						}
-						break;
 					}
+					break;
 				}
-				break;
 			}
-			if (kDown & KEY_UP)
+			break;
+		}
+		if (kDown & KEY_B)
+		{
+			sprintf(returnvalue, "B");
+			while(true)
 			{
-				sprintf(returnvalue, "UP");
-				while(true)
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						SMIN = 0;
-						if (setsel > SMIN)
-						{
-							setsel -= 1;
-						}
-						break;
-					}
+					break;
 				}
-				break;
 			}
-			if (kDown & KEY_START)
-			{
-				sprintf(returnvalue, "START");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						break;
-					}
-				}
-				break;
-			}
-			if (kDown & KEY_A)
-			{
-				sprintf(returnvalue, "A");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						while(true)
-						{
-							result = settingsOption();
-							if (result == 0)
-								break;
-							if (result == 1)
-							{
-								sprintf(returnvalue, "START");
-								break;
-							}
-						}
-						break;
-					}
-				}
-				break;
-			}
-			if (kDown & KEY_B)
-			{
-				sprintf(returnvalue, "B");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						break;
-					}
-				}
-				break;
-			}
+			break;
 		}
-		if (strcmp(returnvalue, "START") == 0)
-		{
-			gfxFlushBuffers();
-			gfxSwapBuffers();
-			gspWaitForVBlank();
-			ireturnvalue = 2;
-		}
-		if (strcmp(returnvalue, "UP") == 0)
-		{
-			gfxFlushBuffers();
-			gfxSwapBuffers();
-			gspWaitForVBlank();
-			ireturnvalue = 1;
-		}
-		if (strcmp(returnvalue, "DOWN") == 0)
-		{
-			gfxFlushBuffers();
-			gfxSwapBuffers();
-			gspWaitForVBlank();
-			ireturnvalue = 1;
-		}
-		if (strcmp(returnvalue, "A") == 0)
-		{
-			gfxFlushBuffers();
-			gfxSwapBuffers();
-			gspWaitForVBlank();
-			ireturnvalue = 1;
-		}
-		if (strcmp(returnvalue, "B") == 0)
-		{
-			gfxFlushBuffers();
-			gfxSwapBuffers();
-			gspWaitForVBlank();
-			ireturnvalue = 0;
-		}
+	}
+	if (strcmp(returnvalue, "START") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 2;
+	}
+	if (strcmp(returnvalue, "UP") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "DOWN") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "A") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "B") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 0;
 	}
 	return ireturnvalue;
 }
@@ -508,7 +527,7 @@ int main(int argc, char **argv)
 		}else{
 			fprintf(fp, "%s %s %s \n", "pass", "=", "none");
 		}
-		fprintf(fp, "color = 40;37 \n");
+		fprintf(fp, "color = 40 37 \n");
 		fprintf(fp, "XP = %d \n", 100);
 		fprintf(fp, "XPEarned = %d \n", 100);
 		fprintf(fp, "lvl = %d \n", 1);
@@ -790,7 +809,7 @@ int main(int argc, char **argv)
 						u32 kUp = hidKeysUp();
 						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 						{
-							MMAX = 1;
+							MMAX = 3;
 							if (mensel < MMAX)
 							{
 								mensel += 1;
@@ -848,7 +867,7 @@ int main(int argc, char **argv)
 						{
 							while(true)
 							{
-								result = menuOption();
+								result = menuOption(userdir);
 								if (result == 0)
 									break;
 								if (result == 2)
