@@ -171,7 +171,7 @@ int games(char userDir[30])
 		gfxFlushBuffers();
 		gfxSwapBuffers();
 		gspWaitForVBlank();
-		return 2;
+		ireturnValue = 2;
 	}
 	if (strcmp(returnValue, "A") == 0)
 	{
@@ -179,7 +179,7 @@ int games(char userDir[30])
 		gfxSwapBuffers();
 		gspWaitForVBlank();
 
-		return 1;
+		ireturnValue = 1;
 	}
 	if (strcmp(returnValue, "UP") == 0)
 	{
@@ -187,24 +187,23 @@ int games(char userDir[30])
 		gfxSwapBuffers();
 		gspWaitForVBlank();
 
-		return 1;
+		ireturnValue = 1;
 	}
 	if (strcmp(returnValue, "DOWN") == 0)
 	{
 		gfxFlushBuffers();
 		gfxSwapBuffers();
 		gspWaitForVBlank();
-
-		return 1;
+		ireturnValue = 1;
 	}
 	if (strcmp(returnValue, "B") == 0)
 	{
 		gfxFlushBuffers();
 		gfxSwapBuffers();
 		gspWaitForVBlank();
-		return 0;
+		ireturnValue = 0;
 	}
-	return 3;
+	return ireturnValue;
 }
 
 int tools(char userDir[30])
