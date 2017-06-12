@@ -33,19 +33,26 @@ int menuOption()
 	returnvalue = 0;
 	if (mensel == 0)
 	{
+		selGame = 0;
 		while (true)
 		{
-			result = games(userdir, selGame);
+			result = games(userdir);
+			int result = games(userdir, selGame);
 			if (result == 0)
 			{
 				returnvalue = 0;
-				selGame = 0;
 				break;
 			}
 			if (result == 2)
 			{
-				returnvalue = 1;
+				returnvalue = 2;
 				break;
+			}
+			if (result == 3)
+			{
+				printf("ERROR");
+				for(int i = 0; i < 300; i++)
+					gspWaitForVBlank();
 			}
 		}
 	}
