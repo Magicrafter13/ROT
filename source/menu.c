@@ -1,20 +1,16 @@
-#include <3ds.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include "header.h"
 
 PrintConsole topScreen, bottomScreen;
 
-char returnValue[30];
-int ireturnValue = 0;
-
+int gamesOption()
+{
+	return 0;
+}
 int games(char userDir[30])
 {
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
+	int ireturnvalue = 0;
 	consoleSelect(&bottomScreen);
 	printf("games opened\n");
 	consoleSelect(&topScreen);
@@ -30,7 +26,7 @@ int games(char userDir[30])
 	userFile = fopen(uf, "r");
 	settingsFile = fopen(sf, "r");
 	char dummy[30], userName[30];
-	int back, text, XP, XPEarned, lvl, Battleship, Blackjack, Chess, ConnectFour, DOND, FakeVirus, GTA, Sudoku, DodgeFall, Stress, Minesweeper, Mastermind, War, Nanogram, TTT, RC, RPS, Timer, WorkLock, Mancala, Monopoly, NGG, Journal, Pawn, SlotMach, Snake, Trivia, Alarm, msg;
+	int back, text, XP, XPEarned, lvl, Battleship, Blackjack, Chess, ConnectFour, Sudoku, DodgeFall, Minesweeper, Mastermind, War, Nanogram, Timer, Mancala, Monopoly, Journal, Pawn, SlotMach, Snake, Alarm, msg;
 	char otherArray[6][30];
 	strcpy(otherArray[0], "name");
 	strcpy(otherArray[1], "pass");
@@ -59,7 +55,6 @@ int games(char userDir[30])
 			}
 		}
 	}
-	//fscanf(userFile, "%s %s %s %s %s %s %s %s %d %d %s %s %d %s %s %d %s %s %d", dummy, dummy, userName, dummy, dummy, dummy, dummy, dummy, &back, &text, dummy, dummy, &XP, dummy, dummy, &XPEarned, dummy, dummy, &lvl);
 	char gameArray[14][30];
 	strcpy(gameArray[0], "Battleship");
 	strcpy(gameArray[1], "Blackjack");
@@ -134,6 +129,7 @@ int games(char userDir[30])
 	printf(RESET " %sConnect Four = %s " RESET "| %sNanogram    = %s\n", isSelected(6), isLocked(ConnectFour), isSelected(7), isLocked(Nanogram));
 	printf(RESET " %sSudoku       = %s " RESET "| %sMancala     = %s\n", isSelected(8), isLocked(Sudoku), isSelected(9), isLocked(Mancala));
 	printf(RESET " %sDodge Fall   = %s", isSelected(10), isLocked(DodgeFall));
+	char returnvalue[30];
 	while(true)
 	{
 		hidScanInput();
@@ -141,10 +137,10 @@ int games(char userDir[30])
 		u32 kDownOld = hidKeysDown();
 		u32 kHeldOld = hidKeysHeld();
 		u32 kUpOld = hidKeysHeld();
-		if (kDown & KEY_DOWN)
+		if (kDown & KEY_RIGHT)
 		{
 			
-			sprintf(returnValue, "DOWN");
+			sprintf(returnvalue, "RIGHT");
 			while(true)
 			{
 				hidScanInput();
@@ -162,9 +158,30 @@ int games(char userDir[30])
 			}
 			break;
 		}
-		if (kDown & KEY_UP)
+		if (kDown & KEY_DOWN)
 		{
-			sprintf(returnValue, "UP");
+			
+			sprintf(returnvalue, "DOWN");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					if (selGame < gameMax + 1)
+					{
+						selGame += 2;
+					}
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_LEFT)
+		{
+			sprintf(returnvalue, "LEFT");
 			while(true)
 			{
 				hidScanInput();
@@ -182,9 +199,29 @@ int games(char userDir[30])
 			}
 			break;
 		}
+		if (kDown & KEY_UP)
+		{
+			sprintf(returnvalue, "UP");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					if (selGame > gameMin - 1)
+					{
+						selGame -= 2;
+					}
+					break;
+				}
+			}
+			break;
+		}
 		if (kDown & KEY_START)
 		{
-			sprintf(returnValue, "START");
+			sprintf(returnvalue, "START");
 			while(true)
 			{
 				hidScanInput();
@@ -200,7 +237,7 @@ int games(char userDir[30])
 		}
 		if (kDown & KEY_A)
 		{
-			sprintf(returnValue, "A");
+			sprintf(returnvalue, "A");
 			while(true)
 			{
 				hidScanInput();
@@ -211,12 +248,12 @@ int games(char userDir[30])
 				{
 					while(true)
 					{
-						int result = settingsOption();
+						int result = gamesOption();
 						if (result == 0)
 							break;
 						if (result == 1)
 						{
-							sprintf(returnValue, "START");
+							sprintf(returnvalue, "START");
 							break;
 						}
 					}
@@ -227,7 +264,7 @@ int games(char userDir[30])
 		}
 		if (kDown & KEY_B)
 		{
-			sprintf(returnValue, "B");
+			sprintf(returnvalue, "B");
 			while(true)
 			{
 				hidScanInput();
@@ -242,59 +279,217 @@ int games(char userDir[30])
 			break;
 		}
 	}
-	if (strcmp(returnValue, "START") == 0)
+	if (strcmp(returnvalue, "START") == 0)
 	{
 		gfxFlushBuffers();
 		gfxSwapBuffers();
 		gspWaitForVBlank();
-		ireturnValue = 2;
+		ireturnvalue = 2;
 	}
-	if (strcmp(returnValue, "A") == 0)
+	if (strcmp(returnvalue, "LEFT") == 0)
 	{
 		gfxFlushBuffers();
 		gfxSwapBuffers();
 		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "UP") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "RIGHT") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "DOWN") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "A") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "B") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 0;
+	}
+	return ireturnvalue;
+}
 
-		ireturnValue = 1;
-	}
-	if (strcmp(returnValue, "UP") == 0)
-	{
-		gfxFlushBuffers();
-		gfxSwapBuffers();
-		gspWaitForVBlank();
-
-		ireturnValue = 1;
-	}
-	if (strcmp(returnValue, "DOWN") == 0)
-	{
-		gfxFlushBuffers();
-		gfxSwapBuffers();
-		gspWaitForVBlank();
-		ireturnValue = 1;
-	}
-	if (strcmp(returnValue, "B") == 0)
-	{
-		gfxFlushBuffers();
-		gfxSwapBuffers();
-		gspWaitForVBlank();
-		ireturnValue = 0;
-	}
-	return ireturnValue;
+int toolsOption()
+{
+	return 0;
 }
 
 int tools(char userDir[30])
 {
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
+	int ireturnvalue = 0;
+	consoleSelect(&bottomScreen);
+	printf("tools opened\n");
+	consoleSelect(&topScreen);
+	consoleClear();
+	char returnvalue[30];
+	while(true)
 	{
-		consoleSelect(&bottomScreen);
-		printf("tools opened\n");
-		consoleSelect(&topScreen);
-		consoleClear();
-		printf("Feature will be added in future release.\n");
-		printf("Will return to settings menu in 5 seconds.\n");
-		for(int I = 0; I < 300; I++)
-			gspWaitForVBlank();
+		hidScanInput();
+		u32 kDown = hidKeysDown();
+		u32 kDownOld = hidKeysDown();
+		u32 kHeldOld = hidKeysHeld();
+		u32 kUpOld = hidKeysHeld();
+		if (kDown & KEY_DOWN)
+		{
+			
+			sprintf(returnvalue, "DOWN");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					int TMAX = 4;
+					if (toolsel < TMAX)
+					{
+						toolsel += 1;
+					}
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_UP)
+		{
+			sprintf(returnvalue, "UP");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					int TMIN = 0;
+					if (toolsel > TMIN)
+					{
+						toolsel -= 1;
+					}
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_START)
+		{
+			sprintf(returnvalue, "START");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_A)
+		{
+			sprintf(returnvalue, "A");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					while(true)
+					{
+						int result = toolsOption();
+						if (result == 0)
+							break;
+						if (result == 1)
+						{
+							sprintf(returnvalue, "START");
+							break;
+						}
+					}
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_B)
+		{
+			sprintf(returnvalue, "B");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					break;
+				}
+			}
+			break;
+		}
 	}
-	return 0;
+	if (strcmp(returnvalue, "START") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 2;
+	}
+	if (strcmp(returnvalue, "UP") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "DOWN") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "A") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "B") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 0;
+	}
+	return ireturnvalue;
 }

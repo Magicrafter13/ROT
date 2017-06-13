@@ -1,3 +1,9 @@
+#include <3ds.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 int mail();
 int toggleMultiUser();
 int debugView();
@@ -8,6 +14,7 @@ int changeUsername();
 int games();
 int tools();
 int selGame;
+int toolsel;
 #define COLOR "\x1b["
 #define RED "31"
 #define B_BRED "41"

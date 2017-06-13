@@ -1,14 +1,8 @@
-#include <3ds.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include "header.h"
 
 int mkdir(const char *pathname, mode_t mode);
 
-char versiontxt[10] = "Alpha 1.7";
+char versiontxt[10] = "Alpha 1.8";
 int versionnum = 0;
 touchPosition touch;
 bool logged = false, multiuser = false, killROT = false;
@@ -33,11 +27,10 @@ int menuOption()
 	returnvalue = 0;
 	if (mensel == 0)
 	{
-		selGame = 0;
+		toolsel = 0;
 		while (true)
 		{
 			result = games(userdir);
-			int result = games(userdir, selGame);
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -48,19 +41,14 @@ int menuOption()
 				returnvalue = 2;
 				break;
 			}
-			if (result == 3)
-			{
-				printf("ERROR");
-				for(int i = 0; i < 300; i++)
-					gspWaitForVBlank();
-			}
 		}
 	}
 	if (mensel == 1)
 	{
+		toolsel = 0;
 		while (true)
 		{
-			result = tools();
+			result = tools(userdir);
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -68,7 +56,7 @@ int menuOption()
 			}
 			if (result == 2)
 			{
-				returnvalue = 1;
+				returnvalue = 2;
 				break;
 			}
 		}
@@ -180,6 +168,7 @@ int newSettingsFile()
 int settings()
 {
 	int ireturnvalue;
+	consoleSelect(&topScreen);
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 	FILE *fp;
@@ -220,7 +209,7 @@ int settings()
 	if (setsel == 2)
 	{
 		strcpy(setOption, "Delete Save Data");
-		strcpy(setOptionP1, "Change Password ");
+		strcpy(setOptionP1, "Change Username ");
 		strcpy(setOptionN1, "      DLC       ");
 		strcpy(setOptionP2, "Change Password ");
 		strcpy(setOptionN2, "  Toggle Debug  ");
@@ -423,9 +412,7 @@ int main(int argc, char **argv)
 {
 	gfxInitDefault();
 	hidInit();
-	
 	PrintConsole topScreen, bottomScreen;
-
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 
