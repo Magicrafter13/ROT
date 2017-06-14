@@ -151,7 +151,8 @@ int games(char userDir[30])
 				{
 					if (selGame < gameMax)
 					{
-						selGame += 1;
+						if (selGame % 2 == 0)
+							selGame += 1;
 					}
 					break;
 				}
@@ -170,7 +171,7 @@ int games(char userDir[30])
 				u32 kUp = hidKeysUp();
 				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 				{
-					if (selGame < gameMax + 1)
+					if (selGame < gameMax - 1)
 					{
 						selGame += 2;
 					}
@@ -192,7 +193,8 @@ int games(char userDir[30])
 				{
 					if (selGame > gameMin)
 					{
-						selGame -= 1;
+						if (selGame % 2 == 1)
+							selGame -= 1;
 					}
 					break;
 				}
@@ -210,7 +212,7 @@ int games(char userDir[30])
 				u32 kUp = hidKeysUp();
 				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 				{
-					if (selGame > gameMin - 1)
+					if (selGame > gameMin + 1)
 					{
 						selGame -= 2;
 					}

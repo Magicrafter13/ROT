@@ -1,9 +1,28 @@
 #include "header.h"
 
+static SwkbdCallbackResult MyCallback(void* user, const char** ppMessage, const char* text, size_t textlen)
+{
+	return SWKBD_CALLBACK_OK;
+}
+
+bool touchInBox(touchPosition touch, int x, int y, int w, int h)
+{
+	int tx=touch.px;
+	int ty=touch.py;
+	u32 kDown = hidKeysDown();
+	if (kDown & KEY_TOUCH && tx > x && tx < x+w && ty > y && ty < y+h) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 int mkdir(const char *pathname, mode_t mode);
 
 char versiontxt[10] = "Alpha 1.8";
 int versionnum = 0;
+int settingsVersion = 01;
+
 touchPosition touch;
 bool logged = false, multiuser = false, killROT = false;
 char sendusername[21];
@@ -15,7 +34,6 @@ FILE *userfile;
 FILE *fp;
 char userdir[30];
 char tempvar[30], dummy[5], username[21], menOption[40];
-int settingsVersion = 01;
 int debugTF = 1;
 int selGame = 0;
 //sdmc:/3ds/ROT_Data/01234567890123456789/userdata.ruf max username length 20
@@ -71,7 +89,7 @@ int settingsOption()
 	{
 		while (true)
 		{
-			result = changePassword();
+			result = changePassword(userdir);
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -391,23 +409,6 @@ int settings()
 	return ireturnvalue;
 }
 
-static SwkbdCallbackResult MyCallback(void* user, const char** ppMessage, const char* text, size_t textlen)
-{
-	return SWKBD_CALLBACK_OK;
-}
-
-bool touchInBox(touchPosition touch, int x, int y, int w, int h)
-{
-	int tx=touch.px;
-	int ty=touch.py;
-	u32 kDown = hidKeysDown();
-	if (kDown & KEY_TOUCH && tx > x && tx < x+w && ty > y && ty < y+h) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
 int main(int argc, char **argv)
 {
 	gfxInitDefault();
@@ -423,10 +424,9 @@ int main(int argc, char **argv)
 	printf("Loading...\n");
 
 	consoleSelect(&topScreen);
-	printf("\x1b[29;15Hby Matthew Rease");
+	printf("\x1b[29;15Hby Matthew Rease\n");
 	
-	
-	if ((fp = fopen("sdmc:/ROT_Data/isset.rvf", "r")) == NULL)
+	if(access("sdmc:/3ds/ROT_Data/isset.rvf", F_OK) == -1)
 	{
 		fclose(fp);
 		bool usepass = false;
@@ -508,9 +508,6 @@ int main(int argc, char **argv)
 			gspWaitForVBlank();
 		}
 		mkdir("sdmc:/3ds/ROT_Data/", 0777);
-		/*fp = fopen("sdmc:/3ds/ROT_Data/isset.rvf", "w");
-		putc("c",fp);
-		fclose(fp);*/
 		fp = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "w");
 		fputs("name = User\n", fp);
 		fclose(fp);
@@ -546,28 +543,13 @@ int main(int argc, char **argv)
 		fprintf(fp, "Alarm = %d \n", 0);
 		fprintf(fp, "msg = %d \n", 0);
 		fclose(fp);
-		/*int c;
-		fp = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r");
-		while(1)
-		{
-			c = fgetc(fp);
-			if(feof(fp))
-			{
-				break;
-			}
-			printf("%c", c);
-		}*/
+		fp = fopen("sdmc:/3ds/ROT_Data/isset.rvf", "w");
+		fprintf(fp, "c");
+		fclose(fp);
 		//Remember this for colors:
 		//\x1b[back;textm(then the text)
 		//30-37 for text 40-47 for back
 		//0 = Black 1 = Red 2 = Green 3 = Yellow 4 = Blue 5 = Magenta 6 = Cyan 7 = White
-		fclose(fp);
-		/*printf("Test with fresh variables:\n");
-		char name1[4], name2[1], name3[30], pass1[4], pass2[1], pass3[30];
-		fp = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r");
-		fscanf(fp, "%s %s %s %s %s %s", name1, name2, name3, pass1, pass2, pass3);
-		fclose(fp);
-		printf("%s %s %s %s %s %s", name1, name2, name3, pass1, pass2, pass3);*/
 		consoleClear();
 		consoleSelect(&bottomScreen);
 		printf("Option: ");
@@ -736,7 +718,7 @@ int main(int argc, char **argv)
 				u32 kDown = hidKeysDown();
 				u32 kDownOld = hidKeysDown();
 				u32 kHeldOld = hidKeysHeld();
-				u32 kUpOld = hidKeysHeld();
+				u32 kUpOld = hidKeysUp();
 				if (kDown & KEY_Y)
 				{
 					while(true)
