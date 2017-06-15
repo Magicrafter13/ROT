@@ -7,15 +7,37 @@ int toggleMultiUser()
 	return 0;
 }
 
-int debugView()
+int debugView(char userDir[30])
 {
 	consoleSelect(&bottomScreen);
 	printf("debugView opened\n");
 	consoleSelect(&topScreen);
 	consoleClear();
-	printf("Feature will be added in future release.\n");
-	printf("Will return to settings menu in 5 seconds.\n");
-	for(int I = 0; I < 300; I++)
+	int thing = 2;
+	char thing2[53], dummy[30];
+	FILE *settingsFile;
+	sprintf(thing2, "%s/settings.rsf", userDir);
+	settingsFile = fopen(thing2, "r+");
+	while(true)
+	{
+		fscanf(settingsFile, "%s", dummy);
+		if(strcmp(dummy, "debug") == 0)
+			break;
+	}
+	fscanf(settingsFile, "%d", &thing);
+	if (thing)
+	{
+		rewind(settingsFile);
+		fseek(settingsFile, 1, SEEK_SET);
+		fputs("0", settingsFile);
+		printf("Debug View turned off.");
+	} else {
+		rewind(settingsFile);
+		fseek(settingsFile, 1, SEEK_SET);
+		fputs("1", settingsFile);
+		printf("Debug View turned on.");
+	}
+	for(int i = 0; i < 120; i++)
 		gspWaitForVBlank();
 	return 0;
 }

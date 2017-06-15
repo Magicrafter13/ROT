@@ -21,7 +21,7 @@ int mkdir(const char *pathname, mode_t mode);
 
 char versiontxt[10] = "Alpha 1.8";
 int versionnum = 0;
-int settingsVersion = 01;
+int settingsVersion = 02;
 
 touchPosition touch;
 bool logged = false, multiuser = false, killROT = false;
@@ -157,7 +157,7 @@ int settingsOption()
 	{
 		while(true)
 		{
-			result = debugView();
+			result = debugView(userdir);
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -178,7 +178,7 @@ int newSettingsFile()
 	sprintf(setfil, "%s/settings.rsf", userdir);
 	settingsFile = fopen(setfil, "w");
 	fprintf(settingsFile, "%d\n", settingsVersion);
-	fprintf(settingsFile, "%s\n", "true"); //debugTrueOrFalse
+	fprintf(settingsFile, "debug\n%d\n", 1); //debugTrueOrFalse
 	fclose(settingsFile);
 	return 0;
 }
@@ -194,6 +194,7 @@ int settings()
 	if ((fp = fopen(setfil, "r")) == NULL)
 	{
 		newSettingsFile();
+		return 1;
 	}
 	int oldversion;
 	fscanf(fp, "%d %d", &oldversion, &debugTF);
