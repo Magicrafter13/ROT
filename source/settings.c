@@ -9,43 +9,50 @@ int toggleMultiUser()
 
 int debugView(char userDir[30])
 {
-	consoleSelect(&bottomScreen);
-	printf("debugView opened\n");
-	consoleSelect(&topScreen);
-	consoleClear();
-	int thing = 2;
-	char thing2[53], dummy[30];
+	int thing = 0, dummy = 0;
+	char thing2[53], thing3[60];
 	FILE *settingsFile;
 	sprintf(thing2, "%s/settings.rsf", userDir);
-	settingsFile = fopen(thing2, "r+");
-	while(true)
-	{
-		fscanf(settingsFile, "%s", dummy);
-		if(strcmp(dummy, "debug") == 0)
-			break;
-	}
-	fscanf(settingsFile, "%d", &thing);
+	settingsFile = fopen(thing2, "r");
+	fscanf(settingsFile, "%d %d", &dummy, &thing);
+	consoleSelect(&bottomScreen);
 	if (thing)
+		printf("debugView opened\n");
+	fclose(settingsFile);
+	consoleSelect(&topScreen);
+	consoleClear();
+	fclose(settingsFile);
+	settingsFile = fopen(thing2, "r+");
+	if (thing == 1)
 	{
 		rewind(settingsFile);
-		fseek(settingsFile, 1, SEEK_SET);
-		fputs("0", settingsFile);
+		sprintf(thing3, "%d\n%d\n", settingsVersion, 0);
+		fputs(thing3, settingsFile);
 		printf("Debug View turned off.");
 	} else {
 		rewind(settingsFile);
-		fseek(settingsFile, 1, SEEK_SET);
-		fputs("1", settingsFile);
+		sprintf(thing3, "%d\n%d\n", settingsVersion, 1);
+		fputs(thing3, settingsFile);
 		printf("Debug View turned on.");
 	}
+	fclose(settingsFile);
 	for(int i = 0; i < 120; i++)
 		gspWaitForVBlank();
 	return 0;
 }
 
-int DLC()
+int DLC(char userDir[30])
 {
+	int thing = 0, dummy = 0;
+	char thing2[53];
+	FILE *settingsFile;
+	sprintf(thing2, "%s/settings.rsf", userDir);
+	settingsFile = fopen(thing2, "r");
+	fscanf(settingsFile, "%d %d", &dummy, &thing);
 	consoleSelect(&bottomScreen);
-	printf("DLC opened\n");
+	if (thing)
+		printf("DLC opened\n");
+	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
 	printf("Feature will be added in future release.\n");
@@ -55,10 +62,18 @@ int DLC()
 	return 0;
 }
 
-int deleteData()
+int deleteData(char userDir[30])
 {
+	int thing = 0, dummy = 0;
+	char thing2[53];
+	FILE *settingsFile;
+	sprintf(thing2, "%s/settings.rsf", userDir);
+	settingsFile = fopen(thing2, "r");
+	fscanf(settingsFile, "%d %d", &dummy, &thing);
 	consoleSelect(&bottomScreen);
-	printf("deleteData opened\n");
+	if (thing)
+		printf("deleteData opened\n");
+	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
 	printf("Feature will be added in future release.\n");
@@ -75,10 +90,18 @@ static SwkbdCallbackResult MyCallback(void* user, const char** ppMessage, const 
 
 int changePassword(char userDir[30])
 {
+	int thing = 0, dummy11 = 0;
+	char thing2[53];
+	FILE *settingsFile;
+	sprintf(thing2, "%s/settings.rsf", userDir);
+	settingsFile = fopen(thing2, "r");
+	fscanf(settingsFile, "%d %d", &dummy11, &thing);
+	consoleSelect(&bottomScreen);
+	if (thing)
+		printf("changePassword opened\n");
+	fclose(settingsFile);
 	static char mybuf[60];
 	static char mybuf2[60];
-	consoleSelect(&bottomScreen);
-	printf("changePassword opened\n");
 	consoleSelect(&topScreen);
 	consoleClear();
 	//passKeyb(0);
@@ -144,10 +167,18 @@ int changePassword(char userDir[30])
 	}
 }
 
-int changeUsername()
+int changeUsername(char userDir[30])
 {
+	int thing = 0, dummy = 0;
+	char thing2[53];
+	FILE *settingsFile;
+	sprintf(thing2, "%s/settings.rsf", userDir);
+	settingsFile = fopen(thing2, "r");
+	fscanf(settingsFile, "%d %d", &dummy, &thing);
 	consoleSelect(&bottomScreen);
-	printf("changeUsername opened\n");
+	if (thing)
+		printf("changeUsername opened\n");
+	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
 	printf("Feature will be added in future release.\n");

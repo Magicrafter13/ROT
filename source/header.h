@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+int settingsVersion;
 int mail();
 int toggleMultiUser();
 int debugView();

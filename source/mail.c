@@ -12,7 +12,10 @@ int mail(char userDir[30])
 	userFile = fopen(uF, "r");
 	settingsFile = fopen(sF, "r");
 	consoleSelect(&bottomScreen);
-	printf("mail opened\n");
+	int dummy = 0, debugTF = 0;
+	fscanf(settingsFile, "%d %d", &dummy, &debugTF);
+	if (debugTF)
+		printf("mail opened\n");
 	consoleSelect(&topScreen);
 	consoleClear();
 	printf("Feature not added yet, and probably not for a while :(\nSorry!");

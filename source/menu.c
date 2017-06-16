@@ -11,15 +11,23 @@ int games(char userDir[30])
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 	int ireturnvalue = 0;
+	int thing = 0, dummy11 = 0;
+	char thing2[53];
+	FILE *settingsFile;
+	sprintf(thing2, "%s/settings.rsf", userDir);
+	settingsFile = fopen(thing2, "r");
+	fscanf(settingsFile, "%d %d", &dummy11, &thing);
 	consoleSelect(&bottomScreen);
-	printf("games opened\n");
+	if (thing)
+		printf("games opened\n");
+	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
 	//printf("Feature will be added in future release.\n");
 	//printf("Will return to settings menu in 5 seconds.\n");
 	//for(int I = 0; I < 300; I++)
 		//gspWaitForVBlank();
-	FILE *userFile, *settingsFile;
+	FILE *userFile;
 	char sf[53], uf[53];
 	sprintf(uf, "%s/userdata.ruf", userDir);
 	sprintf(sf, "%s/settings.rsf", userDir);
@@ -343,8 +351,16 @@ int tools(char userDir[30])
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 	int ireturnvalue = 0;
+	int thing = 0, dummy = 0;
+	char thing2[53];
+	FILE *settingsFile;
+	sprintf(thing2, "%s/settings.rsf", userDir);
+	settingsFile = fopen(thing2, "r");
+	fscanf(settingsFile, "%d %d", &dummy, &thing);
 	consoleSelect(&bottomScreen);
-	printf("tools opened\n");
+	if (thing)
+		printf("tools opened\n");
+	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
 	char returnvalue[30];

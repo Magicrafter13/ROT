@@ -21,7 +21,7 @@ int mkdir(const char *pathname, mode_t mode);
 
 char versiontxt[10] = "Alpha 1.8";
 int versionnum = 0;
-int settingsVersion = 02;
+int settingsVersion = 4;
 
 touchPosition touch;
 bool logged = false, multiuser = false, killROT = false;
@@ -106,7 +106,7 @@ int settingsOption()
 	{
 		while (true)
 		{
-			result = changeUsername();
+			result = changeUsername(userdir);
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -123,7 +123,7 @@ int settingsOption()
 	{
 		while (true)
 		{
-			result = deleteData();
+			result = deleteData(userdir);
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -140,7 +140,7 @@ int settingsOption()
 	{
 		while(true)
 		{
-			result = DLC();
+			result = DLC(userdir);
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -178,7 +178,9 @@ int newSettingsFile()
 	sprintf(setfil, "%s/settings.rsf", userdir);
 	settingsFile = fopen(setfil, "w");
 	fprintf(settingsFile, "%d\n", settingsVersion);
-	fprintf(settingsFile, "debug\n%d\n", 1); //debugTrueOrFalse
+	fprintf(settingsFile, "%d\n", 1); //debugTrueOrFalse
+	for(int i = 0; i < 180; i++)
+		gspWaitForVBlank();
 	fclose(settingsFile);
 	return 0;
 }
@@ -208,7 +210,8 @@ int settings()
 	char dummy[30], username[30];
 	fscanf(userFile, "%s %s %s", dummy, dummy, username);
 	consoleSelect(&bottomScreen);
-	printf("%s Opened Settings", username);
+	if (debugTF)
+		printf("%s Opened Settings", username);
 	if (setsel == 0)
 	{
 		strcpy(setOption, "Change Password ");
