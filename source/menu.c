@@ -23,10 +23,6 @@ int games(char userDir[30])
 	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
-	//printf("Feature will be added in future release.\n");
-	//printf("Will return to settings menu in 5 seconds.\n");
-	//for(int I = 0; I < 300; I++)
-		//gspWaitForVBlank();
 	FILE *userFile;
 	char sf[53], uf[53];
 	sprintf(uf, "%s/userdata.ruf", userDir);

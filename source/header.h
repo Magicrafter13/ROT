@@ -17,6 +17,7 @@ int games();
 int tools();
 int selGame;
 int toolsel;
+const char * keyBoard(char hintTxt[30], int maxNumbers, bool multiLine);
 #define COLOR "\x1b["
 #define RED "31"
 #define B_BRED "41"

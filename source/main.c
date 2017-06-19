@@ -1,10 +1,5 @@
 #include "header.h"
 
-static SwkbdCallbackResult MyCallback(void* user, const char** ppMessage, const char* text, size_t textlen)
-{
-	return SWKBD_CALLBACK_OK;
-}
-
 bool touchInBox(touchPosition touch, int x, int y, int w, int h)
 {
 	int tx=touch.px;
@@ -470,19 +465,14 @@ int main(int argc, char **argv)
 			u32 kDown = hidKeysDown();
 			if (kDown & KEY_START)
 				break;
-			static SwkbdState swkbd;
-			SwkbdButton button = SWKBD_BUTTON_NONE;
+			//static SwkbdState swkbd;
+			//SwkbdButton button = SWKBD_BUTTON_NONE;
 			bool didit = false;
 			if (kDown & KEY_A)
 			{
 				didit = true;
 				usepass = true;
-				swkbdInit(&swkbd, SWKBD_TYPE_WESTERN, 1, -1);
-				swkbdSetValidation(&swkbd, SWKBD_NOTEMPTY_NOTBLANK, SWKBD_FILTER_DIGITS | SWKBD_FILTER_AT | SWKBD_FILTER_PERCENT | SWKBD_FILTER_BACKSLASH | SWKBD_FILTER_PROFANITY, 2);
-				swkbdSetFeatures(&swkbd, SWKBD_MULTILINE);
-				swkbdSetFilterCallback(&swkbd, MyCallback, NULL);
-				swkbdSetHintText(&swkbd, "password");
-				button = swkbdInputText(&swkbd, mybuf, sizeof(mybuf));
+				strcpy(mybuf, keyBoard("password", 0, false));
 			}
 			if (kDown & KEY_B)
 			{
@@ -492,18 +482,15 @@ int main(int argc, char **argv)
 
 			if (didit)
 			{
-				if (button != SWKBD_BUTTON_NONE)
+				if (usepass)
 				{
 					consoleSelect(&bottomScreen);
 					printf("Password set to: ");
 					printf(mybuf);
 					printf("\n");
 					consoleSelect(&topScreen);
-					break;
-				} else {
-					printf("swkbd event: %d\n", swkbdGetResult(&swkbd));
-					break;
 				}
+				break;
 			}
 
 			gfxFlushBuffers();
@@ -629,17 +616,7 @@ int main(int argc, char **argv)
 					}
 					if (kDown & KEY_A)
 					{
-						swkbdInit(&swkbd, SWKBD_TYPE_WESTERN, 1, -1);
-						swkbdSetValidation(&swkbd, SWKBD_NOTEMPTY_NOTBLANK, SWKBD_FILTER_DIGITS | SWKBD_FILTER_AT | SWKBD_FILTER_PERCENT | SWKBD_FILTER_BACKSLASH | SWKBD_FILTER_PROFANITY, 2);
-						swkbdSetFeatures(&swkbd, SWKBD_MULTILINE);
-						swkbdSetFilterCallback(&swkbd, MyCallback, NULL);
-						swkbdSetHintText(&swkbd, "password");
-						button = swkbdInputText(&swkbd, mybuf, sizeof(mybuf));
-						consoleSelect(&bottomScreen);
-						printf("%d\n", button);
-						consoleSelect(&topScreen);
-						/*printf("mybuf = %s \n", mybuf);
-						printf("t6 = %s \n", t6);*/
+						strcpy(mybuf, keyBoard("password", 0, false));
 						if (strcmp(mybuf, t6) == 0)
 						{
 							didit = true;

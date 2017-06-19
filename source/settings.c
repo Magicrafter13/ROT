@@ -62,25 +62,54 @@ int DLC(char userDir[30])
 	return 0;
 }
 
+int getPermission(){
+	return 7;
+}
+
 int deleteData(char userDir[30])
 {
-	int thing = 0, dummy = 0;
-	char thing2[53];
-	FILE *settingsFile;
+	int thing = 0, dummy = 0, returnvaluei = 0;
+	char thing2[53], thing4[53], dummys[21], name[21], pass[50];
+	FILE *settingsFile, *userFile, *fp;
 	sprintf(thing2, "%s/settings.rsf", userDir);
+	sprintf(thing4, "%s/userdata.ruf", userDir);
 	settingsFile = fopen(thing2, "r");
+	userFile = fopen(thing4, "r");
 	fscanf(settingsFile, "%d %d", &dummy, &thing);
+	fscanf(userFile, "%s %s %s %s %s %s", dummys, dummys, name, dummys, dummys, pass);
 	consoleSelect(&bottomScreen);
 	if (thing)
 		printf("deleteData opened\n");
 	fclose(settingsFile);
+	fclose(userFile);
 	consoleSelect(&topScreen);
 	consoleClear();
-	printf("Feature will be added in future release.\n");
-	printf("Will return to settings menu in 5 seconds.\n");
-	for(int I = 0; I < 300; I++)
-		gspWaitForVBlank();
-	return 0;
+	if ((fp = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r")) == NULL)
+	{
+		NULL;
+	} else {
+		printf("%s\n", name);
+		printf("Press A to delete all ROT data, press B to return");
+		while(true)
+		{
+			hidScanInput();
+			u32 kDown = hidKeysDown();
+			if (kDown & KEY_A)
+			{
+				char input[50];
+				for (int i = 0; i < 5; i++)
+					strcpy(input, keyBoard("Verify with Password", 0, false));
+				returnvaluei = 2;
+				break;
+			}
+			if (kDown & KEY_B)
+			{
+				returnvaluei = 0;
+				break;
+			}
+		}
+	}
+	return returnvaluei;
 }
 
 static SwkbdCallbackResult MyCallback(void* user, const char** ppMessage, const char* text, size_t textlen)
