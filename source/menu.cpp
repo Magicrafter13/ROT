@@ -1,11 +1,28 @@
 #include "header.h"
 
-PrintConsole topScreen, bottomScreen;
+//PrintConsole topScreen, bottomScreen;
 
 int gamesOption()
 {
 	return 0;
 }
+
+const char * isLocked(bool game)
+{
+	if (game)
+		return "Unlocked";
+	else
+		return " Locked ";
+}
+
+const char * isSelected(int game)
+{
+	if (selGame == game)
+		return COLOR WHITE CEND;
+	else
+		return COLOR BRIGHT CSEP WHITE CEND;
+}
+
 int games(char userDir[30])
 {
 	consoleInit(GFX_TOP, &topScreen);
@@ -111,20 +128,6 @@ int games(char userDir[30])
 	fclose(userFile);
 	int gameMax = 10;
 	int gameMin = 0;
-	const char * isLocked(bool game)
-	{
-		if (game)
-			return "Unlocked";
-		else
-			return " Locked ";
-	}
-	const char * isSelected(int game)
-	{
-		if (selGame == game)
-			return COLOR WHITE CEND;
-		else
-			return COLOR BRIGHT CSEP WHITE CEND;
-	}
 	printf("                   -Games List-\n");
 	printf("\n");
 	printf(RESET " %sBattleship   = %s " RESET "| %sMinesweeper = %s\n", isSelected(0), isLocked(Battleship), isSelected(1), isLocked(Minesweeper));

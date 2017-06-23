@@ -5,9 +5,9 @@ static SwkbdCallbackResult MyCallback(void* user, const char** ppMessage, const 
 	return SWKBD_CALLBACK_OK;
 }
 
-const char * keyBoard(char hintTxt[30], int maxNumbers, bool multiLine)
+const char * keyBoard(char * hintTxt, int maxNumbers, bool multiLine)
 {
-	static char string[21];
+	static char KBstring[21];
 	static SwkbdState swkbd;
 	SwkbdButton button = SWKBD_BUTTON_NONE;
 	swkbdInit(&swkbd, SWKBD_TYPE_WESTERN, 1, -1);
@@ -16,6 +16,8 @@ const char * keyBoard(char hintTxt[30], int maxNumbers, bool multiLine)
 		swkbdSetFeatures(&swkbd, SWKBD_MULTILINE);
 	swkbdSetFilterCallback(&swkbd, MyCallback, NULL);
 	swkbdSetHintText(&swkbd, hintTxt);
-	button = swkbdInputText(&swkbd, string, sizeof(string));
-	return string;
+	button = swkbdInputText(&swkbd, KBstring, sizeof(KBstring));
+	if((button) == false)
+		NULL;
+	return KBstring;
 }

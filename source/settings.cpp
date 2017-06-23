@@ -1,6 +1,6 @@
 #include "header.h"
 
-PrintConsole topScreen, bottomScreen;
+//PrintConsole topScreen, bottomScreen;
 
 int toggleMultiUser()
 {
@@ -96,9 +96,17 @@ int deleteData(char userDir[30])
 			u32 kDown = hidKeysDown();
 			if (kDown & KEY_A)
 			{
-				char input[50];
+				std::string tempss = "Verify with Password";
+				char * tempcs = new char[tempss.size() + 1];
+				std::copy(tempss.begin(), tempss.end(), tempcs);
+				tempcs[tempss.size()] = '\0';
 				for (int i = 0; i < 5; i++)
-					strcpy(input, keyBoard("Verify with Password", 0, false));
+				{
+					strcpy(tempcs, keyBoard(tempcs, 0, false));
+				}
+				delete[] tempcs;
+				remove("sdmc:/3ds/ROT_Data/*.*");
+				rmdir("sdmc:/3ds/ROT_Data/");
 				returnvaluei = 2;
 				break;
 			}

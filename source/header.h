@@ -1,23 +1,37 @@
+#ifndef headerfile
+#define headerfile
+
 #include <3ds.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string>
+using std::string;
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-int settingsVersion;
-int mail();
+#include <iostream>
+
+extern PrintConsole topScreen, bottomScreen;
+
+extern char versiontxt[10];
+extern int versionnum;
+extern int settingsVersion;
+int mail(char userDir[30]);
 int toggleMultiUser();
-int debugView();
-int DLC();
-int deleteData();
-int changePassword();
-int changeUsername();
-int games();
-int tools();
-int selGame;
-int toolsel;
-const char * keyBoard(char hintTxt[30], int maxNumbers, bool multiLine);
+int debugView(char userDir[30]);
+int DLC(char userDir[30]);
+int deleteData(char userDir[30]);
+int changePassword(char userDir[30]);
+int changeUsername(char userDir[30]);
+int games(char userDir[30]);
+int tools(char userDir[30]);
+extern int toolsel;
+extern int selGame;
+extern int debugTF;
+const char * keyBoard(char * hintTxt, int maxNumbers, bool multiLine);
+int mkdir(const char *pathname, mode_t mode);
+
 #define COLOR "\x1b["
 #define RED "31"
 #define B_BRED "41"
@@ -37,3 +51,5 @@ const char * keyBoard(char hintTxt[30], int maxNumbers, bool multiLine);
 #define RESET "\x1b[0m"
 #define CSEP ";"
 #define CEND "m"
+
+#endif

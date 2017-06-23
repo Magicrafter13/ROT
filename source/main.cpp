@@ -1,5 +1,13 @@
 #include "header.h"
 
+//init
+int toolsel = 0;
+int selGame = 0;
+int debugTF = 1;
+char versiontxt[10] = "Alpha 1.9";
+int versionnum = 0;
+int settingsVersion = 4;
+
 bool touchInBox(touchPosition touch, int x, int y, int w, int h)
 {
 	int tx=touch.px;
@@ -12,12 +20,6 @@ bool touchInBox(touchPosition touch, int x, int y, int w, int h)
 	}
 }
 
-int mkdir(const char *pathname, mode_t mode);
-
-char versiontxt[10] = "Alpha 1.8";
-int versionnum = 0;
-int settingsVersion = 4;
-
 touchPosition touch;
 bool logged = false, multiuser = false, killROT = false;
 char sendusername[21];
@@ -29,8 +31,6 @@ FILE *userfile;
 FILE *fp;
 char userdir[30];
 char tempvar[30], dummy[5], username[21], menOption[40];
-int debugTF = 1;
-int selGame = 0;
 //sdmc:/3ds/ROT_Data/01234567890123456789/userdata.ruf max username length 20
 
 PrintConsole topScreen, bottomScreen;
@@ -412,7 +412,7 @@ int main(int argc, char **argv)
 {
 	gfxInitDefault();
 	hidInit();
-	PrintConsole topScreen, bottomScreen;
+	//PrintConsole topScreen, bottomScreen;
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 
@@ -429,7 +429,8 @@ int main(int argc, char **argv)
 	{
 		fclose(fp);
 		bool usepass = false;
-		static char mybuf[60];
+		//char *mybuf = "n";
+		char mybuf[21];
 		consoleSelect(&bottomScreen);
 		printf("First Time Setup is Running\n");
 		consoleSelect(&topScreen);
@@ -472,7 +473,12 @@ int main(int argc, char **argv)
 			{
 				didit = true;
 				usepass = true;
-				strcpy(mybuf, keyBoard("password", 0, false));
+				std::string tempss = "password";
+				char * tempcs = new char[tempss.size() + 1];
+				std::copy(tempss.begin(), tempss.end(), tempcs);
+				tempcs[tempss.size()] = '\0';
+				strcpy(mybuf, keyBoard(tempcs, 0, false));
+				delete[] tempcs;
 			}
 			if (kDown & KEY_B)
 			{
@@ -486,7 +492,8 @@ int main(int argc, char **argv)
 				{
 					consoleSelect(&bottomScreen);
 					printf("Password set to: ");
-					printf(mybuf);
+					std::cout << mybuf;
+					//printf(mybuf);
 					printf("\n");
 					consoleSelect(&topScreen);
 				}
@@ -616,7 +623,12 @@ int main(int argc, char **argv)
 					}
 					if (kDown & KEY_A)
 					{
-						strcpy(mybuf, keyBoard("password", 0, false));
+						std::string tempss = "password";
+						char * tempcs = new char[tempss.size() + 1];
+						std::copy(tempss.begin(), tempss.end(), tempcs);
+						tempcs[tempss.size()] = '\0';
+						strcpy(mybuf, keyBoard(tempcs, 0, false));
+						delete[] tempcs;
 						if (strcmp(mybuf, t6) == 0)
 						{
 							didit = true;
@@ -815,7 +827,7 @@ int main(int argc, char **argv)
 						{
 							while(true)
 							{
-								result = menuOption(userdir);
+								result = menuOption();
 								if (result == 0)
 									break;
 								if (result == 2)

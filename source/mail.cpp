@@ -1,6 +1,6 @@
 #include "header.h"
 
-PrintConsole topScreen, bottomScreen;
+//PrintConsole topScreen, bottomScreen;
 
 int mail(char userDir[30])
 {
@@ -12,7 +12,7 @@ int mail(char userDir[30])
 	userFile = fopen(uF, "r");
 	settingsFile = fopen(sF, "r");
 	consoleSelect(&bottomScreen);
-	int dummy = 0, debugTF = 0;
+	int dummy = 0;
 	fscanf(settingsFile, "%d %d", &dummy, &debugTF);
 	if (debugTF)
 		printf("mail opened\n");
