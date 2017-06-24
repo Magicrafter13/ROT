@@ -17,7 +17,5 @@ const char * keyBoard(char * hintTxt, int maxNumbers, bool multiLine)
 	swkbdSetFilterCallback(&swkbd, MyCallback, NULL);
 	swkbdSetHintText(&swkbd, hintTxt);
 	button = swkbdInputText(&swkbd, KBstring, sizeof(KBstring));
-	if((button) == false)
-		NULL;
 	return KBstring;
 }

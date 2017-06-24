@@ -1,21 +1,19 @@
 #include "header.h"
 
-//PrintConsole topScreen, bottomScreen;
-
 int gamesOption()
 {
 	return 0;
 }
 
-const char * isLocked(bool game)
+const char * isLocked(bool item)
 {
-	if (game)
+	if (item)
 		return "Unlocked";
 	else
 		return " Locked ";
 }
 
-const char * isSelected(int game)
+const char * isSelectedGame(int game)
 {
 	if (selGame == game)
 		return COLOR WHITE CEND;
@@ -23,10 +21,16 @@ const char * isSelected(int game)
 		return COLOR BRIGHT CSEP WHITE CEND;
 }
 
+const char * isSelectedTool(int tool)
+{
+	if (selTool == tool)
+		return COLOR WHITE CEND;
+	else
+		return COLOR BRIGHT CSEP WHITE CEND;
+}
+
 int games(char userDir[30])
 {
-	consoleInit(GFX_TOP, &topScreen);
-	consoleInit(GFX_BOTTOM, &bottomScreen);
 	int ireturnvalue = 0;
 	int thing = 0, dummy11 = 0;
 	char thing2[53];
@@ -47,7 +51,7 @@ int games(char userDir[30])
 	userFile = fopen(uf, "r");
 	settingsFile = fopen(sf, "r");
 	char dummy[30], userName[30];
-	int back, text, XP, XPEarned, lvl, Battleship, Blackjack, Chess, ConnectFour, Sudoku, DodgeFall, Minesweeper, Mastermind, War, Nanogram, Timer, Mancala, Monopoly, Journal, Pawn, SlotMach, Snake, Alarm, msg;
+	int back, text, XP, XPEarned, lvl, Battleship, Blackjack, Chess, ConnectFour, Sudoku, DodgeFall, Minesweeper, Mastermind, War, Nanogram, Mancala, Monopoly, SlotMach, Snake;
 	char otherArray[6][30];
 	strcpy(otherArray[0], "name");
 	strcpy(otherArray[1], "pass");
@@ -91,13 +95,12 @@ int games(char userDir[30])
 	strcpy(gameArray[11], "Monopoly");
 	strcpy(gameArray[12], "SlotMach");
 	strcpy(gameArray[13], "Snake");
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; i < 14; i++)
 	{
 		while(true)
 		{
 			fscanf(userFile, "%s", dummy);
-			int part = i + 1;
-			if (strcmp(dummy, gameArray[part]) == 0)
+			if (strcmp(dummy, gameArray[i]) == 0)
 			{
 				if (i == 0)
 					fscanf(userFile, "%s %d", dummy, &Battleship);
@@ -121,21 +124,28 @@ int games(char userDir[30])
 					fscanf(userFile, "%s %d", dummy, &Nanogram);
 				if (i == 10)
 					fscanf(userFile, "%s %d", dummy, &Mancala);
+				if (i == 11)
+					fscanf(userFile, "%s %d", dummy, &Monopoly);
+				if (i == 12)
+					fscanf(userFile, "%s %d", dummy, &SlotMach);
+				if (i == 13)
+					fscanf(userFile, "%s %d", dummy, &Snake);
 				break;
 			}
 		}
 	}
 	fclose(userFile);
-	int gameMax = 10;
+	int gameMax = 13;
 	int gameMin = 0;
 	printf("                   -Games List-\n");
 	printf("\n");
-	printf(RESET " %sBattleship   = %s " RESET "| %sMinesweeper = %s\n", isSelected(0), isLocked(Battleship), isSelected(1), isLocked(Minesweeper));
-	printf(RESET " %sBlackjack    = %s " RESET "| %sMastermind  = %s\n", isSelected(2), isLocked(Blackjack), isSelected(3), isLocked(Mastermind));
-	printf(RESET " %sChess        = %s " RESET "| %sWar         = %s\n", isSelected(4), isLocked(Chess), isSelected(5), isLocked(War));
-	printf(RESET " %sConnect Four = %s " RESET "| %sNanogram    = %s\n", isSelected(6), isLocked(ConnectFour), isSelected(7), isLocked(Nanogram));
-	printf(RESET " %sSudoku       = %s " RESET "| %sMancala     = %s\n", isSelected(8), isLocked(Sudoku), isSelected(9), isLocked(Mancala));
-	printf(RESET " %sDodge Fall   = %s", isSelected(10), isLocked(DodgeFall));
+	printf(RESET " %sBattleship   = %s " RESET "| %sMinesweeper = %s\n", isSelectedGame(0), isLocked(Battleship), isSelectedGame(1), isLocked(Minesweeper));
+	printf(RESET " %sBlackjack    = %s " RESET "| %sMastermind  = %s\n", isSelectedGame(2), isLocked(Blackjack), isSelectedGame(3), isLocked(Mastermind));
+	printf(RESET " %sChess        = %s " RESET "| %sWar         = %s\n", isSelectedGame(4), isLocked(Chess), isSelectedGame(5), isLocked(War));
+	printf(RESET " %sConnect Four = %s " RESET "| %sNanogram    = %s\n", isSelectedGame(6), isLocked(ConnectFour), isSelectedGame(7), isLocked(Nanogram));
+	printf(RESET " %sSudoku       = %s " RESET "| %sMancala     = %s\n", isSelectedGame(8), isLocked(Sudoku), isSelectedGame(9), isLocked(Mancala));
+	printf(RESET " %sDodge Fall   = %s " RESET "| %sMonopoly    = %s\n", isSelectedGame(10), isLocked(DodgeFall), isSelectedGame(11), isLocked(Monopoly));
+	printf(RESET " %sSlotMach     = %s " RESET "| %sSnake       = %s\n", isSelectedGame(12), isLocked(SlotMach), isSelectedGame(13), isLocked(Snake));
 	char returnvalue[30];
 	while(true)
 	{
@@ -347,21 +357,86 @@ int toolsOption()
 
 int tools(char userDir[30])
 {
-	consoleInit(GFX_TOP, &topScreen);
-	consoleInit(GFX_BOTTOM, &bottomScreen);
 	int ireturnvalue = 0;
-	int thing = 0, dummy = 0;
+	int thing = 0, dummy11 = 0;
 	char thing2[53];
 	FILE *settingsFile;
 	sprintf(thing2, "%s/settings.rsf", userDir);
 	settingsFile = fopen(thing2, "r");
-	fscanf(settingsFile, "%d %d", &dummy, &thing);
+	fscanf(settingsFile, "%d %d", &dummy11, &thing);
 	consoleSelect(&bottomScreen);
 	if (thing)
 		printf("tools opened\n");
 	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
+	FILE *userFile;
+	char sf[53], uf[53];
+	sprintf(uf, "%s/userdata.ruf", userDir);
+	sprintf(sf, "%s/settings.rsf", userDir);
+	userFile = fopen(uf, "r");
+	settingsFile = fopen(sf, "r");
+	char dummy[30], userName[30];
+	int back, text, XP, XPEarned, lvl, Timer, Journal, Pawn, Alarm;
+	char otherArray[6][30];
+	strcpy(otherArray[0], "name");
+	strcpy(otherArray[1], "pass");
+	strcpy(otherArray[2], "color");
+	strcpy(otherArray[3], "XP");
+	strcpy(otherArray[4], "XPEarned");
+	strcpy(otherArray[5], "lvl");
+	for (int i = 0; i < 6; i++)
+	{
+		while(true)
+		{
+			fscanf(userFile, "%s", dummy);
+			if (strcmp(dummy, otherArray[i]) == 0)
+			{
+				if (i == 0)
+					fscanf(userFile, "%s %s", dummy, userName);
+				if (i == 2)
+					fscanf(userFile, "%s %d %d", dummy, &back, &text);
+				if (i == 3)
+					fscanf(userFile, "%s %d", dummy, &XP);
+				if (i == 4)
+					fscanf(userFile, "%s %d", dummy, &XPEarned);
+				if (i == 5)
+					fscanf(userFile, "%s %d", dummy, &lvl);
+				break;
+			}
+		}
+	}
+	char toolArray[4][30];
+	strcpy(toolArray[0], "Timer");
+	strcpy(toolArray[1], "Journal");
+	strcpy(toolArray[2], "Pawn");
+	strcpy(toolArray[3], "Alarm");
+	for (int i = 0; i < 4; i++)
+	{
+		while(true)
+		{
+			fscanf(userFile, "%s", dummy);
+			if (strcmp(dummy, toolArray[i]) == 0)
+			{
+				if (i == 0)
+					fscanf(userFile, "%s %d", dummy, &Timer);
+				if (i == 1)
+					fscanf(userFile, "%s %d", dummy, &Journal);
+				if (i == 2)
+					fscanf(userFile, "%s %d", dummy, &Pawn);
+				if (i == 3)
+					fscanf(userFile, "%s %d", dummy, &Alarm);
+				break;
+			}
+		}
+	}
+	fclose(userFile);
+	int toolMax = 13;
+	int toolMin = 0;
+	printf("                   -Games List-\n");
+	printf("\n");
+	printf("      " RESET " %sTimer = %s " RESET "| %sJournal = %s\n", isSelectedTool(0), isLocked(Timer), isSelectedTool(1), isLocked(Journal));
+	printf("      " RESET " %sPawn  = %s " RESET "| %sAlarm   = %s\n", isSelectedTool(2), isLocked(Pawn), isSelectedTool(3), isLocked(Alarm));
 	char returnvalue[30];
 	while(true)
 	{
@@ -370,6 +445,28 @@ int tools(char userDir[30])
 		u32 kDownOld = hidKeysDown();
 		u32 kHeldOld = hidKeysHeld();
 		u32 kUpOld = hidKeysHeld();
+		if (kDown & KEY_RIGHT)
+		{
+			
+			sprintf(returnvalue, "RIGHT");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					if (selTool < toolMax)
+					{
+						if (selTool % 2 == 0)
+							selTool += 1;
+					}
+					break;
+				}
+			}
+			break;
+		}
 		if (kDown & KEY_DOWN)
 		{
 			
@@ -382,10 +479,30 @@ int tools(char userDir[30])
 				u32 kUp = hidKeysUp();
 				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 				{
-					int TMAX = 4;
-					if (toolsel < TMAX)
+					if (selTool < toolMax - 1)
 					{
-						toolsel += 1;
+						selTool += 2;
+					}
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_LEFT)
+		{
+			sprintf(returnvalue, "LEFT");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					if (selTool > toolMin)
+					{
+						if (selTool % 2 == 1)
+							selTool -= 1;
 					}
 					break;
 				}
@@ -403,10 +520,9 @@ int tools(char userDir[30])
 				u32 kUp = hidKeysUp();
 				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 				{
-					int TMIN = 0;
-					if (toolsel > TMIN)
+					if (selTool > toolMin + 1)
 					{
-						toolsel -= 1;
+						selTool -= 2;
 					}
 					break;
 				}
@@ -480,7 +596,21 @@ int tools(char userDir[30])
 		gspWaitForVBlank();
 		ireturnvalue = 2;
 	}
+	if (strcmp(returnvalue, "LEFT") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
 	if (strcmp(returnvalue, "UP") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "RIGHT") == 0)
 	{
 		gfxFlushBuffers();
 		gfxSwapBuffers();

@@ -1,7 +1,7 @@
 #include "header.h"
 
 //init
-int toolsel = 0;
+int selTool = 0;
 int selGame = 0;
 int debugTF = 1;
 char versiontxt[10] = "Alpha 1.9";
@@ -40,7 +40,7 @@ int menuOption()
 	returnvalue = 0;
 	if (mensel == 0)
 	{
-		toolsel = 0;
+		selTool = 0;
 		while (true)
 		{
 			result = games(userdir);
@@ -58,7 +58,7 @@ int menuOption()
 	}
 	if (mensel == 1)
 	{
-		toolsel = 0;
+		selTool = 0;
 		while (true)
 		{
 			result = tools(userdir);
@@ -74,6 +74,7 @@ int menuOption()
 			}
 		}
 	}
+	printf(RESET "\n");
 	return returnvalue;
 }
 
@@ -184,8 +185,6 @@ int settings()
 {
 	int ireturnvalue;
 	consoleSelect(&topScreen);
-	consoleInit(GFX_TOP, &topScreen);
-	consoleInit(GFX_BOTTOM, &bottomScreen);
 	FILE *fp;
 	sprintf(setfil, "%s/settings.rsf", userdir);
 	if ((fp = fopen(setfil, "r")) == NULL)
@@ -410,9 +409,8 @@ int settings()
 
 int main(int argc, char **argv)
 {
-	gfxInitDefault();
 	hidInit();
-	//PrintConsole topScreen, bottomScreen;
+	gfxInitDefault();
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 
@@ -429,7 +427,6 @@ int main(int argc, char **argv)
 	{
 		fclose(fp);
 		bool usepass = false;
-		//char *mybuf = "n";
 		char mybuf[21];
 		consoleSelect(&bottomScreen);
 		printf("First Time Setup is Running\n");
@@ -447,7 +444,7 @@ int main(int argc, char **argv)
 			hidScanInput();
 			u32 kDown = hidKeysDown();
 
-			if (kDown & KEY_A) break; // break in order to return to hbmenu
+			if (kDown & KEY_A) break;
 
 			gfxFlushBuffers();
 			gfxSwapBuffers();
@@ -610,8 +607,6 @@ int main(int argc, char **argv)
 				{
 					hidScanInput();
 					u32 kDown = hidKeysDown();
-					static SwkbdState swkbd;
-					SwkbdButton button = SWKBD_BUTTON_NONE;
 					if (didit)
 					{
 						logged = true;
@@ -711,16 +706,14 @@ int main(int argc, char **argv)
 				u32 kDown = hidKeysDown();
 				u32 kDownOld = hidKeysDown();
 				u32 kHeldOld = hidKeysHeld();
-				u32 kUpOld = hidKeysUp();
+				u32 kUpOld = hidKeysHeld();
 				if (kDown & KEY_Y)
 				{
 					while(true)
 					{
 						hidScanInput();
 						u32 kDown = hidKeysDown();
-						u32 kHeld = hidKeysHeld();
-						u32 kUp = hidKeysUp();
-						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						if (kDown != kDownOld)
 						{
 							while(true)
 							{

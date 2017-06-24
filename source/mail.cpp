@@ -1,7 +1,5 @@
 #include "header.h"
 
-//PrintConsole topScreen, bottomScreen;
-
 int mail(char userDir[30])
 {
 	FILE *userFile;

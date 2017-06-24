@@ -1,7 +1,5 @@
 #include "header.h"
 
-//PrintConsole topScreen, bottomScreen;
-
 int toggleMultiUser()
 {
 	return 0;
@@ -86,7 +84,6 @@ int deleteData(char userDir[30])
 	consoleClear();
 	if ((fp = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r")) == NULL)
 	{
-		NULL;
 	} else {
 		printf("%s\n", name);
 		printf("Press A to delete all ROT data, press B to return");
@@ -105,9 +102,26 @@ int deleteData(char userDir[30])
 					strcpy(tempcs, keyBoard(tempcs, 0, false));
 				}
 				delete[] tempcs;
-				remove("sdmc:/3ds/ROT_Data/*.*");
-				rmdir("sdmc:/3ds/ROT_Data/");
-				returnvaluei = 2;
+				//remove("sdmc:/3ds/ROT_Data/*.*");
+				//rmdir("sdmc:/3ds/ROT_Data/");
+				std::string tempdsps = "sdmc:/3ds/ROT_Data/";
+				char * tempds = new char[tempdsps.size() + 1];
+				std::copy(tempdsps.begin(), tempdsps.end(), tempds);
+				tempds[tempdsps.size()] = '\0';
+				/*
+				if (PathDelete(tempds))
+					returnvaluei = 2;
+				else
+					returnvaluei = 0;
+				*/
+				FS_Archive sdArch;
+				if (FSUSER_DeleteDirectoryRecursively(sdArch, fsMakePath(PATH_ASCII, tempds)))
+					returnvaluei = 2;
+				else
+					returnvaluei = 0;
+				for (int i = 0; i < 180; i++)
+					gspWaitForVBlank();
+				delete[] tempds;
 				break;
 			}
 			if (kDown & KEY_B)
@@ -137,25 +151,27 @@ int changePassword(char userDir[30])
 	if (thing)
 		printf("changePassword opened\n");
 	fclose(settingsFile);
-	static char mybuf[60];
-	static char mybuf2[60];
 	consoleSelect(&topScreen);
 	consoleClear();
 	//passKeyb(0);
 	//passKeyb(1);
-	static SwkbdState swkbd;
-	swkbdInit(&swkbd, SWKBD_TYPE_WESTERN, 1, -1);
-	swkbdSetValidation(&swkbd, SWKBD_NOTEMPTY_NOTBLANK, SWKBD_FILTER_DIGITS | SWKBD_FILTER_AT | SWKBD_FILTER_PERCENT | SWKBD_FILTER_BACKSLASH | SWKBD_FILTER_PROFANITY, 2);
-	swkbdSetFeatures(&swkbd, SWKBD_MULTILINE);
-	swkbdSetFilterCallback(&swkbd, MyCallback, NULL);
-	swkbdSetHintText(&swkbd, "new password");
-	swkbdInputText(&swkbd, mybuf, sizeof(mybuf));
-	swkbdInit(&swkbd, SWKBD_TYPE_WESTERN, 1, -1);
-	swkbdSetValidation(&swkbd, SWKBD_NOTEMPTY_NOTBLANK, SWKBD_FILTER_DIGITS | SWKBD_FILTER_AT | SWKBD_FILTER_PERCENT | SWKBD_FILTER_BACKSLASH | SWKBD_FILTER_PROFANITY, 2);
-	swkbdSetFeatures(&swkbd, SWKBD_MULTILINE);
-	swkbdSetFilterCallback(&swkbd, MyCallback, NULL);
-	swkbdSetHintText(&swkbd, "confirm");
-	swkbdInputText(&swkbd, mybuf2, sizeof(mybuf2));
+	static char mybuf[21], mybuf2[21];
+	std::string tempss = "Enter new Password:";
+	std::string tempss2 = "Verify";
+	for (int i = 0; i < 2; i++)
+	{
+		char * tempcs = new char[tempss.size() + 1];
+		if (i)
+			std::copy(tempss2.begin(), tempss2.end(), tempcs);
+		else
+			std::copy(tempss.begin(), tempss.end(), tempcs);
+		tempcs[tempss.size()] = '\0';
+		if(i)
+			strcpy(mybuf2, keyBoard(tempcs, 0, false));
+		else
+			strcpy(mybuf, keyBoard(tempcs, 0, false));
+		delete[] tempcs;
+	}
 	FILE *fp;
 	char ustring[30];
 	char ustring2[30];
@@ -206,21 +222,63 @@ int changePassword(char userDir[30])
 
 int changeUsername(char userDir[30])
 {
-	int thing = 0, dummy = 0;
+	int thing = 0, dummy11 = 0;
 	char thing2[53];
 	FILE *settingsFile;
 	sprintf(thing2, "%s/settings.rsf", userDir);
 	settingsFile = fopen(thing2, "r");
-	fscanf(settingsFile, "%d %d", &dummy, &thing);
+	fscanf(settingsFile, "%d %d", &dummy11, &thing);
 	consoleSelect(&bottomScreen);
 	if (thing)
-		printf("changeUsername opened\n");
+		printf("changePassword opened\n");
 	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
-	printf("Feature will be added in future release.\n");
-	printf("Will return to settings menu in 5 seconds.\n");
-	for(int I = 0; I < 300; I++)
-		gspWaitForVBlank();
+	static char mybuf[21];
+	std::string tempss = "Username";
+	char * tempcs = new char[tempss.size() + 1];
+	std::copy(tempss.begin(), tempss.end(), tempcs);
+	tempcs[tempss.size()] = '\0';
+	strcpy(mybuf, keyBoard(tempcs, 0, false));
+	delete[] tempcs;
+	FILE *fp;
+	char ustring[30];
+	char ustring2[30];
+	sprintf(ustring, "%s/userdata.ruf", userDir);
+	sprintf(ustring2, "%s/temp.rtf", userDir);
+	char dummy[30];
+	fp = fopen(ustring, "r");
+	fseek(fp, 0, SEEK_SET);
+	char name[21], pass[21];
+	fscanf(fp, "%s %s %s %s %s %s", dummy, dummy, name, dummy, dummy, pass);
+	fclose(fp);
+	FILE *fileptr1, *fileptr2;
+	fileptr1 = fopen(ustring, "r");
+	fileptr2 = fopen(ustring2, "w");
+	fscanf(fileptr1, "%s %s %s", dummy, dummy, dummy);
+	for(int I = 0; I < 100; I++)
+	{
+		//ch = getc(fileptr1);
+		//putc(ch, fileptr2);
+		fscanf(fileptr1, "%s", dummy);
+		fprintf(fileptr2, "%s ", dummy);
+	}
+	fclose(fileptr1);
+	fclose(fileptr2);
+	remove(ustring);
+	fileptr1 = fopen(ustring, "w");
+	fileptr2 = fopen(ustring2, "r");
+	fprintf(fileptr1, "name = %s\n", mybuf);
+	fprintf(fileptr1, "pass = %s\n", pass);
+	for(int I = 0; I < 100; I++)
+	{
+		//ch = getc(fileptr2);
+		//putc(ch, fileptr1);
+		fscanf(fileptr2, "%s", dummy);
+		fprintf(fileptr1, "%s ", dummy);
+	}
+	fclose(fileptr1);
+	fclose(fileptr2);
+	remove(ustring2);
 	return 0;
 }
