@@ -14,7 +14,7 @@ using std::string;
 
 extern PrintConsole topScreen, bottomScreen;
 
-extern char versiontxt[10];
+extern char versiontxt[11];
 extern int versionnum;
 extern int settingsVersion;
 int mail(char userDir[30]);
@@ -24,8 +24,9 @@ int DLC(char userDir[30]);
 int deleteData(char userDir[30]);
 int changePassword(char userDir[30]);
 int changeUsername(char userDir[30]);
-int games(char userDir[30]);
-int tools(char userDir[30]);
+int games(char userDir[30], int upperrv);
+int tools(char userDir[30], int upperrv);
+int credits();
 //int PathDelete(const char* path);
 extern int selTool;
 extern int selGame;
@@ -35,7 +36,7 @@ int mkdir(const char *pathname, mode_t mode);
 
 #define COLOR "\x1b["
 #define RED "31"
-#define B_BRED "41"
+#define B_RED "41"
 #define GREEN "32"
 #define B_GREEN "42"
 #define YELLOW "33"

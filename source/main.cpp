@@ -4,7 +4,7 @@
 int selTool = 0;
 int selGame = 0;
 int debugTF = 1;
-char versiontxt[10] = "Alpha 1.9";
+char versiontxt[11] = "Alpha 1.10";
 int versionnum = 0;
 int settingsVersion = 4;
 
@@ -40,10 +40,10 @@ int menuOption()
 	returnvalue = 0;
 	if (mensel == 0)
 	{
-		selTool = 0;
+		selGame = 0;
 		while (true)
 		{
-			result = games(userdir);
+			result = games(userdir, result);
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -61,7 +61,24 @@ int menuOption()
 		selTool = 0;
 		while (true)
 		{
-			result = tools(userdir);
+			result = tools(userdir, result);
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 2;
+				break;
+			}
+		}
+	}
+	if (mensel == 3)
+	{
+		while (true)
+		{
+			result = credits();
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -181,11 +198,11 @@ int newSettingsFile()
 	return 0;
 }
 
-int settings()
+int settings(int upperrv)
 {
 	int ireturnvalue;
 	consoleSelect(&topScreen);
-	FILE *fp;
+	FILE *fp, *userFile;
 	sprintf(setfil, "%s/settings.rsf", userdir);
 	if ((fp = fopen(setfil, "r")) == NULL)
 	{
@@ -195,6 +212,7 @@ int settings()
 	int oldversion;
 	fscanf(fp, "%d %d", &oldversion, &debugTF);
 	fclose(fp);
+	userFile = fopen(usrfil, "r");
 	if (oldversion != settingsVersion)
 	{
 		newSettingsFile();
@@ -203,9 +221,11 @@ int settings()
 	char setOption[17], setOptionP1[17], setOptionN1[17], setOptionP2[17], setOptionN2[17];
 	char dummy[30], username[30];
 	fscanf(userFile, "%s %s %s", dummy, dummy, username);
+	fclose(userFile);
 	consoleSelect(&bottomScreen);
-	if (debugTF)
-		printf("%s Opened Settings", username);
+	if (upperrv != 1)
+		if (debugTF)
+			printf("%s Opened Settings\n", username);
 	if (setsel == 0)
 	{
 		strcpy(setOption, "Change Password ");
@@ -612,7 +632,7 @@ int main(int argc, char **argv)
 						logged = true;
 						printf("Log in Successful");
 						consoleSelect(&bottomScreen);
-						printf("User Logged in");
+						printf("%s Logged in\n", t3);
 						incorrect = false;
 						break;
 					}
@@ -728,8 +748,6 @@ int main(int argc, char **argv)
 									break;
 								}
 							}
-							consoleInit(GFX_TOP, &topScreen);
-							consoleInit(GFX_BOTTOM, &bottomScreen);
 							break;
 						}
 					}
@@ -847,7 +865,7 @@ int main(int argc, char **argv)
 						{
 							while(true)
 							{
-								result = settings();
+								result = settings(result);
 								if (result == 0)
 									break;
 								if (result == 2)

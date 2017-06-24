@@ -29,7 +29,7 @@ const char * isSelectedTool(int tool)
 		return COLOR BRIGHT CSEP WHITE CEND;
 }
 
-int games(char userDir[30])
+int games(char userDir[30], int upperrv)
 {
 	int ireturnvalue = 0;
 	int thing = 0, dummy11 = 0;
@@ -39,8 +39,9 @@ int games(char userDir[30])
 	settingsFile = fopen(thing2, "r");
 	fscanf(settingsFile, "%d %d", &dummy11, &thing);
 	consoleSelect(&bottomScreen);
-	if (thing)
-		printf("games opened\n");
+	if (upperrv != 1)
+		if (thing)
+			printf("games opened\n");
 	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
@@ -355,7 +356,7 @@ int toolsOption()
 	return 0;
 }
 
-int tools(char userDir[30])
+int tools(char userDir[30], int upperrv)
 {
 	int ireturnvalue = 0;
 	int thing = 0, dummy11 = 0;
@@ -365,8 +366,9 @@ int tools(char userDir[30])
 	settingsFile = fopen(thing2, "r");
 	fscanf(settingsFile, "%d %d", &dummy11, &thing);
 	consoleSelect(&bottomScreen);
-	if (thing)
-		printf("tools opened\n");
+	if (upperrv != 1)
+		if (thing)
+			printf("tools opened\n");
 	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
@@ -639,4 +641,31 @@ int tools(char userDir[30])
 		ireturnvalue = 0;
 	}
 	return ireturnvalue;
+}
+
+int credits()
+{
+	consoleSelect(&bottomScreen);
+	if (debugTF)
+		printf("credits opened\n");
+	consoleSelect(&topScreen);
+	consoleClear();
+	printf("\x1b[0;21HCredits:");
+	printf("\x1b[2;16H" COLOR RED CEND "-Lead Programmers-");
+	printf("\x1b[3;18H" RESET "Matthew Rease");
+	printf("\x1b[5;17H" COLOR YELLOW CEND "-Alpha Testing-");
+	printf("\x1b[6;18H" RESET "Jared Freeman");
+	printf("\x1b[8;17H" COLOR CYAN CEND "-Special Thanks-");
+	printf("\x1b[9;10H" COLOR BRIGHT CSEP RED CEND "Smealum" RESET " - " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " and " COLOR BLUE CEND "homebrew");
+	printf("\x1b[10;0H" RESET "Aurelio Mannara +");
+	printf("\x1b[11;16H- both-screen-text " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
+	printf("\x1b[12;16H- colored-text " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
+	printf("\x1b[13;16H- read-controls " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
+	printf("\x1b[14;16H- touch-screen " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
+	printf("\x1b[15;4Hfincs - software-keyboard " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
+	printf("\x1b[16;14HAnd the people over at " COLOR BRIGHT CSEP YELLOW CEND "sourceforge," RESET);
+	printf("\x1b[17;12Hhelping me learn " COLOR GREEN CEND "C" RESET " and " COLOR BRIGHT CSEP GREEN CEND "C++" RESET);
+	for (int i = 0; i < 420; i++)
+		gspWaitForVBlank();
+	return 0;
 }
