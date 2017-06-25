@@ -643,6 +643,326 @@ int tools(char userDir[30], int upperrv)
 	return ireturnvalue;
 }
 
+char storeArray[7][13];
+char storeMenu[5][13];
+
+const char * storeStrings(int frame5, int line, int direction)
+{
+	char * temp = new char[13];
+	char * returnstr = new char[12];
+	if (direction)
+	{ //shift down
+		
+	} else { //shift up
+		if (line % 2 == 0)
+		{
+			if (frame5 == 0)
+			{
+				std::copy(&storeMenu[line / 2][1], &storeMenu[line / 2][12], temp);
+				sprintf(returnstr, " %s", temp);
+			} else if (frame5 == 1)
+			{
+				std::copy(&storeMenu[line / 2][2], &storeMenu[line / 2][12], temp);
+				sprintf(returnstr, "  %s", temp);
+			} else if (frame5 == 2)
+			{
+				std::copy(&storeMenu[line / 2][3], &storeMenu[line / 2][12], temp);
+				sprintf(returnstr, "   %s", temp);
+			} else if (frame5 == 3)
+			{
+				std::copy(&storeMenu[line / 2][4], &storeMenu[line / 2][12], temp);
+				sprintf(returnstr, "    %s", temp);
+			} else if (frame5 == 4)
+			{
+				std::copy(&storeMenu[line / 2][5], &storeMenu[line / 2][12], temp);
+				sprintf(returnstr, "     %s", temp);
+			} else if (frame5 == 5)
+			{
+				std::copy(&storeMenu[line / 2][6], &storeMenu[line / 2][12], temp);
+				sprintf(returnstr, "      %s", temp);
+			} else if (frame5 == 6)
+			{
+				std::copy(&storeMenu[line / 2][7], &storeMenu[line / 2][12], temp);
+				sprintf(returnstr, "       %s", temp);
+			} else if (frame5 == 7)
+			{
+				std::copy(&storeMenu[line / 2][8], &storeMenu[line / 2][12], temp);
+				sprintf(returnstr, "        %s", temp);
+			} else if (frame5 == 8)
+			{
+				std::copy(&storeMenu[line / 2][9], &storeMenu[line / 2][12], temp);
+				sprintf(returnstr, "         %s", temp);
+			} else if (frame5 == 9)
+			{
+				std::copy(&storeMenu[line / 2][10], &storeMenu[line / 2][12], temp);
+				sprintf(returnstr, "          %s", temp);
+			} else if (frame5 == 10)
+			{
+				std::copy(&storeMenu[line / 2][11], &storeMenu[line / 2][12], temp);
+				sprintf(returnstr, "           %s", temp);
+			}
+			return returnstr;
+		} else if (line % 2 == 1)
+		{
+			if (frame5 == 0)
+			{
+				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][1], temp);
+				sprintf(returnstr, "%s           ", temp);
+			} else if (frame5 == 1)
+			{
+				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][2], temp);
+				sprintf(returnstr, "%s          ", temp);
+			} else if (frame5 == 2)
+			{
+				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][3], temp);
+				sprintf(returnstr, "%s         ", temp);
+			} else if (frame5 == 3)
+			{
+				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][4], temp);
+				sprintf(returnstr, "%s        ", temp);
+			} else if (frame5 == 4)
+			{
+				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][5], temp);
+				sprintf(returnstr, "%s       ", temp);
+			} else if (frame5 == 5)
+			{
+				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][6], temp);
+				sprintf(returnstr, "%s      ", temp);
+			} else if (frame5 == 6)
+			{
+				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][7], temp);
+				sprintf(returnstr, "%s     ", temp);
+			} else if (frame5 == 7)
+			{
+				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][8], temp);
+				sprintf(returnstr, "%s    ", temp);
+			} else if (frame5 == 8)
+			{
+				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][9], temp);
+				sprintf(returnstr, "%s   ", temp);
+			} else if (frame5 == 9)
+			{
+				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][10], temp);
+				sprintf(returnstr, "%s  ", temp);
+			} else if (frame5 == 10)
+			{
+				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][11], temp);
+				sprintf(returnstr, "%s ", temp);
+			}
+			return returnstr;
+		}
+	}
+	return "error";
+}
+
+int storeDisplay(int method)
+{
+	strcpy(storeMenu[0], storeArray[selStore + 0]);
+	strcpy(storeMenu[1], storeArray[selStore + 1]);
+	strcpy(storeMenu[2], storeArray[selStore + 2]);
+	strcpy(storeMenu[3], storeArray[selStore + 3]);
+	strcpy(storeMenu[4], storeArray[selStore + 4]);
+	if (method == 0)
+	{
+		printf(RESET "\x1b[0;20H-XP Store-");
+		printf(RESET "\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[0]);
+		printf(RESET "\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[1]);
+		printf(RESET "\x1b[8;19H" COLOR WHITE CEND "%s", storeMenu[2]);
+		printf(RESET "\x1b[10;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[3]);
+		printf(RESET "\x1b[12;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[4]);
+	} else if (method == 1)
+	{
+		for (int i = 0; i < 22; i++)
+		{
+			for (int n = 0; n < 5; n++)
+				gspWaitForVBlank();
+			printf("\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 0, 0));
+			printf("\x1b[5;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 1, 0));
+			printf("\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 2, 0));
+			printf("\x1b[7;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 3, 0));
+			printf("\x1b[8;19H" COLOR WHITE CEND "%s", storeStrings(i, 4, 0));
+			printf("\x1b[9;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 5, 0));
+			printf("\x1b[10;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 6, 0));
+			printf("\x1b[11;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 7, 0));
+			printf("\x1b[12;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 8, 0));
+		}
+	}
+	return 0;
+}
+
+int store(char userDir[30], int upperrv)
+{
+	int ireturnvalue = 0;
+	consoleSelect(&bottomScreen);
+	if (upperrv != 1)
+		if (debugTF)
+			printf("store opened\n");
+	consoleSelect(&topScreen);
+	consoleClear();
+	strcpy(storeArray[0], "            ");
+	strcpy(storeArray[1], "            ");
+	strcpy(storeArray[2], " Buy a Game ");
+	strcpy(storeArray[3], " Buy a Tool ");
+	strcpy(storeArray[4], "Reedem Code ");
+	strcpy(storeArray[5], "            ");
+	strcpy(storeArray[6], "            ");
+	int storeMax = 2;
+	int storeMin = 0;
+	storeDisplay(storeDisp != 3); //0 neutral 1 Down[MovesUp] 2 Up[MovesDown]
+	//supposed to be storeDisplay(storeDisp); but it crashes when trying to animate (1 or 2).
+	//I don't currently know how to fix this, so if anyone can help, please go to my GitHub page, because this
+	//issue should be listed there.
+	storeDisp = 0;
+	printf("\x1b[0;20H-XP Store-");
+	char returnvalue[30];
+	while(true)
+	{
+		hidScanInput();
+		u32 kDown = hidKeysDown();
+		u32 kDownOld = hidKeysDown();
+		u32 kHeldOld = hidKeysHeld();
+		u32 kUpOld = hidKeysHeld();
+		if (kDown & KEY_DOWN)
+		{
+			
+			sprintf(returnvalue, "DOWN");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					if (selStore < storeMax)
+					{
+						selStore++;
+						storeDisp = 1;
+					}
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_UP)
+		{
+			sprintf(returnvalue, "UP");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					if (selStore > storeMin)
+					{
+						selStore--;
+						storeDisp = 2;
+					}
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_START)
+		{
+			sprintf(returnvalue, "START");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_A)
+		{
+			sprintf(returnvalue, "A");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					while(true)
+					{
+						int result = toolsOption();
+						if (result == 0)
+							break;
+						if (result == 1)
+						{
+							sprintf(returnvalue, "START");
+							break;
+						}
+					}
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_B)
+		{
+			sprintf(returnvalue, "B");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					break;
+				}
+			}
+			break;
+		}
+	}
+	if (strcmp(returnvalue, "START") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 2;
+	}
+	if (strcmp(returnvalue, "UP") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "DOWN") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "A") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "B") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 0;
+	}
+	return ireturnvalue;
+}
+
 int credits()
 {
 	consoleSelect(&bottomScreen);
@@ -662,9 +982,11 @@ int credits()
 	printf("\x1b[12;16H- colored-text " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
 	printf("\x1b[13;16H- read-controls " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
 	printf("\x1b[14;16H- touch-screen " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
-	printf("\x1b[15;4Hfincs - software-keyboard " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
-	printf("\x1b[16;14HAnd the people over at " COLOR BRIGHT CSEP YELLOW CEND "sourceforge," RESET);
-	printf("\x1b[17;12Hhelping me learn " COLOR GREEN CEND "C" RESET " and " COLOR BRIGHT CSEP GREEN CEND "C++" RESET);
+	printf("\x1b[15;16H- multiple-windows-text " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET);
+	printf("\x1b[16;43Hexample");
+	printf("\x1b[17;4Hfincs - software-keyboard " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
+	printf("\x1b[18;14HAnd the people over at " COLOR BRIGHT CSEP YELLOW CEND "sourceforge," RESET);
+	printf("\x1b[19;12Hhelping me learn " COLOR GREEN CEND "C" RESET " and " COLOR BRIGHT CSEP GREEN CEND "C++" RESET);
 	for (int i = 0; i < 420; i++)
 		gspWaitForVBlank();
 	return 0;

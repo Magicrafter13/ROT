@@ -12,9 +12,9 @@ using std::string;
 #include <unistd.h>
 #include <iostream>
 
-extern PrintConsole topScreen, bottomScreen;
+extern PrintConsole topScreen, bottomScreen, versionWin;
 
-extern char versiontxt[11];
+extern char versiontxt[16];
 extern int versionnum;
 extern int settingsVersion;
 int mail(char userDir[30]);
@@ -26,11 +26,14 @@ int changePassword(char userDir[30]);
 int changeUsername(char userDir[30]);
 int games(char userDir[30], int upperrv);
 int tools(char userDir[30], int upperrv);
+int store(char userDir[30], int upperrv);
 int credits();
 //int PathDelete(const char* path);
 extern int selTool;
 extern int selGame;
+extern int selStore;
 extern int debugTF;
+extern int storeDisp;
 const char * keyBoard(char * hintTxt, int maxNumbers, bool multiLine);
 int mkdir(const char *pathname, mode_t mode);
 

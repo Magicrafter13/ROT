@@ -3,8 +3,10 @@
 //init
 int selTool = 0;
 int selGame = 0;
+int selStore = 0;
 int debugTF = 1;
-char versiontxt[11] = "Alpha 1.10";
+int storeDisp = 0;
+char versiontxt[16] = "Alpha  1.11.2 ";
 int versionnum = 0;
 int settingsVersion = 4;
 
@@ -33,7 +35,7 @@ char userdir[30];
 char tempvar[30], dummy[5], username[21], menOption[40];
 //sdmc:/3ds/ROT_Data/01234567890123456789/userdata.ruf max username length 20
 
-PrintConsole topScreen, bottomScreen;
+PrintConsole topScreen, bottomScreen, versionWin;
 
 int menuOption()
 {
@@ -62,6 +64,23 @@ int menuOption()
 		while (true)
 		{
 			result = tools(userdir, result);
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 2;
+				break;
+			}
+		}
+	}
+	if (mensel == 2)
+	{
+		while(true)
+		{
+			result = store(userdir, result);
 			if (result == 0)
 			{
 				returnvalue = 0;
@@ -433,12 +452,18 @@ int main(int argc, char **argv)
 	gfxInitDefault();
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
+	consoleInit(GFX_BOTTOM, &versionWin);
+	
+	consoleSetWindow(&versionWin, 13, 29, 27, 1);
 
 	consoleSelect(&topScreen);
 	printf("ROT\n");
 
 	consoleSelect(&bottomScreen);
 	printf("Loading...\n");
+	
+	consoleSelect(&versionWin);
+	printf("ROT Version: " COLOR RED CEND "%s", versiontxt);
 
 	consoleSelect(&topScreen);
 	printf("\x1b[29;15Hby Matthew Rease\n");
