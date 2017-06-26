@@ -6,7 +6,8 @@ int selGame = 0;
 int selStore = 0;
 int debugTF = 1;
 int storeDisp = 0;
-char versiontxt[16] = "Alpha  1.11.2 ";
+char versiontxtt[6] = "Alpha";
+char versiontxtn[9] = " 1.11.3 ";
 int versionnum = 0;
 int settingsVersion = 4;
 
@@ -305,48 +306,48 @@ int settings(int upperrv)
 		u32 kDownOld = hidKeysDown();
 		u32 kHeldOld = hidKeysHeld();
 		u32 kUpOld = hidKeysHeld();
-		if (kDown & KEY_DOWN)
+		SMAX = 4;
+		if (setsel < SMAX)
 		{
-			
-			sprintf(returnvalue, "DOWN");
-			while(true)
+			if (kDown & KEY_DOWN)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				
+				sprintf(returnvalue, "DOWN");
+				while(true)
 				{
-					SMAX = 4;
-					if (setsel < SMAX)
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						setsel += 1;
+						break;
 					}
-					break;
 				}
+				break;
 			}
-			break;
 		}
-		if (kDown & KEY_UP)
+		SMIN = 0;
+		if (setsel > SMIN)
 		{
-			sprintf(returnvalue, "UP");
-			while(true)
+			if (kDown & KEY_UP)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				sprintf(returnvalue, "UP");
+				while(true)
 				{
-					SMIN = 0;
-					if (setsel > SMIN)
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						setsel -= 1;
+						break;
 					}
-					break;
 				}
+				break;
 			}
-			break;
 		}
 		if (kDown & KEY_START)
 		{
@@ -463,7 +464,7 @@ int main(int argc, char **argv)
 	printf("Loading...\n");
 	
 	consoleSelect(&versionWin);
-	printf("ROT Version: " COLOR RED CEND "%s", versiontxt);
+	printf("ROT Version: " COLOR RED CEND "%s" RESET " " COLOR YELLOW CEND "%s", versiontxtt, versiontxtn);
 
 	consoleSelect(&topScreen);
 	printf("\x1b[29;15Hby Matthew Rease\n");
@@ -498,7 +499,8 @@ int main(int argc, char **argv)
 		}
 		consoleClear();
 		printf("You are using ROT version: ");
-		printf(versiontxt);
+		printf(versiontxtt);
+		printf(versiontxtn);
 		printf("\n");
 		printf("Would you like a password?\n");
 		printf("A - Yes | B - No\n");
@@ -745,6 +747,7 @@ int main(int argc, char **argv)
 			printf(" ###                                          ### ");
 			printf("###                                            ###");
 			printf("%s Logged in:", username);
+			//hidWaitForEvent(HIDEVENT_PAD0, false);
 			while(true)
 			{
 				hidScanInput();
@@ -794,46 +797,46 @@ int main(int argc, char **argv)
 					logged = false;
 					break;
 				}
-				if (kDown & KEY_RIGHT)
+				MMAX = 3;
+				if (mensel < MMAX)
 				{
-					
-					while(true)
+					if (kDown & KEY_RIGHT)
 					{
-						hidScanInput();
-						u32 kDown = hidKeysDown();
-						u32 kHeld = hidKeysHeld();
-						u32 kUp = hidKeysUp();
-						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						
+						while(true)
 						{
-							MMAX = 3;
-							if (mensel < MMAX)
+							hidScanInput();
+							u32 kDown = hidKeysDown();
+							u32 kHeld = hidKeysHeld();
+							u32 kUp = hidKeysUp();
+							if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 							{
 								mensel += 1;
+								break;
 							}
-							break;
 						}
+						break;
 					}
-					break;
 				}
-				if (kDown & KEY_LEFT)
+				MMIN = 0;
+				if (mensel > MMIN)
 				{
-					while(true)
+					if (kDown & KEY_LEFT)
 					{
-						hidScanInput();
-						u32 kDown = hidKeysDown();
-						u32 kHeld = hidKeysHeld();
-						u32 kUp = hidKeysUp();
-						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						while(true)
 						{
-							MMIN = 0;
-							if (mensel > MMIN)
+							hidScanInput();
+							u32 kDown = hidKeysDown();
+							u32 kHeld = hidKeysHeld();
+							u32 kUp = hidKeysUp();
+							if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 							{
 								mensel -= 1;
+								break;
 							}
-							break;
 						}
+						break;
 					}
-					break;
 				}
 				if (kDown & KEY_START)
 				{

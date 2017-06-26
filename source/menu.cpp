@@ -963,6 +963,16 @@ int store(char userDir[30], int upperrv)
 	return ireturnvalue;
 }
 
+/*bool inputEval(int step)
+{
+	hidScanInput();
+	u32 kDown = hidKeysDown();
+	bool bStep[11] = {(kDown & KEY_UP), (kDown & KEY_UP), (kDown & KEY_DOWN), (kDown & KEY_DOWN), (kDown & KEY_LEFT), (kDown & KEY_RIGHT), (kDown & KEY_LEFT), (kDown & KEY_RIGHT), (kDown & KEY_B), (kDown & KEY_A), (kDown & KEY_START)};
+	if(bStep[step])
+		return true;
+	return false;
+}*/
+
 int credits()
 {
 	consoleSelect(&bottomScreen);
@@ -987,7 +997,29 @@ int credits()
 	printf("\x1b[17;4Hfincs - software-keyboard " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
 	printf("\x1b[18;14HAnd the people over at " COLOR BRIGHT CSEP YELLOW CEND "sourceforge," RESET);
 	printf("\x1b[19;12Hhelping me learn " COLOR GREEN CEND "C" RESET " and " COLOR BRIGHT CSEP GREEN CEND "C++" RESET);
+	//int step = 0;
+	//int buttonDown = false;
 	for (int i = 0; i < 420; i++)
+	{
+		/*hidScanInput();
+		u32 kHeld = hidKeysHeld();
+		bool bStep[11] = {(kHeld & KEY_UP), (kHeld & KEY_UP), (kHeld & KEY_DOWN), (kHeld & KEY_DOWN), (kHeld & KEY_LEFT), (kHeld & KEY_RIGHT), (kHeld & KEY_LEFT), (kHeld & KEY_RIGHT), (kHeld & KEY_B), (kHeld & KEY_A), (kHeld & KEY_START)};
+		if(buttonDown)
+		{
+			printf("%d", step);
+			if(!bStep[step])
+			{
+				buttonDown = false;
+				step++;
+			}
+		}else{
+			printf("%d", step);
+			if(inputEval(step))
+			{
+				buttonDown = true;
+			}
+		}*/
 		gspWaitForVBlank();
+	}
 	return 0;
 }

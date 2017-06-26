@@ -14,7 +14,8 @@ using std::string;
 
 extern PrintConsole topScreen, bottomScreen, versionWin;
 
-extern char versiontxt[16];
+extern char versiontxtt[6];
+extern char versiontxtn[9];
 extern int versionnum;
 extern int settingsVersion;
 int mail(char userDir[30]);
