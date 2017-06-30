@@ -138,6 +138,21 @@ int games(char userDir[30], int upperrv)
 	fclose(userFile);
 	int gameMax = 13;
 	int gameMin = 0;
+	char listArray[14][12];
+	sprintf(listArray[0], "%s", isLocked(Battleship));
+	sprintf(listArray[1], "%s", isLocked(Minesweeper));
+	sprintf(listArray[2], "%s", isLocked(Blackjack));
+	sprintf(listArray[3], "%s", isLocked(Mastermind));
+	sprintf(listArray[4], "%s", isLocked(Chess));
+	sprintf(listArray[5], "%s", isLocked(War));
+	sprintf(listArray[6], "%s", isLocked(ConnectFour));
+	sprintf(listArray[7], "%s", isLocked(Nanogram));
+	sprintf(listArray[8], "%s", isLocked(Sudoku));
+	sprintf(listArray[9], "%s", isLocked(Mancala));
+	sprintf(listArray[10], "%s", isLocked(DodgeFall));
+	sprintf(listArray[11], "%s", isLocked(Monopoly));
+	sprintf(listArray[12], "%s", isLocked(SlotMach));
+	sprintf(listArray[13], "%s", isLocked(Snake));
 	printf("                   -Games List-\n");
 	printf("\n");
 	printf(RESET " %sBattleship   = %s " RESET "| %sMinesweeper = %s\n", isSelectedGame(0), isLocked(Battleship), isSelectedGame(1), isLocked(Minesweeper));
@@ -259,32 +274,35 @@ int games(char userDir[30], int upperrv)
 			}
 			break;
 		}
-		if (kDown & KEY_A)
+		if (strcmp(listArray[selTool], "Unlocked") == 0)
 		{
-			sprintf(returnvalue, "A");
-			while(true)
+			if (kDown & KEY_A)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				sprintf(returnvalue, "A");
+				while(true)
 				{
-					while(true)
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
-						int result = gamesOption();
-						if (result == 0)
-							break;
-						if (result == 1)
+						while(true)
 						{
-							sprintf(returnvalue, "START");
-							break;
+							int result = gamesOption();
+							if (result == 0)
+								break;
+							if (result == 1)
+							{
+								sprintf(returnvalue, "START");
+								break;
+							}
 						}
+						break;
 					}
-					break;
 				}
+				break;
 			}
-			break;
 		}
 		if (kDown & KEY_B)
 		{
@@ -442,11 +460,17 @@ int tools(char userDir[30], int upperrv)
 	fclose(userFile);
 	int toolMax = 4;
 	int toolMin = 0;
+	char listArray[5][12];
+	sprintf(listArray[0], "%s", isLocked(Timer));
+	sprintf(listArray[1], "%s", isLocked(Journal));
+	sprintf(listArray[2], "%s", isLocked(Pawn));
+	sprintf(listArray[3], "%s", isLocked(Alarm));
+	sprintf(listArray[4], "%s", isLocked(Media));
 	printf("                   -Tools List-\n");
 	printf("\n");
 	printf("      " RESET " %sTimer = %s " RESET "| %sJournal = %s\n", isSelectedTool(0), isLocked(Timer), isSelectedTool(1), isLocked(Journal));
 	printf("      " RESET " %sPawn  = %s " RESET "| %sAlarm   = %s\n", isSelectedTool(2), isLocked(Pawn), isSelectedTool(3), isLocked(Alarm));
-	printf("      " RESET " %sMedia = %s ", isSelectedTool(4), isLocked(Media));
+	printf("      " RESET " %sMedia = %s \n", isSelectedTool(4), isLocked(Media));
 	char returnvalue[30];
 	while(true)
 	{
@@ -559,32 +583,35 @@ int tools(char userDir[30], int upperrv)
 			}
 			break;
 		}
-		if (kDown & KEY_A)
+		if(strcmp(listArray[selTool], "Unlocked") == 0)
 		{
-			sprintf(returnvalue, "A");
-			while(true)
+			if (kDown & KEY_A)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				sprintf(returnvalue, "A");
+				while(true)
 				{
-					while(true)
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
-						int result = toolsOption();
-						if (result == 0)
-							break;
-						if (result == 1)
+						while(true)
 						{
-							sprintf(returnvalue, "START");
-							break;
+							int result = toolsOption();
+							if (result == 0)
+								break;
+							if (result == 1)
+							{
+								sprintf(returnvalue, "START");
+								break;
+							}
 						}
+						break;
 					}
-					break;
 				}
+				break;
 			}
-			break;
 		}
 		if (kDown & KEY_B)
 		{
