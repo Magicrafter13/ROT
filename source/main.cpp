@@ -7,9 +7,10 @@ int selStore = 0;
 int debugTF = 1;
 int storeDisp = 0;
 char versiontxtt[6] = "Alpha";
-char versiontxtn[9] = " 1.11.3 ";
+char versiontxtn[9] = " 1.16.6 ";
 int versionnum = 0;
-int settingsVersion = 4;
+int vernumqik = 2;
+int settingsVersion = 5;
 
 bool touchInBox(touchPosition touch, int x, int y, int w, int h)
 {
@@ -206,15 +207,27 @@ int settingsOption()
 	return returnvalue;
 }
 
-int newSettingsFile()
+int newSettingsFile(int hasEOF)
 {
-	sprintf(setfil, "%s/settings.rsf", userdir);
-	settingsFile = fopen(setfil, "w");
-	fprintf(settingsFile, "%d\n", settingsVersion);
-	fprintf(settingsFile, "%d\n", 1); //debugTrueOrFalse
-	for(int i = 0; i < 180; i++)
-		gspWaitForVBlank();
-	fclose(settingsFile);
+	if (hasEOF)
+	{
+		char dummyc[10];
+		sprintf(setfil, "%s/settings.rsf", userdir);
+		settingsFile = fopen(setfil, "r");
+		fscanf(settingsFile, "%s %s %s %s", dummyc, dummyc, dummyc, dummyc);
+		if (strcmp(dummyc, "-EOF") == 0)
+			updateSF(userdir, false);
+		else
+			updateSF(userdir, true);
+		fclose(settingsFile);
+	} else {
+		sprintf(setfil, "%s/settings.rsf", userdir);
+		settingsFile = fopen(setfil, "w");
+		fprintf(settingsFile, "%d\n", settingsVersion);
+		fprintf(settingsFile, "%d\n", 1); //debugTrueOrFalse
+		fprintf(settingsFile, "1\n-EOF-");
+		fclose(settingsFile);
+	}
 	return 0;
 }
 
@@ -226,16 +239,16 @@ int settings(int upperrv)
 	sprintf(setfil, "%s/settings.rsf", userdir);
 	if ((fp = fopen(setfil, "r")) == NULL)
 	{
-		newSettingsFile();
+		newSettingsFile(0);
 		return 1;
 	}
-	int oldversion;
-	fscanf(fp, "%d %d", &oldversion, &debugTF);
+	int oldversion, hasEOF;
+	fscanf(fp, "%d %d %d", &oldversion, &debugTF, &hasEOF);
 	fclose(fp);
 	userFile = fopen(usrfil, "r");
 	if (oldversion != settingsVersion)
 	{
-		newSettingsFile();
+		newSettingsFile(hasEOF);
 		return 1;
 	}
 	char setOption[17], setOptionP1[17], setOptionN1[17], setOptionP2[17], setOptionN2[17];
@@ -560,6 +573,7 @@ int main(int argc, char **argv)
 		}else{
 			fprintf(fp, "%s %s %s \n", "pass", "=", "none");
 		}
+		fprintf(fp, "version = %d\n", vernumqik);
 		fprintf(fp, "color = 40 37 \n");
 		fprintf(fp, "XP = %d \n", 100);
 		fprintf(fp, "XPEarned = %d \n", 100);
@@ -584,6 +598,8 @@ int main(int argc, char **argv)
 		fprintf(fp, "Snake = %d \n", 0);
 		fprintf(fp, "Alarm = %d \n", 0);
 		fprintf(fp, "msg = %d \n", 0);
+		fprintf(fp, "Media = %d\n", 1);
+		fprintf(fp, "-EOF-");
 		fclose(fp);
 		fp = fopen("sdmc:/3ds/ROT_Data/isset.rvf", "w");
 		fprintf(fp, "c");
@@ -696,6 +712,22 @@ int main(int argc, char **argv)
 			sprintf(tempvar, "%s/userdata.ruf", userdir);
 			userfile = fopen(tempvar, "r");
 			fscanf(userfile, "%s %s %s", dummy, dummy, username);
+			int initFindUpdt = 0;
+			int idummy;
+			for(int i = 0; i < 100; i++)
+			{
+				fscanf(userfile, "%s", dummy);
+				if(strcmp(dummy, "version") == 0)
+					initFindUpdt = 1;
+			}
+			if(!initFindUpdt)
+				updateUF(userdir, 0);
+			if(initFindUpdt)
+			{
+				fscanf(userfile, "%s %d", dummy, &idummy);
+				if(idummy != vernumqik)
+					updateUF(userdir, idummy);
+			}
 			fclose(settingsFile);
 			fclose(userFile);
 			fclose(userfile);

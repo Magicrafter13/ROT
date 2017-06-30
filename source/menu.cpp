@@ -155,89 +155,93 @@ int games(char userDir[30], int upperrv)
 		u32 kDownOld = hidKeysDown();
 		u32 kHeldOld = hidKeysHeld();
 		u32 kUpOld = hidKeysHeld();
-		if (kDown & KEY_RIGHT)
+		if (selGame < gameMax)
 		{
-			
-			sprintf(returnvalue, "RIGHT");
-			while(true)
+			if (selGame % 2 == 0)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				if (kDown & KEY_RIGHT)
 				{
-					if (selGame < gameMax)
+					
+					sprintf(returnvalue, "RIGHT");
+					while(true)
 					{
-						if (selGame % 2 == 0)
+						hidScanInput();
+						u32 kDown = hidKeysDown();
+						u32 kHeld = hidKeysHeld();
+						u32 kUp = hidKeysUp();
+						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						{
 							selGame += 1;
+							break;
+						}
 					}
 					break;
 				}
 			}
-			break;
 		}
-		if (kDown & KEY_DOWN)
+		if (selGame < gameMax - 1)
 		{
-			
-			sprintf(returnvalue, "DOWN");
-			while(true)
+			if (kDown & KEY_DOWN)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				
+				sprintf(returnvalue, "DOWN");
+				while(true)
 				{
-					if (selGame < gameMax - 1)
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						selGame += 2;
+						break;
 					}
-					break;
 				}
+				break;
 			}
-			break;
 		}
-		if (kDown & KEY_LEFT)
+		if (selGame > gameMin)
 		{
-			sprintf(returnvalue, "LEFT");
-			while(true)
+			if (selGame % 2 == 1)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				if (kDown & KEY_LEFT)
 				{
-					if (selGame > gameMin)
+					sprintf(returnvalue, "LEFT");
+					while(true)
 					{
-						if (selGame % 2 == 1)
+						hidScanInput();
+						u32 kDown = hidKeysDown();
+						u32 kHeld = hidKeysHeld();
+						u32 kUp = hidKeysUp();
+						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						{
 							selGame -= 1;
+							break;
+						}
 					}
 					break;
 				}
 			}
-			break;
 		}
-		if (kDown & KEY_UP)
+		if (selGame > gameMin + 1)
 		{
-			sprintf(returnvalue, "UP");
-			while(true)
+			if (kDown & KEY_UP)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				sprintf(returnvalue, "UP");
+				while(true)
 				{
-					if (selGame > gameMin + 1)
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						selGame -= 2;
+						break;
 					}
-					break;
 				}
+				break;
 			}
-			break;
 		}
 		if (kDown & KEY_START)
 		{
@@ -379,7 +383,7 @@ int tools(char userDir[30], int upperrv)
 	userFile = fopen(uf, "r");
 	settingsFile = fopen(sf, "r");
 	char dummy[30], userName[30];
-	int back, text, XP, XPEarned, lvl, Timer, Journal, Pawn, Alarm;
+	int back, text, XP, XPEarned, lvl, Timer, Journal, Pawn, Alarm, Media;
 	char otherArray[6][30];
 	strcpy(otherArray[0], "name");
 	strcpy(otherArray[1], "pass");
@@ -413,7 +417,8 @@ int tools(char userDir[30], int upperrv)
 	strcpy(toolArray[1], "Journal");
 	strcpy(toolArray[2], "Pawn");
 	strcpy(toolArray[3], "Alarm");
-	for (int i = 0; i < 4; i++)
+	strcpy(toolArray[4], "Media");
+	for (int i = 0; i < 5; i++)
 	{
 		while(true)
 		{
@@ -428,17 +433,20 @@ int tools(char userDir[30], int upperrv)
 					fscanf(userFile, "%s %d", dummy, &Pawn);
 				if (i == 3)
 					fscanf(userFile, "%s %d", dummy, &Alarm);
+				if (i == 4)
+					fscanf(userFile, "%s %d", dummy, &Media);
 				break;
 			}
 		}
 	}
 	fclose(userFile);
-	int toolMax = 13;
+	int toolMax = 4;
 	int toolMin = 0;
-	printf("                   -Games List-\n");
+	printf("                   -Tools List-\n");
 	printf("\n");
 	printf("      " RESET " %sTimer = %s " RESET "| %sJournal = %s\n", isSelectedTool(0), isLocked(Timer), isSelectedTool(1), isLocked(Journal));
 	printf("      " RESET " %sPawn  = %s " RESET "| %sAlarm   = %s\n", isSelectedTool(2), isLocked(Pawn), isSelectedTool(3), isLocked(Alarm));
+	printf("      " RESET " %sMedia = %s ", isSelectedTool(4), isLocked(Media));
 	char returnvalue[30];
 	while(true)
 	{
@@ -447,89 +455,93 @@ int tools(char userDir[30], int upperrv)
 		u32 kDownOld = hidKeysDown();
 		u32 kHeldOld = hidKeysHeld();
 		u32 kUpOld = hidKeysHeld();
-		if (kDown & KEY_RIGHT)
+		if (selTool < toolMax)
 		{
-			
-			sprintf(returnvalue, "RIGHT");
-			while(true)
+			if (selTool % 2 == 0)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				if (kDown & KEY_RIGHT)
 				{
-					if (selTool < toolMax)
+					
+					sprintf(returnvalue, "RIGHT");
+					while(true)
 					{
-						if (selTool % 2 == 0)
+						hidScanInput();
+						u32 kDown = hidKeysDown();
+						u32 kHeld = hidKeysHeld();
+						u32 kUp = hidKeysUp();
+						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						{
 							selTool += 1;
+							break;
+						}
 					}
 					break;
 				}
 			}
-			break;
 		}
-		if (kDown & KEY_DOWN)
+		if (selTool < toolMax - 1)
 		{
-			
-			sprintf(returnvalue, "DOWN");
-			while(true)
+			if (kDown & KEY_DOWN)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				
+				sprintf(returnvalue, "DOWN");
+				while(true)
 				{
-					if (selTool < toolMax - 1)
-					{
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+					{					
 						selTool += 2;
+						break;
 					}
-					break;
 				}
+				break;
 			}
-			break;
 		}
-		if (kDown & KEY_LEFT)
+		if (selTool > toolMin)
 		{
-			sprintf(returnvalue, "LEFT");
-			while(true)
+			if (selTool % 2 == 1)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				if (kDown & KEY_LEFT)
 				{
-					if (selTool > toolMin)
+					sprintf(returnvalue, "LEFT");
+					while(true)
 					{
-						if (selTool % 2 == 1)
+						hidScanInput();
+						u32 kDown = hidKeysDown();
+						u32 kHeld = hidKeysHeld();
+						u32 kUp = hidKeysUp();
+						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						{
 							selTool -= 1;
+							break;
+						}
 					}
 					break;
 				}
 			}
-			break;
 		}
-		if (kDown & KEY_UP)
+		if (selTool > toolMin + 1)
 		{
-			sprintf(returnvalue, "UP");
-			while(true)
+			if (kDown & KEY_UP)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				sprintf(returnvalue, "UP");
+				while(true)
 				{
-					if (selTool > toolMin + 1)
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						selTool -= 2;
+						break;
 					}
-					break;
 				}
+				break;
 			}
-			break;
 		}
 		if (kDown & KEY_START)
 		{
@@ -808,7 +820,7 @@ int store(char userDir[30], int upperrv)
 	strcpy(storeArray[6], "            ");
 	int storeMax = 2;
 	int storeMin = 0;
-	storeDisplay(storeDisp != 3); //0 neutral 1 Down[MovesUp] 2 Up[MovesDown]
+	storeDisplay(0); //0 neutral 1 Down[MovesUp] 2 Up[MovesDown]
 	//supposed to be storeDisplay(storeDisp); but it crashes when trying to animate (1 or 2).
 	//I don't currently know how to fix this, so if anyone can help, please go to my GitHub page, because this
 	//issue should be listed there.
@@ -822,48 +834,48 @@ int store(char userDir[30], int upperrv)
 		u32 kDownOld = hidKeysDown();
 		u32 kHeldOld = hidKeysHeld();
 		u32 kUpOld = hidKeysHeld();
-		if (kDown & KEY_DOWN)
+		if (selStore < storeMax)
 		{
-			
-			sprintf(returnvalue, "DOWN");
-			while(true)
+			if (kDown & KEY_DOWN)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				
+				sprintf(returnvalue, "DOWN");
+				while(true)
 				{
-					if (selStore < storeMax)
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						selStore++;
 						storeDisp = 1;
+						break;
 					}
-					break;
 				}
+				break;
 			}
-			break;
 		}
-		if (kDown & KEY_UP)
+		if (selStore > storeMin)
 		{
-			sprintf(returnvalue, "UP");
-			while(true)
+			if (kDown & KEY_UP)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				sprintf(returnvalue, "UP");
+				while(true)
 				{
-					if (selStore > storeMin)
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
 						selStore--;
 						storeDisp = 2;
+						break;
 					}
-					break;
 				}
+				break;
 			}
-			break;
 		}
 		if (kDown & KEY_START)
 		{

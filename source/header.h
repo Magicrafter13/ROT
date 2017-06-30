@@ -16,6 +16,7 @@ extern PrintConsole topScreen, bottomScreen, versionWin;
 
 extern char versiontxtt[6];
 extern char versiontxtn[9];
+extern int vernumqik;
 extern int versionnum;
 extern int settingsVersion;
 int mail(char userDir[30]);
@@ -28,6 +29,8 @@ int changeUsername(char userDir[30]);
 int games(char userDir[30], int upperrv);
 int tools(char userDir[30], int upperrv);
 int store(char userDir[30], int upperrv);
+int updateUF(char userDir[30], int oldvernum);
+int updateSF(char userDir[30], bool hasRunU);
 int credits();
 //int PathDelete(const char* path);
 extern int selTool;

@@ -189,13 +189,17 @@ int changePassword(char userDir[30])
 		fileptr1 = fopen(ustring, "r");
 		fileptr2 = fopen(ustring2, "w");
 		fscanf(fileptr1, "%s %s %s %s %s %s", dummy, dummy, dummy, dummy, dummy, dummy);
-		for(int I = 0; I < 100; I++)
+		while(true)
 		{
 			//ch = getc(fileptr1);
 			//putc(ch, fileptr2);
 			fscanf(fileptr1, "%s", dummy);
-			fprintf(fileptr2, "%s ", dummy);
+			if (strcmp(dummy, "-EOF-") == 0)
+				break;
+			else
+				fprintf(fileptr2, "%s ", dummy);
 		}
+		fprintf(fileptr2, "-EOF-");
 		fclose(fileptr1);
 		fclose(fileptr2);
 		remove(ustring);
@@ -203,13 +207,17 @@ int changePassword(char userDir[30])
 		fileptr2 = fopen(ustring2, "r");
 		fprintf(fileptr1, "name = %s\n", name);
 		fprintf(fileptr1, "pass = %s\n", mybuf);
-		for(int I = 0; I < 100; I++)
+		while(true)
 		{
 			//ch = getc(fileptr2);
 			//putc(ch, fileptr1);
 			fscanf(fileptr2, "%s", dummy);
-			fprintf(fileptr1, "%s ", dummy);
+			if (strcmp(dummy, "-EOF-") == 0)
+				break;
+			else
+				fprintf(fileptr1, "%s ", dummy);
 		}
+		fprintf(fileptr1, "-EOF-");
 		fclose(fileptr1);
 		fclose(fileptr2);
 		remove(ustring2);
@@ -256,13 +264,17 @@ int changeUsername(char userDir[30])
 	fileptr1 = fopen(ustring, "r");
 	fileptr2 = fopen(ustring2, "w");
 	fscanf(fileptr1, "%s %s %s", dummy, dummy, dummy);
-	for(int I = 0; I < 100; I++)
+	while(true)
 	{
 		//ch = getc(fileptr1);
 		//putc(ch, fileptr2);
 		fscanf(fileptr1, "%s", dummy);
-		fprintf(fileptr2, "%s ", dummy);
+		if (strcmp(dummy, "-EOF-") == 0)
+			break;
+		else
+			fprintf(fileptr2, "%s ", dummy);
 	}
+	fprintf(fileptr2, "-EOF-");
 	fclose(fileptr1);
 	fclose(fileptr2);
 	remove(ustring);
@@ -270,13 +282,17 @@ int changeUsername(char userDir[30])
 	fileptr2 = fopen(ustring2, "r");
 	fprintf(fileptr1, "name = %s\n", mybuf);
 	fprintf(fileptr1, "pass = %s\n", pass);
-	for(int I = 0; I < 100; I++)
+	while(true)
 	{
 		//ch = getc(fileptr2);
 		//putc(ch, fileptr1);
 		fscanf(fileptr2, "%s", dummy);
-		fprintf(fileptr1, "%s ", dummy);
+		if (strcmp(dummy, "-EOF-") == 0)
+			break;
+		else
+			fprintf(fileptr1, "%s ", dummy);
 	}
+	fprintf(fileptr1, "-EOF-");
 	fclose(fileptr1);
 	fclose(fileptr2);
 	remove(ustring2);
