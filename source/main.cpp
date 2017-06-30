@@ -6,8 +6,8 @@ int selGame = 0;
 int selStore = 0;
 int debugTF = 1;
 int storeDisp = 0;
-char versiontxtt[6] = "Alpha";
-char versiontxtn[9] = " 1.16.7 ";
+char versiontxtt[6] = " Beta";
+char versiontxtn[9] = " 1.00.0 ";
 int versionnum = 0;
 int vernumqik = 2;
 int settingsVersion = 5;
@@ -477,7 +477,7 @@ int main(int argc, char **argv)
 	printf("Loading...\n");
 	
 	consoleSelect(&versionWin);
-	printf("ROT Version: " COLOR RED CEND "%s" RESET " " COLOR YELLOW CEND "%s", versiontxtt, versiontxtn);
+	printf("ROT Version: " COLOR GREEN CEND "%s" RESET " " COLOR YELLOW CEND "%s", versiontxtt, versiontxtn);
 
 	consoleSelect(&topScreen);
 	printf("\x1b[29;15Hby Matthew Rease\n");
