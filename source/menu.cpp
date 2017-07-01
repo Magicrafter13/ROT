@@ -153,7 +153,7 @@ int games(char userDir[30], int upperrv)
 	sprintf(listArray[11], "%s", isLocked(Monopoly));
 	sprintf(listArray[12], "%s", isLocked(SlotMach));
 	sprintf(listArray[13], "%s", isLocked(Snake));
-	printf("                   -Games List-\n");
+	printf(RESET "                   -Games List-\n");
 	printf("\n");
 	printf(RESET " %sBattleship   = %s " RESET "| %sMinesweeper = %s\n", isSelectedGame(0), isLocked(Battleship), isSelectedGame(1), isLocked(Minesweeper));
 	printf(RESET " %sBlackjack    = %s " RESET "| %sMastermind  = %s\n", isSelectedGame(2), isLocked(Blackjack), isSelectedGame(3), isLocked(Mastermind));
@@ -466,7 +466,7 @@ int tools(char userDir[30], int upperrv)
 	sprintf(listArray[2], "%s", isLocked(Pawn));
 	sprintf(listArray[3], "%s", isLocked(Alarm));
 	sprintf(listArray[4], "%s", isLocked(Media));
-	printf("                   -Tools List-\n");
+	printf(RESET "                   -Tools List-\n");
 	printf("\n");
 	printf("      " RESET " %sTimer = %s " RESET "| %sJournal = %s\n", isSelectedTool(0), isLocked(Timer), isSelectedTool(1), isLocked(Journal));
 	printf("      " RESET " %sPawn  = %s " RESET "| %sAlarm   = %s\n", isSelectedTool(2), isLocked(Pawn), isSelectedTool(3), isLocked(Alarm));
