@@ -747,6 +747,7 @@ int storeDisplay(int method)
 			iRandom5 = rand() % 6 + 1;
 			iRandom6 = rand() % 6 + 1;
 			iRandom7 = rand() % 6 + 1;
+			printf("\x1b[1;0H [%d] [%d] [%d] [%d] [%d] [%d] [%d]", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
 			printf("\x1b[0;20H-\x1b[3%dMX" RESET "\x1b[3%dMP" RESET " \x1b[3%dMS" RESET "\x1b[3%dMt" RESET "\x1b[3%dMo" RESET "\x1b[3%dMr" RESET "\x1b[3%dMe" RESET "-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
 			for(int n = 0; n < 4; n++)
 			{
@@ -770,6 +771,7 @@ int storeDisplay(int method)
 			iRandom5 = rand() % 6 + 1;
 			iRandom6 = rand() % 6 + 1;
 			iRandom7 = rand() % 6 + 1;
+			printf("\x1b[1;0H [%d] [%d] [%d] [%d] [%d] [%d] [%d]", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
 			printf("\x1b[0;20H-\x1b[3%dMX" RESET "\x1b[3%dMP" RESET " \x1b[3%dMS" RESET "\x1b[3%dMt" RESET "\x1b[3%dMo" RESET "\x1b[3%dMr" RESET "\x1b[3%dMe" RESET "-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
 			for(int n = 0; n < 4; n++)
 			{
@@ -787,13 +789,14 @@ int storeDisplay(int method)
 	if (method == 0)
 	{
 		iRandom1 = rand() % 6 + 1;
-			iRandom2 = rand() % 6 + 1;
-			iRandom3 = rand() % 6 + 1;
-			iRandom4 = rand() % 6 + 1;
-			iRandom5 = rand() % 6 + 1;
-			iRandom6 = rand() % 6 + 1;
-			iRandom7 = rand() % 6 + 1;
-			printf("\x1b[0;20H-\x1b[3%dMX" RESET "\x1b[3%dMP" RESET " \x1b[3%dMS" RESET "\x1b[3%dMt" RESET "\x1b[3%dMo" RESET "\x1b[3%dMr" RESET "\x1b[3%dMe" RESET "-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
+		iRandom2 = rand() % 6 + 1;
+		iRandom3 = rand() % 6 + 1;
+		iRandom4 = rand() % 6 + 1;
+		iRandom5 = rand() % 6 + 1;
+		iRandom6 = rand() % 6 + 1;
+		iRandom7 = rand() % 6 + 1;
+		printf("\x1b[1;0H [%d] [%d] [%d] [%d] [%d] [%d] [%d]", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
+		printf("\x1b[0;20H-\x1b[3%dMX" RESET "\x1b[3%dMP" RESET " \x1b[3%dMS" RESET "\x1b[3%dMt" RESET "\x1b[3%dMo" RESET "\x1b[3%dMr" RESET "\x1b[3%dMe" RESET "-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
 		printf(RESET "\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[2]);
 		printf(RESET "\x1b[5;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[3]);
 		printf(RESET "\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[4]);
