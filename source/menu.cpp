@@ -682,149 +682,107 @@ int tools(char userDir[30], int upperrv)
 	return ireturnvalue;
 }
 
-char storeArray[7][13];
-char storeMenu[5][13];
+char storeArray[14][13] = {"            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            "};
+char storeMenu[14][13] = {"            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            "};
 
-const char * storeStrings(int frame5, int line, int direction)
+std::string storeStrings(int frame5, int line, int direction)
 {
-	char * temp = new char[13];
-	char * returnstr = new char[12];
+	//char * temp1 = new char[12];
+	//char * temp2 = new char[12];
+	//char * returnstr = new char[12];
+	std::string temp1;
+	std::string temp2;
+	std::string returnstr;
+	returnstr.clear();
 	if (direction)
 	{ //shift down
-		
+		if (frame5 < 11)
+		{
+			std::copy(&storeMenu[line][0], &storeMenu[line][11-frame5], back_inserter(temp1));
+			std::copy(&storeMenu[line-1][11-frame5], &storeMenu[line-1][12], back_inserter(temp2));
+			returnstr.append(temp1);
+			returnstr.append(temp2);
+		} else {
+			std::copy(&storeMenu[line-1][0], &storeMenu[line-1][22-frame5], back_inserter(temp1));
+			std::copy(&storeMenu[line-2][22-frame5], &storeMenu[line-2][12], back_inserter(temp2));
+			returnstr.append(temp1);
+			returnstr.append(temp2);
+		}
 	} else { //shift up
-		if (line % 2 == 0)
+		if (frame5 < 11)
 		{
-			if (frame5 == 0)
-			{
-				std::copy(&storeMenu[line / 2][1], &storeMenu[line / 2][12], temp);
-				sprintf(returnstr, " %s", temp);
-			} else if (frame5 == 1)
-			{
-				std::copy(&storeMenu[line / 2][2], &storeMenu[line / 2][12], temp);
-				sprintf(returnstr, "  %s", temp);
-			} else if (frame5 == 2)
-			{
-				std::copy(&storeMenu[line / 2][3], &storeMenu[line / 2][12], temp);
-				sprintf(returnstr, "   %s", temp);
-			} else if (frame5 == 3)
-			{
-				std::copy(&storeMenu[line / 2][4], &storeMenu[line / 2][12], temp);
-				sprintf(returnstr, "    %s", temp);
-			} else if (frame5 == 4)
-			{
-				std::copy(&storeMenu[line / 2][5], &storeMenu[line / 2][12], temp);
-				sprintf(returnstr, "     %s", temp);
-			} else if (frame5 == 5)
-			{
-				std::copy(&storeMenu[line / 2][6], &storeMenu[line / 2][12], temp);
-				sprintf(returnstr, "      %s", temp);
-			} else if (frame5 == 6)
-			{
-				std::copy(&storeMenu[line / 2][7], &storeMenu[line / 2][12], temp);
-				sprintf(returnstr, "       %s", temp);
-			} else if (frame5 == 7)
-			{
-				std::copy(&storeMenu[line / 2][8], &storeMenu[line / 2][12], temp);
-				sprintf(returnstr, "        %s", temp);
-			} else if (frame5 == 8)
-			{
-				std::copy(&storeMenu[line / 2][9], &storeMenu[line / 2][12], temp);
-				sprintf(returnstr, "         %s", temp);
-			} else if (frame5 == 9)
-			{
-				std::copy(&storeMenu[line / 2][10], &storeMenu[line / 2][12], temp);
-				sprintf(returnstr, "          %s", temp);
-			} else if (frame5 == 10)
-			{
-				std::copy(&storeMenu[line / 2][11], &storeMenu[line / 2][12], temp);
-				sprintf(returnstr, "           %s", temp);
-			}
-			return returnstr;
-		} else if (line % 2 == 1)
-		{
-			if (frame5 == 0)
-			{
-				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][1], temp);
-				sprintf(returnstr, "%s           ", temp);
-			} else if (frame5 == 1)
-			{
-				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][2], temp);
-				sprintf(returnstr, "%s          ", temp);
-			} else if (frame5 == 2)
-			{
-				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][3], temp);
-				sprintf(returnstr, "%s         ", temp);
-			} else if (frame5 == 3)
-			{
-				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][4], temp);
-				sprintf(returnstr, "%s        ", temp);
-			} else if (frame5 == 4)
-			{
-				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][5], temp);
-				sprintf(returnstr, "%s       ", temp);
-			} else if (frame5 == 5)
-			{
-				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][6], temp);
-				sprintf(returnstr, "%s      ", temp);
-			} else if (frame5 == 6)
-			{
-				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][7], temp);
-				sprintf(returnstr, "%s     ", temp);
-			} else if (frame5 == 7)
-			{
-				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][8], temp);
-				sprintf(returnstr, "%s    ", temp);
-			} else if (frame5 == 8)
-			{
-				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][9], temp);
-				sprintf(returnstr, "%s   ", temp);
-			} else if (frame5 == 9)
-			{
-				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][10], temp);
-				sprintf(returnstr, "%s  ", temp);
-			} else if (frame5 == 10)
-			{
-				std::copy(&storeMenu[line / 2][0], &storeMenu[line / 2][11], temp);
-				sprintf(returnstr, "%s ", temp);
-			}
-			return returnstr;
+			std::copy(&storeMenu[line+1][0], &storeMenu[line+1][frame5+1], back_inserter(temp1));
+			std::copy(&storeMenu[line][frame5+1], &storeMenu[line][12], back_inserter(temp2));
+			//sprintf(returnstr, "%s%s", temp1.c_str(), temp2.c_str());
+			returnstr.append(temp1);
+			returnstr.append(temp2);
+		} else {
+			std::copy(&storeMenu[line+2][0], &storeMenu[line+2][frame5-10], back_inserter(temp1));
+			std::copy(&storeMenu[line+1][frame5-10], &storeMenu[line+1][12], back_inserter(temp2));
+			//sprintf(returnstr, "%s%s", temp1.c_str(), temp2.c_str());
+			returnstr.append(temp1);
+			returnstr.append(temp2);
 		}
 	}
-	return "error";
+	consoleSelect(&bottomScreen);
+	//printf("%s", returnstr.c_str());
+	consoleSelect(&topScreen);
+	return returnstr;
 }
 
 int storeDisplay(int method)
 {
-	strcpy(storeMenu[0], storeArray[selStore + 0]);
-	strcpy(storeMenu[1], storeArray[selStore + 1]);
-	strcpy(storeMenu[2], storeArray[selStore + 2]);
-	strcpy(storeMenu[3], storeArray[selStore + 3]);
-	strcpy(storeMenu[4], storeArray[selStore + 4]);
-	if (method == 0)
-	{
-		printf(RESET "\x1b[0;20H-XP Store-");
-		printf(RESET "\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[0]);
-		printf(RESET "\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[1]);
-		printf(RESET "\x1b[8;19H" COLOR WHITE CEND "%s", storeMenu[2]);
-		printf(RESET "\x1b[10;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[3]);
-		printf(RESET "\x1b[12;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[4]);
-	} else if (method == 1)
+	for(int i = 0; i < 13; i++)
+		strcpy(storeMenu[i], storeArray[selStore + i - 2]);
+	//printf("\x1b[20;0H%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n", storeMenu[0], storeMenu[1], storeMenu[2], storeMenu[3], storeMenu[4], storeMenu[5], storeMenu[6], storeMenu[7], storeMenu[8]);
+	if (method == 1)
 	{
 		for (int i = 0; i < 22; i++)
 		{
-			for (int n = 0; n < 5; n++)
-				gspWaitForVBlank();
-			printf("\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 0, 0));
-			printf("\x1b[5;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 1, 0));
-			printf("\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 2, 0));
-			printf("\x1b[7;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 3, 0));
-			printf("\x1b[8;19H" COLOR WHITE CEND "%s", storeStrings(i, 4, 0));
-			printf("\x1b[9;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 5, 0));
-			printf("\x1b[10;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 6, 0));
-			printf("\x1b[11;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 7, 0));
-			printf("\x1b[12;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 8, 0));
+			for(int n = 0; n < 4; n++)
+			{
+				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 4), storeStrings(i, (n + 2), 0).c_str());
+				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 9), storeStrings(i, (n + 7), 0).c_str());
+			}
+			printf("\x1b[8;19H" RESET "%s", storeStrings(i, 6, 0).c_str());
+			gspWaitForVBlank();
 		}
+		method = 0;
+		selStore += 2;
+	}
+	if (method == 2)
+	{
+		for (int i = 0; i < 22; i++)
+		{
+			printf("\x1b[0;20H-XP Store-");
+			printf("\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 2, 1).c_str());
+			printf("\x1b[5;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 3, 1).c_str());
+			printf("\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 4, 1).c_str());
+			printf("\x1b[7;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 5, 1).c_str());
+			printf("\x1b[8;19H" RESET "%s", storeStrings(i, 6, 1).c_str());
+			printf("\x1b[9;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 7, 1).c_str());
+			printf("\x1b[10;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 8, 1).c_str());
+			printf("\x1b[11;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 9, 1).c_str());
+			printf("\x1b[12;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 10, 1).c_str());
+			gspWaitForVBlank();
+		}
+		method = 0;
+		selStore -= 2;
+	}
+	for(int i = 0; i < 13; i++)
+		strcpy(storeMenu[i], storeArray[selStore + i - 2]);
+	if (method == 0)
+	{
+		printf(RESET "\x1b[0;20H-XP Store-");
+		printf(RESET "\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[2]);
+		printf(RESET "\x1b[5;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[3]);
+		printf(RESET "\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[4]);
+		printf(RESET "\x1b[7;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[5]);
+		printf(RESET "\x1b[8;19H" COLOR WHITE CEND "%s", storeMenu[6]);
+		printf(RESET "\x1b[9;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[7]);
+		printf(RESET "\x1b[10;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[8]);
+		printf(RESET "\x1b[11;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[9]);
+		printf(RESET "\x1b[12;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[10]);
 	}
 	return 0;
 }
@@ -840,14 +798,20 @@ int store(char userDir[30], int upperrv)
 	consoleClear();
 	strcpy(storeArray[0], "            ");
 	strcpy(storeArray[1], "            ");
-	strcpy(storeArray[2], " Buy a Game ");
-	strcpy(storeArray[3], " Buy a Tool ");
-	strcpy(storeArray[4], "Reedem Code ");
+	strcpy(storeArray[2], "            ");
+	strcpy(storeArray[3], "            ");
+	strcpy(storeArray[4], " Buy a Game ");
 	strcpy(storeArray[5], "            ");
-	strcpy(storeArray[6], "            ");
-	int storeMax = 2;
+	strcpy(storeArray[6], " Buy a Tool ");
+	strcpy(storeArray[7], "            ");
+	strcpy(storeArray[8], "Reedem Code ");
+	strcpy(storeArray[9], "            ");
+	strcpy(storeArray[10], "            ");
+	strcpy(storeArray[11], "            ");
+	strcpy(storeArray[12], "            ");
+	int storeMax = 4;
 	int storeMin = 0;
-	storeDisplay(0); //0 neutral 1 Down[MovesUp] 2 Up[MovesDown]
+	storeDisplay(storeDisp); //0 neutral 1 Down[MovesUp] 2 Up[MovesDown]
 	//supposed to be storeDisplay(storeDisp); but it crashes when trying to animate (1 or 2).
 	//I don't currently know how to fix this, so if anyone can help, please go to my GitHub page, because this
 	//issue should be listed there.
@@ -875,7 +839,6 @@ int store(char userDir[30], int upperrv)
 					u32 kUp = hidKeysUp();
 					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
-						selStore++;
 						storeDisp = 1;
 						break;
 					}
@@ -896,7 +859,6 @@ int store(char userDir[30], int upperrv)
 					u32 kUp = hidKeysUp();
 					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
 					{
-						selStore--;
 						storeDisp = 2;
 						break;
 					}
