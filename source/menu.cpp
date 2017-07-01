@@ -732,13 +732,22 @@ std::string storeStrings(int frame5, int line, int direction)
 
 int storeDisplay(int method)
 {
+	int iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7;
+	srand(time(NULL));
 	for(int i = 0; i < 13; i++)
 		strcpy(storeMenu[i], storeArray[selStore + i - 2]);
-	//printf("\x1b[20;0H%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n", storeMenu[0], storeMenu[1], storeMenu[2], storeMenu[3], storeMenu[4], storeMenu[5], storeMenu[6], storeMenu[7], storeMenu[8]);
 	if (method == 1)
 	{
 		for (int i = 0; i < 22; i++)
 		{
+			iRandom1 = rand() % 6 + 1;
+			iRandom2 = rand() % 6 + 1;
+			iRandom3 = rand() % 6 + 1;
+			iRandom4 = rand() % 6 + 1;
+			iRandom5 = rand() % 6 + 1;
+			iRandom6 = rand() % 6 + 1;
+			iRandom7 = rand() % 6 + 1;
+			printf("\x1b[0;20H-\x1b[3%dMX" RESET "\x1b[3%dMP" RESET " \x1b[3%dMS" RESET "\x1b[3%dMt" RESET "\x1b[3%dMo" RESET "\x1b[3%dMr" RESET "\x1b[3%dMe" RESET "-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
 			for(int n = 0; n < 4; n++)
 			{
 				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 4), storeStrings(i, (n + 2), 0).c_str());
@@ -754,16 +763,20 @@ int storeDisplay(int method)
 	{
 		for (int i = 0; i < 22; i++)
 		{
-			printf("\x1b[0;20H-XP Store-");
-			printf("\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 2, 1).c_str());
-			printf("\x1b[5;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 3, 1).c_str());
-			printf("\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 4, 1).c_str());
-			printf("\x1b[7;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 5, 1).c_str());
+			iRandom1 = rand() % 6 + 1;
+			iRandom2 = rand() % 6 + 1;
+			iRandom3 = rand() % 6 + 1;
+			iRandom4 = rand() % 6 + 1;
+			iRandom5 = rand() % 6 + 1;
+			iRandom6 = rand() % 6 + 1;
+			iRandom7 = rand() % 6 + 1;
+			printf("\x1b[0;20H-\x1b[3%dMX" RESET "\x1b[3%dMP" RESET " \x1b[3%dMS" RESET "\x1b[3%dMt" RESET "\x1b[3%dMo" RESET "\x1b[3%dMr" RESET "\x1b[3%dMe" RESET "-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
+			for(int n = 0; n < 4; n++)
+			{
+				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 4), storeStrings(i, (n + 2), 1).c_str());
+				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 9), storeStrings(i, (n + 7), 1).c_str());
+			}
 			printf("\x1b[8;19H" RESET "%s", storeStrings(i, 6, 1).c_str());
-			printf("\x1b[9;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 7, 1).c_str());
-			printf("\x1b[10;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 8, 1).c_str());
-			printf("\x1b[11;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 9, 1).c_str());
-			printf("\x1b[12;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeStrings(i, 10, 1).c_str());
 			gspWaitForVBlank();
 		}
 		method = 0;
@@ -773,7 +786,14 @@ int storeDisplay(int method)
 		strcpy(storeMenu[i], storeArray[selStore + i - 2]);
 	if (method == 0)
 	{
-		printf(RESET "\x1b[0;20H-XP Store-");
+		iRandom1 = rand() % 6 + 1;
+			iRandom2 = rand() % 6 + 1;
+			iRandom3 = rand() % 6 + 1;
+			iRandom4 = rand() % 6 + 1;
+			iRandom5 = rand() % 6 + 1;
+			iRandom6 = rand() % 6 + 1;
+			iRandom7 = rand() % 6 + 1;
+			printf("\x1b[0;20H-\x1b[3%dMX" RESET "\x1b[3%dMP" RESET " \x1b[3%dMS" RESET "\x1b[3%dMt" RESET "\x1b[3%dMo" RESET "\x1b[3%dMr" RESET "\x1b[3%dMe" RESET "-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
 		printf(RESET "\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[2]);
 		printf(RESET "\x1b[5;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[3]);
 		printf(RESET "\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[4]);
@@ -812,15 +832,12 @@ int store(char userDir[30], int upperrv)
 	int storeMax = 4;
 	int storeMin = 0;
 	storeDisplay(storeDisp); //0 neutral 1 Down[MovesUp] 2 Up[MovesDown]
-	//supposed to be storeDisplay(storeDisp); but it crashes when trying to animate (1 or 2).
-	//I don't currently know how to fix this, so if anyone can help, please go to my GitHub page, because this
-	//issue should be listed there.
 	storeDisp = 0;
-	printf("\x1b[0;20H-XP Store-");
 	char returnvalue[30];
 	while(true)
 	{
 		hidScanInput();
+		hidWaitForEvent(HIDEVENT_PAD0, false);
 		u32 kDown = hidKeysDown();
 		u32 kDownOld = hidKeysDown();
 		u32 kHeldOld = hidKeysHeld();
