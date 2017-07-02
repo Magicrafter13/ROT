@@ -1288,7 +1288,7 @@ int about(int upperrv)
 						int result = aboutOption();
 						if (result == 0)
 							break;
-						if (result == 1)
+						if (result == 2)
 						{
 							sprintf(returnvalue, "START");
 							break;
