@@ -2,6 +2,10 @@
 
 int matthew()
 {
+	consoleSelect(&bottomScreen);
+	if (debugTF)
+		printf("matthew [about] opened\n");
+	consoleSelect(&topScreen);
 	int returnvalue = 0;
 	consoleClear();
 	gspWaitForVBlank();
@@ -43,6 +47,10 @@ int matthew()
 
 int rot()
 {
+	consoleSelect(&bottomScreen);
+	if (debugTF)
+		printf("rot [about] opened\n");
+	consoleSelect(&topScreen);
 	int returnvalue = 0;
 	consoleClear();
 	gspWaitForVBlank();
@@ -76,5 +84,10 @@ int rot()
 
 int timeline(int upperrv)
 {
+	consoleSelect(&bottomScreen);
+	if (upperrv != 1)
+		if (debugTF)
+			printf("timeline [about] opened\n");
+	consoleSelect(&topScreen);
 	return upperrv;
 }
