@@ -42,6 +42,7 @@ extern int selTool;
 extern int selGame;
 extern int selStore;
 extern int selAbout;
+extern int selTimeline;
 extern int debugTF;
 extern int storeDisp;
 extern int aboutDisp;

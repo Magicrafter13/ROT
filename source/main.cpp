@@ -5,6 +5,7 @@ int selTool = 0;
 int selGame = 0;
 int selStore = 0;
 int selAbout = 0;
+int selTimeline = 0;
 int debugTF = 1;
 int storeDisp = 0;
 int aboutDisp = 0;

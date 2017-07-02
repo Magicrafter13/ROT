@@ -96,7 +96,7 @@ int media(char userDir[30])
 		fscanf(settingsFile, "%d %d", debugTF, debugTF);
 		consoleSelect(&bottomScreen);
 		if(debugTF)
-			printf("timer opened\n");
+			printf("media opened\n");
 	}
 	delete[] tempstr;
 	fclose(settingsFile);
