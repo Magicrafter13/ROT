@@ -682,7 +682,7 @@ int tools(char userDir[30], int upperrv)
 	return ireturnvalue;
 }
 
-char storeArray[14][13] = {"            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            "};
+char storeArray[14][13] = {"            ", "            ", "            ", "            ", " Buy a Game ", "            ", " Buy a Tool ", "            ", "Reedem Code ", "            ", "            ", "            ", "            ", "            "};
 char storeMenu[14][13] = {"            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            "};
 
 std::string storeStrings(int frame5, int line, int direction)
@@ -818,19 +818,6 @@ int store(char userDir[30], int upperrv)
 			printf("store opened\n");
 	consoleSelect(&topScreen);
 	consoleClear();
-	strcpy(storeArray[0], "            ");
-	strcpy(storeArray[1], "            ");
-	strcpy(storeArray[2], "            ");
-	strcpy(storeArray[3], "            ");
-	strcpy(storeArray[4], " Buy a Game ");
-	strcpy(storeArray[5], "            ");
-	strcpy(storeArray[6], " Buy a Tool ");
-	strcpy(storeArray[7], "            ");
-	strcpy(storeArray[8], "Reedem Code ");
-	strcpy(storeArray[9], "            ");
-	strcpy(storeArray[10], "            ");
-	strcpy(storeArray[11], "            ");
-	strcpy(storeArray[12], "            ");
 	int storeMax = 4;
 	int storeMin = 0;
 	storeDisplay(storeDisp); //0 neutral 1 Down[MovesUp] 2 Up[MovesDown]
@@ -1042,4 +1029,327 @@ int credits()
 		gspWaitForVBlank();
 	}
 	return 0;
+}
+
+char aboutArray[14][13] = {"            ", "            ", "            ", "            ", "  Matthew   ", "            ", "    ROT     ", "            ", "  History   ", "            ", "            ", "            ", "            ", "            "};
+char aboutMenu[14][13] = {"            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            ", "            "};
+
+std::string aboutStrings(int frame5, int line, int direction)
+{
+	//char * temp1 = new char[12];
+	//char * temp2 = new char[12];
+	//char * returnstr = new char[12];
+	std::string temp1;
+	std::string temp2;
+	std::string returnstr;
+	returnstr.clear();
+	if (direction)
+	{ //shift down
+		if (frame5 < 11)
+		{
+			std::copy(&aboutMenu[line][0], &aboutMenu[line][11-frame5], back_inserter(temp1));
+			std::copy(&aboutMenu[line-1][11-frame5], &aboutMenu[line-1][12], back_inserter(temp2));
+			returnstr.append(temp1);
+			returnstr.append(temp2);
+		} else {
+			std::copy(&aboutMenu[line-1][0], &aboutMenu[line-1][22-frame5], back_inserter(temp1));
+			std::copy(&aboutMenu[line-2][22-frame5], &aboutMenu[line-2][12], back_inserter(temp2));
+			returnstr.append(temp1);
+			returnstr.append(temp2);
+		}
+	} else { //shift up
+		if (frame5 < 11)
+		{
+			std::copy(&aboutMenu[line+1][0], &aboutMenu[line+1][frame5+1], back_inserter(temp1));
+			std::copy(&aboutMenu[line][frame5+1], &aboutMenu[line][12], back_inserter(temp2));
+			//sprintf(returnstr, "%s%s", temp1.c_str(), temp2.c_str());
+			returnstr.append(temp1);
+			returnstr.append(temp2);
+		} else {
+			std::copy(&aboutMenu[line+2][0], &aboutMenu[line+2][frame5-10], back_inserter(temp1));
+			std::copy(&aboutMenu[line+1][frame5-10], &aboutMenu[line+1][12], back_inserter(temp2));
+			//sprintf(returnstr, "%s%s", temp1.c_str(), temp2.c_str());
+			returnstr.append(temp1);
+			returnstr.append(temp2);
+		}
+	}
+	consoleSelect(&bottomScreen);
+	//printf("%s", returnstr.c_str());
+	consoleSelect(&topScreen);
+	return returnstr;
+}
+
+int aboutDisplay(int method)
+{
+	for(int i = 0; i < 13; i++)
+		strcpy(aboutMenu[i], aboutArray[selAbout + i - 2]);
+	if (method == 1)
+	{
+		for (int i = 0; i < 22; i++)
+		{
+			printf("\x1b[0;21H-About-");
+			for(int n = 0; n < 4; n++)
+			{
+				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 4), aboutStrings(i, (n + 2), 0).c_str());
+				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 9), aboutStrings(i, (n + 7), 0).c_str());
+			}
+			printf("\x1b[8;19H" RESET "%s", aboutStrings(i, 6, 0).c_str());
+			gspWaitForVBlank();
+		}
+		method = 0;
+		selAbout += 2;
+	}
+	if (method == 2)
+	{
+		for (int i = 0; i < 22; i++)
+		{
+			printf("\x1b[0;21H-About-");
+			for(int n = 0; n < 4; n++)
+			{
+				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 4), aboutStrings(i, (n + 2), 1).c_str());
+				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 9), aboutStrings(i, (n + 7), 1).c_str());
+			}
+			printf("\x1b[8;19H" RESET "%s", aboutStrings(i, 6, 1).c_str());
+			gspWaitForVBlank();
+		}
+		method = 0;
+		selAbout -= 2;
+	}
+	for(int i = 0; i < 13; i++)
+		strcpy(aboutMenu[i], aboutArray[selAbout + i - 2]);
+	if (method == 0)
+	{
+		printf("\x1b[0;21H-About-");
+		printf(RESET "\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[2]);
+		printf(RESET "\x1b[5;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[3]);
+		printf(RESET "\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[4]);
+		printf(RESET "\x1b[7;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[5]);
+		printf(RESET "\x1b[8;19H" COLOR WHITE CEND "%s", aboutMenu[6]);
+		printf(RESET "\x1b[9;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[7]);
+		printf(RESET "\x1b[10;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[8]);
+		printf(RESET "\x1b[11;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[9]);
+		printf(RESET "\x1b[12;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[10]);
+	}
+	return 0;
+}
+
+int aboutOption()
+{
+	int result = 0;
+	int returnvalue = 3;
+	if (selAbout == 0)
+	{
+		while(true)
+		{
+			result = matthew();
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 2;
+				break;
+			}
+		}
+	}
+	if (selAbout == 1)
+	{
+		while(true)
+		{
+			result = rot();
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 2;
+				break;
+			}
+		}
+	}
+	if (selAbout == 2)
+	{
+		while(true)
+		{
+			result = timeline(result);
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 2;
+				break;
+			}
+		}
+	}
+	return returnvalue;
+}
+
+int about(int upperrv)
+{
+	consoleClear();
+	gspWaitForVBlank();
+	int ireturnvalue = 0;
+	consoleSelect(&bottomScreen);
+	if (upperrv != 1)
+		if (debugTF)
+			printf("about opened\n");
+	consoleSelect(&topScreen);
+	consoleClear();
+	int aboutMax = 4;
+	int aboutMin = 0;
+	aboutDisplay(aboutDisp); //0 neutral 1 Down[MovesUp] 2 Up[MovesDown]
+	aboutDisp = 0;
+	char returnvalue[30];
+	while(true)
+	{
+		hidScanInput();
+		hidWaitForEvent(HIDEVENT_PAD0, false);
+		u32 kDown = hidKeysDown();
+		u32 kDownOld = hidKeysDown();
+		u32 kHeldOld = hidKeysHeld();
+		u32 kUpOld = hidKeysHeld();
+		if (selAbout < aboutMax)
+		{
+			if (kDown & KEY_DOWN)
+			{
+				
+				sprintf(returnvalue, "DOWN");
+				while(true)
+				{
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+					{
+						aboutDisp = 1;
+						break;
+					}
+				}
+				break;
+			}
+		}
+		if (selAbout > aboutMin)
+		{
+			if (kDown & KEY_UP)
+			{
+				sprintf(returnvalue, "UP");
+				while(true)
+				{
+					hidScanInput();
+					u32 kDown = hidKeysDown();
+					u32 kHeld = hidKeysHeld();
+					u32 kUp = hidKeysUp();
+					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+					{
+						aboutDisp = 2;
+						break;
+					}
+				}
+				break;
+			}
+		}
+		if (kDown & KEY_START)
+		{
+			sprintf(returnvalue, "START");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_A)
+		{
+			sprintf(returnvalue, "A");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					while(true)
+					{
+						int result = aboutOption();
+						if (result == 0)
+							break;
+						if (result == 1)
+						{
+							sprintf(returnvalue, "START");
+							break;
+						}
+					}
+					break;
+				}
+			}
+			break;
+		}
+		if (kDown & KEY_B)
+		{
+			sprintf(returnvalue, "B");
+			while(true)
+			{
+				hidScanInput();
+				u32 kDown = hidKeysDown();
+				u32 kHeld = hidKeysHeld();
+				u32 kUp = hidKeysUp();
+				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				{
+					break;
+				}
+			}
+			break;
+		}
+	}
+	if (strcmp(returnvalue, "START") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 2;
+	}
+	if (strcmp(returnvalue, "UP") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "DOWN") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "A") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 1;
+	}
+	if (strcmp(returnvalue, "B") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 0;
+	}
+	return ireturnvalue;
 }

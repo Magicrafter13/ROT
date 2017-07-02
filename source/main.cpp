@@ -4,13 +4,17 @@
 int selTool = 0;
 int selGame = 0;
 int selStore = 0;
+int selAbout = 0;
 int debugTF = 1;
 int storeDisp = 0;
+int aboutDisp = 0;
 char versiontxtt[6] = " Beta";
 char versiontxtn[9] = " 1.00.3 ";
 int versionnum = 0;
 int vernumqik = 2;
 int settingsVersion = 5;
+
+char menOption[5][25] = {"         Games          ", "        Tool Box        ", "        XP Store        ", "        Credits         ", "         About          "};
 
 bool touchInBox(touchPosition touch, int x, int y, int w, int h)
 {
@@ -34,7 +38,7 @@ char setfil[53], usrfil[53];
 FILE *userfile;
 FILE *fp;
 char userdir[30];
-char tempvar[30], dummy[5], username[21], menOption[40];
+char tempvar[30], dummy[5], username[21];
 //sdmc:/3ds/ROT_Data/01234567890123456789/userdata.ruf max username length 20
 
 PrintConsole topScreen, bottomScreen, versionWin;
@@ -112,7 +116,26 @@ int menuOption()
 			}
 		}
 	}
+	if (mensel == 4)
+	{
+		while (true)
+		{
+			result = about(result);
+			if (result == 0)
+			{
+				returnvalue = 0;
+				break;
+			}
+			if (result == 2)
+			{
+				returnvalue = 2;
+				break;
+			}
+		}
+	}
 	printf(RESET "\n");
+	consoleClear();
+	gspWaitForVBlank();
 	return returnvalue;
 }
 
@@ -673,7 +696,6 @@ int main(int argc, char **argv)
 					if (didit)
 					{
 						logged = true;
-						printf("Log in Successful");
 						consoleSelect(&bottomScreen);
 						printf("%s Logged in\n", t3);
 						incorrect = false;
@@ -733,22 +755,7 @@ int main(int argc, char **argv)
 			fclose(userfile);
 			consoleSelect(&topScreen);
 			consoleClear();
-			if (mensel == 0)
-			{
-				strcpy(menOption, "\x1b[31m         Games          \x1b[0m");
-			}
-			if (mensel == 1)
-			{
-				strcpy(menOption, "\x1b[32m        Tool Box        \x1b[0m");
-			}
-			if (mensel == 2)
-			{
-				strcpy(menOption, "\x1b[33m        XP Store        \x1b[0m");
-			}
-			if (mensel == 3)
-			{
-				strcpy(menOption, "\x1b[34m        Credits         \x1b[0m");
-			}
+			gspWaitForVBlank();
 			printf("###                                            ###");
 			printf(" ###                                          ### ");
 			printf("  ###            [Select] Log-off            ###  ");
@@ -763,7 +770,7 @@ int main(int argc, char **argv)
 			printf("           ############################           ");
 			printf("           ##                        ##           ");
 			printf("           ##                        ##           ");
-			printf(" [<] Left  ##%s## Right [>] ", menOption);
+			printf(" [<] Left  ##\x1b[3%dm%s\x1b[0m## Right [>] ", (mensel + 1), menOption[mensel]);
 			printf("           ##                        ##           ");
 			printf("           ##                        ##           ");
 			printf("           ############################           ");
@@ -779,6 +786,7 @@ int main(int argc, char **argv)
 			printf(" ###                                          ### ");
 			printf("###                                            ###");
 			printf("%s Logged in:", username);
+			gspWaitForVBlank();
 			//hidWaitForEvent(HIDEVENT_PAD0, false);
 			while(true)
 			{
@@ -829,7 +837,7 @@ int main(int argc, char **argv)
 					logged = false;
 					break;
 				}
-				MMAX = 3;
+				MMAX = 4;
 				if (mensel < MMAX)
 				{
 					if (kDown & KEY_RIGHT)
