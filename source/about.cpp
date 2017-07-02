@@ -46,7 +46,7 @@ int rot()
 	int returnvalue = 0;
 	consoleClear();
 	gspWaitForVBlank();
-	printf("ROT, for those who don't know:\n");
+	printf(RESET "ROT, for those who don't know:\n");
 	printf("RFGEP On ThreeDS\n");
 	printf("RFGEP which in and of itself stands for\n");
 	printf("Rease Family Gaming Entertainment Package\n");
@@ -71,7 +71,7 @@ int rot()
 			break;
 		gspWaitForVBlank();
 	}
-	return 0;
+	return returnvalue;
 }
 
 int timeline(int upperrv)

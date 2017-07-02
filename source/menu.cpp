@@ -1154,7 +1154,7 @@ int aboutOption()
 			}
 		}
 	}
-	if (selAbout == 1)
+	if (selAbout == 2)
 	{
 		while(true)
 		{
@@ -1171,7 +1171,7 @@ int aboutOption()
 			}
 		}
 	}
-	if (selAbout == 2)
+	if (selAbout == 4)
 	{
 		while(true)
 		{
