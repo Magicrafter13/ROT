@@ -12,7 +12,7 @@ int timer(char userDir[30])
 		fscanf(settingsFile, "%d %d", debugTF, debugTF);
 		consoleSelect(&bottomScreen);
 		if(debugTF)
-			printf("timer opened\n");
+			std::cout << "timer opened\n";
 	}
 	delete[] tempstr;
 	fclose(settingsFile);
@@ -33,7 +33,7 @@ int journal(char userDir[30])
 		fscanf(settingsFile, "%d %d", debugTF, debugTF);
 		consoleSelect(&bottomScreen);
 		if(debugTF)
-			printf("timer opened\n");
+			std::cout << "timer opened\n";
 	}
 	delete[] tempstr;
 	fclose(settingsFile);
@@ -54,7 +54,7 @@ int pawn(char userDir[30])
 		fscanf(settingsFile, "%d %d", debugTF, debugTF);
 		consoleSelect(&bottomScreen);
 		if(debugTF)
-			printf("timer opened\n");
+			std::cout << "timer opened\n";
 	}
 	delete[] tempstr;
 	fclose(settingsFile);
@@ -75,7 +75,7 @@ int alarm(char userDir[30])
 		fscanf(settingsFile, "%d %d", debugTF, debugTF);
 		consoleSelect(&bottomScreen);
 		if(debugTF)
-			printf("timer opened\n");
+			std::cout << "timer opened\n";
 	}
 	delete[] tempstr;
 	fclose(settingsFile);
@@ -96,7 +96,7 @@ int media(char userDir[30])
 		fscanf(settingsFile, "%d %d", debugTF, debugTF);
 		consoleSelect(&bottomScreen);
 		if(debugTF)
-			printf("media opened\n");
+			std::cout << "media opened\n";
 	}
 	delete[] tempstr;
 	fclose(settingsFile);

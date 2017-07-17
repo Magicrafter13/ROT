@@ -16,17 +16,17 @@ const char * isLocked(bool item)
 const char * isSelectedGame(int game)
 {
 	if (selGame == game)
-		return COLOR WHITE CEND;
+		return ANSI WHITE CEND;
 	else
-		return COLOR BRIGHT CSEP WHITE CEND;
+		return ANSI BRIGHT ASEP WHITE CEND;
 }
 
 const char * isSelectedTool(int tool)
 {
 	if (selTool == tool)
-		return COLOR WHITE CEND;
+		return ANSI WHITE CEND;
 	else
-		return COLOR BRIGHT CSEP WHITE CEND;
+		return ANSI BRIGHT ASEP WHITE CEND;
 }
 
 int games(char userDir[30], int upperrv)
@@ -41,7 +41,7 @@ int games(char userDir[30], int upperrv)
 	consoleSelect(&bottomScreen);
 	if (upperrv != 1)
 		if (thing)
-			printf("games opened\n");
+			std::cout << "games opened\n";
 	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
@@ -53,7 +53,7 @@ int games(char userDir[30], int upperrv)
 	settingsFile = fopen(sf, "r");
 	char dummy[30], userName[30];
 	int back, text, XP, XPEarned, lvl, Battleship, Blackjack, Chess, ConnectFour, Sudoku, DodgeFall, Minesweeper, Mastermind, War, Nanogram, Mancala, Monopoly, SlotMach, Snake;
-	char otherArray[6][30];
+	char otherArray[5][30];
 	strcpy(otherArray[0], "name");
 	strcpy(otherArray[1], "pass");
 	strcpy(otherArray[2], "color");
@@ -153,23 +153,19 @@ int games(char userDir[30], int upperrv)
 	sprintf(listArray[11], "%s", isLocked(Monopoly));
 	sprintf(listArray[12], "%s", isLocked(SlotMach));
 	sprintf(listArray[13], "%s", isLocked(Snake));
-	printf(RESET "                   -Games List-\n");
-	printf("\n");
-	printf(RESET " %sBattleship   = %s " RESET "| %sMinesweeper = %s\n", isSelectedGame(0), isLocked(Battleship), isSelectedGame(1), isLocked(Minesweeper));
-	printf(RESET " %sBlackjack    = %s " RESET "| %sMastermind  = %s\n", isSelectedGame(2), isLocked(Blackjack), isSelectedGame(3), isLocked(Mastermind));
-	printf(RESET " %sChess        = %s " RESET "| %sWar         = %s\n", isSelectedGame(4), isLocked(Chess), isSelectedGame(5), isLocked(War));
-	printf(RESET " %sConnect Four = %s " RESET "| %sNanogram    = %s\n", isSelectedGame(6), isLocked(ConnectFour), isSelectedGame(7), isLocked(Nanogram));
-	printf(RESET " %sSudoku       = %s " RESET "| %sMancala     = %s\n", isSelectedGame(8), isLocked(Sudoku), isSelectedGame(9), isLocked(Mancala));
-	printf(RESET " %sDodge Fall   = %s " RESET "| %sMonopoly    = %s\n", isSelectedGame(10), isLocked(DodgeFall), isSelectedGame(11), isLocked(Monopoly));
-	printf(RESET " %sSlotMach     = %s " RESET "| %sSnake       = %s\n", isSelectedGame(12), isLocked(SlotMach), isSelectedGame(13), isLocked(Snake));
+	std::cout << CRESET "                   -Games List-\n\n";
+	std::cout << CRESET " " << isSelectedGame(0) << "Battleship   = " << isLocked(Battleship) << " " CRESET "| " << isSelectedGame(1) << "Minesweeper = " << isLocked(Minesweeper) << "\n";
+	std::cout << CRESET " " << isSelectedGame(2) << "Blackjack    = " << isLocked(Blackjack) << " " CRESET "| " << isSelectedGame(3) << "Mastermind  = " << isLocked(Mastermind) << "\n";
+	std::cout << CRESET " " << isSelectedGame(4) << "Chess        = " << isLocked(Chess) << " " CRESET "| " << isSelectedGame(5) << "War         = " << isLocked(War) << "\n";
+	std::cout << CRESET " " << isSelectedGame(6) << "Connect Four = " << isLocked(ConnectFour) << " " CRESET "| " << isSelectedGame(7) << "Nanogram    = " << isLocked(Nanogram) << "\n";
+	std::cout << CRESET " " << isSelectedGame(8) << "Sudoku       = " << isLocked(Sudoku) << " " CRESET "| " << isSelectedGame(9) << "Mancala     = " << isLocked(Mancala) << "\n";
+	std::cout << CRESET " " << isSelectedGame(10) << "Dodge Fall   = " << isLocked(DodgeFall) << " " CRESET "| " << isSelectedGame(11) << "Monopoly    = " << isLocked(Monopoly) << "\n";
+	std::cout << CRESET " " << isSelectedGame(12) << "SlotMach     = " << isLocked(SlotMach) << " " CRESET "| " << isSelectedGame(13) << "Snake       = " << isLocked(Snake) << "\n";
 	char returnvalue[30];
 	while(true)
 	{
 		hidScanInput();
 		u32 kDown = hidKeysDown();
-		u32 kDownOld = hidKeysDown();
-		u32 kHeldOld = hidKeysHeld();
-		u32 kUpOld = hidKeysHeld();
 		if (selGame < gameMax)
 		{
 			if (selGame % 2 == 0)
@@ -178,18 +174,7 @@ int games(char userDir[30], int upperrv)
 				{
 					
 					sprintf(returnvalue, "RIGHT");
-					while(true)
-					{
-						hidScanInput();
-						u32 kDown = hidKeysDown();
-						u32 kHeld = hidKeysHeld();
-						u32 kUp = hidKeysUp();
-						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-						{
-							selGame += 1;
-							break;
-						}
-					}
+					selGame += 1;
 					break;
 				}
 			}
@@ -200,18 +185,7 @@ int games(char userDir[30], int upperrv)
 			{
 				
 				sprintf(returnvalue, "DOWN");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						selGame += 2;
-						break;
-					}
-				}
+				selGame += 2;
 				break;
 			}
 		}
@@ -222,18 +196,7 @@ int games(char userDir[30], int upperrv)
 				if (kDown & KEY_LEFT)
 				{
 					sprintf(returnvalue, "LEFT");
-					while(true)
-					{
-						hidScanInput();
-						u32 kDown = hidKeysDown();
-						u32 kHeld = hidKeysHeld();
-						u32 kUp = hidKeysUp();
-						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-						{
-							selGame -= 1;
-							break;
-						}
-					}
+					selGame -= 1;
 					break;
 				}
 			}
@@ -243,35 +206,13 @@ int games(char userDir[30], int upperrv)
 			if (kDown & KEY_UP)
 			{
 				sprintf(returnvalue, "UP");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						selGame -= 2;
-						break;
-					}
-				}
+				selGame -= 2;
 				break;
 			}
 		}
 		if (kDown & KEY_START)
 		{
 			sprintf(returnvalue, "START");
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-				{
-					break;
-				}
-			}
 			break;
 		}
 		if (strcmp(listArray[selTool], "Unlocked") == 0)
@@ -281,23 +222,12 @@ int games(char userDir[30], int upperrv)
 				sprintf(returnvalue, "A");
 				while(true)
 				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+					int result = gamesOption();
+					if (result == 0)
+						break;
+					if (result == 1)
 					{
-						while(true)
-						{
-							int result = gamesOption();
-							if (result == 0)
-								break;
-							if (result == 1)
-							{
-								sprintf(returnvalue, "START");
-								break;
-							}
-						}
+						sprintf(returnvalue, "START");
 						break;
 					}
 				}
@@ -307,69 +237,43 @@ int games(char userDir[30], int upperrv)
 		if (kDown & KEY_B)
 		{
 			sprintf(returnvalue, "B");
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-				{
-					break;
-				}
-			}
 			break;
 		}
-	}
-	if (strcmp(returnvalue, "START") == 0)
-	{
 		gfxFlushBuffers();
 		gfxSwapBuffers();
 		gspWaitForVBlank();
+	}
+	if (strcmp(returnvalue, "START") == 0)
+	{
 		ireturnvalue = 2;
 	}
 	if (strcmp(returnvalue, "LEFT") == 0)
 	{
-		gfxFlushBuffers();
-		gfxSwapBuffers();
-		gspWaitForVBlank();
 		ireturnvalue = 1;
 	}
 	if (strcmp(returnvalue, "UP") == 0)
 	{
-		gfxFlushBuffers();
-		gfxSwapBuffers();
-		gspWaitForVBlank();
 		ireturnvalue = 1;
 	}
 	if (strcmp(returnvalue, "RIGHT") == 0)
 	{
-		gfxFlushBuffers();
-		gfxSwapBuffers();
-		gspWaitForVBlank();
 		ireturnvalue = 1;
 	}
 	if (strcmp(returnvalue, "DOWN") == 0)
 	{
-		gfxFlushBuffers();
-		gfxSwapBuffers();
-		gspWaitForVBlank();
 		ireturnvalue = 1;
 	}
 	if (strcmp(returnvalue, "A") == 0)
 	{
-		gfxFlushBuffers();
-		gfxSwapBuffers();
-		gspWaitForVBlank();
 		ireturnvalue = 1;
 	}
 	if (strcmp(returnvalue, "B") == 0)
 	{
-		gfxFlushBuffers();
-		gfxSwapBuffers();
-		gspWaitForVBlank();
 		ireturnvalue = 0;
 	}
+	gfxFlushBuffers();
+	gfxSwapBuffers();
+	gspWaitForVBlank();
 	return ireturnvalue;
 }
 
@@ -390,7 +294,7 @@ int tools(char userDir[30], int upperrv)
 	consoleSelect(&bottomScreen);
 	if (upperrv != 1)
 		if (thing)
-			printf("tools opened\n");
+			std::cout << "tools opened\n";
 	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
@@ -466,19 +370,15 @@ int tools(char userDir[30], int upperrv)
 	sprintf(listArray[2], "%s", isLocked(Pawn));
 	sprintf(listArray[3], "%s", isLocked(Alarm));
 	sprintf(listArray[4], "%s", isLocked(Media));
-	printf(RESET "                   -Tools List-\n");
-	printf("\n");
-	printf("      " RESET " %sTimer = %s " RESET "| %sJournal = %s\n", isSelectedTool(0), isLocked(Timer), isSelectedTool(1), isLocked(Journal));
-	printf("      " RESET " %sPawn  = %s " RESET "| %sAlarm   = %s\n", isSelectedTool(2), isLocked(Pawn), isSelectedTool(3), isLocked(Alarm));
-	printf("      " RESET " %sMedia = %s \n", isSelectedTool(4), isLocked(Media));
+	std::cout << CRESET "                   -Tools List-\n\n";
+	std::cout << "      " CRESET " " << isSelectedTool(0) << "Timer = " << isLocked(Timer) << " " CRESET "| " << isSelectedTool(1) << "Journal = " << isLocked(Journal) << "\n";
+	std::cout << "      " CRESET " " << isSelectedTool(2) << "Pawn  = " << isLocked(Pawn) << " " CRESET "| " << isSelectedTool(3) << "Alarm   = " << isLocked(Alarm) << "\n";
+	std::cout << "      " CRESET " " << isSelectedTool(4) << "Media = " << isLocked(Media) << "\n";
 	char returnvalue[30];
 	while(true)
 	{
 		hidScanInput();
 		u32 kDown = hidKeysDown();
-		u32 kDownOld = hidKeysDown();
-		u32 kHeldOld = hidKeysHeld();
-		u32 kUpOld = hidKeysHeld();
 		if (selTool < toolMax)
 		{
 			if (selTool % 2 == 0)
@@ -487,18 +387,7 @@ int tools(char userDir[30], int upperrv)
 				{
 					
 					sprintf(returnvalue, "RIGHT");
-					while(true)
-					{
-						hidScanInput();
-						u32 kDown = hidKeysDown();
-						u32 kHeld = hidKeysHeld();
-						u32 kUp = hidKeysUp();
-						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-						{
-							selTool += 1;
-							break;
-						}
-					}
+					selTool += 1;
 					break;
 				}
 			}
@@ -508,19 +397,8 @@ int tools(char userDir[30], int upperrv)
 			if (kDown & KEY_DOWN)
 			{
 				
-				sprintf(returnvalue, "DOWN");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{					
-						selTool += 2;
-						break;
-					}
-				}
+				sprintf(returnvalue, "DOWN");				
+				selTool += 2;
 				break;
 			}
 		}
@@ -531,18 +409,7 @@ int tools(char userDir[30], int upperrv)
 				if (kDown & KEY_LEFT)
 				{
 					sprintf(returnvalue, "LEFT");
-					while(true)
-					{
-						hidScanInput();
-						u32 kDown = hidKeysDown();
-						u32 kHeld = hidKeysHeld();
-						u32 kUp = hidKeysUp();
-						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-						{
-							selTool -= 1;
-							break;
-						}
-					}
+					selTool -= 1;
 					break;
 				}
 			}
@@ -552,35 +419,13 @@ int tools(char userDir[30], int upperrv)
 			if (kDown & KEY_UP)
 			{
 				sprintf(returnvalue, "UP");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						selTool -= 2;
-						break;
-					}
-				}
+				selTool -= 2;
 				break;
 			}
 		}
 		if (kDown & KEY_START)
 		{
 			sprintf(returnvalue, "START");
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-				{
-					break;
-				}
-			}
 			break;
 		}
 		if(strcmp(listArray[selTool], "Unlocked") == 0)
@@ -590,23 +435,12 @@ int tools(char userDir[30], int upperrv)
 				sprintf(returnvalue, "A");
 				while(true)
 				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+					int result = toolsOption();
+					if (result == 0)
+						break;
+					if (result == 1)
 					{
-						while(true)
-						{
-							int result = toolsOption();
-							if (result == 0)
-								break;
-							if (result == 1)
-							{
-								sprintf(returnvalue, "START");
-								break;
-							}
-						}
+						sprintf(returnvalue, "START");
 						break;
 					}
 				}
@@ -616,17 +450,6 @@ int tools(char userDir[30], int upperrv)
 		if (kDown & KEY_B)
 		{
 			sprintf(returnvalue, "B");
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-				{
-					break;
-				}
-			}
 			break;
 		}
 	}
@@ -748,13 +571,16 @@ int storeDisplay(int method)
 			iRandom6 = rand() % 6 + 31;
 			iRandom7 = rand() % 6 + 31;
 			if (i % 4 == 1)
-				printf("\x1b[0;20H-\x1b[%dmX\x1b[%dmP \x1b[%dmS\x1b[%dmt\x1b[%dmo\x1b[%dmr\x1b[%dme\x1b[0m-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
+			{
+				std::cout << ANSI "0;20" PEND;
+				printf("-" ANSI "%d" CEND "X" ANSI "%d" CEND "P " ANSI "%d" CEND "S" ANSI "%d" CEND "t" ANSI "%d" CEND "o" ANSI "%d" CEND "r" ANSI "%d" CEND "e" CRESET "-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
+			}
 			for(int n = 0; n < 4; n++)
 			{
-				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 4), storeStrings(i, (n + 2), 0).c_str());
-				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 9), storeStrings(i, (n + 7), 0).c_str());
+				printf(ANSI "%d;19" PEND ANSI BRIGHT ASEP WHITE CEND "%s", (n + 4), storeStrings(i, (n + 2), 0).c_str());
+				printf(ANSI "%d;19" PEND ANSI BRIGHT ASEP WHITE CEND "%s", (n + 9), storeStrings(i, (n + 7), 0).c_str());
 			}
-			printf("\x1b[8;19H" RESET "%s", storeStrings(i, 6, 0).c_str());
+			std::cout << ANSI "8;19" PEND CRESET << storeStrings(i, 6, 0).c_str();
 			gspWaitForVBlank();
 		}
 		method = 0;
@@ -772,13 +598,16 @@ int storeDisplay(int method)
 			iRandom6 = rand() % 6 + 31;
 			iRandom7 = rand() % 6 + 31;
 			if (i % 4 == 1)
-				printf("\x1b[0;20H-\x1b[%dmX\x1b[%dmP \x1b[%dmS\x1b[%dmt\x1b[%dmo\x1b[%dmr\x1b[%dme\x1b[0m-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
+			{
+				std::cout << ANSI "0;20" PEND;
+				printf("-" ANSI "%d" CEND "X" ANSI "%d" CEND "P " ANSI "%d" CEND "S" ANSI "%d" CEND "t" ANSI "%d" CEND "o" ANSI "%d" CEND "r" ANSI "%d" CEND "e" CRESET "-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
+			}
 			for(int n = 0; n < 4; n++)
 			{
-				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 4), storeStrings(i, (n + 2), 1).c_str());
-				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 9), storeStrings(i, (n + 7), 1).c_str());
+				printf(ANSI "%d;19" PEND ANSI BRIGHT ASEP WHITE CEND "%s", (n + 4), storeStrings(i, (n + 2), 1).c_str());
+				printf(ANSI "%d;19" PEND ANSI BRIGHT ASEP WHITE CEND "%s", (n + 9), storeStrings(i, (n + 7), 1).c_str());
 			}
-			printf("\x1b[8;19H" RESET "%s", storeStrings(i, 6, 1).c_str());
+			std::cout << ANSI "8;19" PEND CRESET << storeStrings(i, 6, 1).c_str();
 			gspWaitForVBlank();
 		}
 		method = 0;
@@ -788,23 +617,24 @@ int storeDisplay(int method)
 		strcpy(storeMenu[i], storeArray[selStore + i - 2]);
 	if (method == 0)
 	{
-		iRandom1 = rand() % 6 + 1;
-		iRandom2 = rand() % 6 + 1;
-		iRandom3 = rand() % 6 + 1;
-		iRandom4 = rand() % 6 + 1;
-		iRandom5 = rand() % 6 + 1;
-		iRandom6 = rand() % 6 + 1;
-		iRandom7 = rand() % 6 + 1;
-		printf("\x1b[0;20H-\x1b[3%dmX" RESET "\x1b[3%dmP" RESET " \x1b[3%dmS" RESET "\x1b[3%dmt" RESET "\x1b[3%dmo" RESET "\x1b[3%dmr" RESET "\x1b[3%dme" RESET "-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
-		printf(RESET "\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[2]);
-		printf(RESET "\x1b[5;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[3]);
-		printf(RESET "\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[4]);
-		printf(RESET "\x1b[7;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[5]);
-		printf(RESET "\x1b[8;19H" COLOR WHITE CEND "%s", storeMenu[6]);
-		printf(RESET "\x1b[9;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[7]);
-		printf(RESET "\x1b[10;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[8]);
-		printf(RESET "\x1b[11;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[9]);
-		printf(RESET "\x1b[12;19H" COLOR BRIGHT CSEP WHITE CEND "%s", storeMenu[10]);
+		iRandom1 = rand() % 6 + 31;
+		iRandom2 = rand() % 6 + 31;
+		iRandom3 = rand() % 6 + 31;
+		iRandom4 = rand() % 6 + 31;
+		iRandom5 = rand() % 6 + 31;
+		iRandom6 = rand() % 6 + 31;
+		iRandom7 = rand() % 6 + 31;
+		std::cout << ANSI "0;20" PEND;
+		printf("-" ANSI "%d" CEND "X" CRESET ANSI "%d" CEND "P" CRESET " " ANSI "%d" CEND "S" CRESET ANSI "%d" CEND "t" CRESET ANSI "%d" CEND "o" CRESET ANSI "%d" CEND "r" CRESET ANSI "%d" CEND "e" CRESET "-", iRandom1, iRandom2, iRandom3, iRandom4, iRandom5, iRandom6, iRandom7);
+		std::cout << CRESET ANSI "4;19" PEND ANSI BRIGHT ASEP WHITE CEND << storeMenu[2];
+		std::cout << CRESET ANSI "5;19" PEND ANSI BRIGHT ASEP WHITE CEND << storeMenu[3];
+		std::cout << CRESET ANSI "6;19" PEND ANSI BRIGHT ASEP WHITE CEND << storeMenu[4];
+		std::cout << CRESET ANSI "7;19" PEND ANSI BRIGHT ASEP WHITE CEND << storeMenu[5];
+		std::cout << CRESET ANSI "8;19" PEND ANSI WHITE CEND << storeMenu[6];
+		std::cout << CRESET ANSI "9;19" PEND ANSI BRIGHT ASEP WHITE CEND << storeMenu[7];
+		std::cout << CRESET ANSI "10;19" PEND ANSI BRIGHT ASEP WHITE CEND << storeMenu[8];
+		std::cout << CRESET ANSI "11;19" PEND ANSI BRIGHT ASEP WHITE CEND << storeMenu[9];
+		std::cout << CRESET ANSI "12;19" PEND ANSI BRIGHT ASEP WHITE CEND << storeMenu[10];
 	}
 	return 0;
 }
@@ -815,7 +645,7 @@ int store(char userDir[30], int upperrv)
 	consoleSelect(&bottomScreen);
 	if (upperrv != 1)
 		if (debugTF)
-			printf("store opened\n");
+			std::cout << "store opened\n";
 	consoleSelect(&topScreen);
 	consoleClear();
 	int storeMax = 4;
@@ -828,27 +658,13 @@ int store(char userDir[30], int upperrv)
 		hidScanInput();
 		hidWaitForEvent(HIDEVENT_PAD0, false);
 		u32 kDown = hidKeysDown();
-		u32 kDownOld = hidKeysDown();
-		u32 kHeldOld = hidKeysHeld();
-		u32 kUpOld = hidKeysHeld();
 		if (selStore < storeMax)
 		{
 			if (kDown & KEY_DOWN)
 			{
 				
 				sprintf(returnvalue, "DOWN");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						storeDisp = 1;
-						break;
-					}
-				}
+				storeDisp = 1;
 				break;
 			}
 		}
@@ -857,35 +673,13 @@ int store(char userDir[30], int upperrv)
 			if (kDown & KEY_UP)
 			{
 				sprintf(returnvalue, "UP");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						storeDisp = 2;
-						break;
-					}
-				}
+				storeDisp = 2;
 				break;
 			}
 		}
 		if (kDown & KEY_START)
 		{
 			sprintf(returnvalue, "START");
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-				{
-					break;
-				}
-			}
 			break;
 		}
 		if (kDown & KEY_A)
@@ -893,23 +687,12 @@ int store(char userDir[30], int upperrv)
 			sprintf(returnvalue, "A");
 			while(true)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				int result = toolsOption();
+				if (result == 0)
+					break;
+				if (result == 1)
 				{
-					while(true)
-					{
-						int result = toolsOption();
-						if (result == 0)
-							break;
-						if (result == 1)
-						{
-							sprintf(returnvalue, "START");
-							break;
-						}
-					}
+					sprintf(returnvalue, "START");
 					break;
 				}
 			}
@@ -918,17 +701,6 @@ int store(char userDir[30], int upperrv)
 		if (kDown & KEY_B)
 		{
 			sprintf(returnvalue, "B");
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-				{
-					break;
-				}
-			}
 			break;
 		}
 	}
@@ -984,26 +756,26 @@ int credits()
 {
 	consoleSelect(&bottomScreen);
 	if (debugTF)
-		printf("credits opened\n");
+		std::cout << "credits opened\n";
 	consoleSelect(&topScreen);
 	consoleClear();
-	printf("\x1b[0;21HCredits:");
-	printf("\x1b[2;16H" COLOR RED CEND "-Lead Programmers-");
-	printf("\x1b[3;18H" RESET "Matthew Rease");
-	printf("\x1b[5;17H" COLOR YELLOW CEND "-Alpha Testing-");
-	printf("\x1b[6;18H" RESET "Jared Freeman");
-	printf("\x1b[8;17H" COLOR CYAN CEND "-Special Thanks-");
-	printf("\x1b[9;10H" COLOR BRIGHT CSEP RED CEND "Smealum" RESET " - " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " and " COLOR BLUE CEND "homebrew");
-	printf("\x1b[10;0H" RESET "Aurelio Mannara +");
-	printf("\x1b[11;16H- both-screen-text " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
-	printf("\x1b[12;16H- colored-text " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
-	printf("\x1b[13;16H- read-controls " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
-	printf("\x1b[14;16H- touch-screen " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
-	printf("\x1b[15;16H- multiple-windows-text " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET);
-	printf("\x1b[16;43Hexample");
-	printf("\x1b[17;4Hfincs - software-keyboard " COLOR BRIGHT CSEP BLUE CEND "libctru" RESET " example");
-	printf("\x1b[18;14HAnd the people over at " COLOR BRIGHT CSEP YELLOW CEND "sourceforge," RESET);
-	printf("\x1b[19;12Hhelping me learn " COLOR GREEN CEND "C" RESET " and " COLOR BRIGHT CSEP GREEN CEND "C++" RESET);
+	std::cout << ANSI "0;21" PEND "Credits:";
+	std::cout << ANSI "2;16" PEND ANSI RED CEND "-Lead Programmers-";
+	std::cout << ANSI "3;18" PEND CRESET "Matthew Rease";
+	std::cout << ANSI "5;17" PEND ANSI YELLOW CEND "-Alpha Testing-";
+	std::cout << ANSI "6;18" PEND CRESET "Jared Freeman";
+	std::cout << ANSI "8;17" PEND ANSI CYAN CEND "-Special Thanks-";
+	std::cout << ANSI "9;10" PEND ANSI BRIGHT ASEP RED CEND "Smealum" CRESET " - " ANSI BRIGHT ASEP BLUE CEND "libctru" CRESET " and " ANSI BLUE CEND "homebrew";
+	std::cout << ANSI "10;0" PEND CRESET "Aurelio Mannara +";
+	std::cout << ANSI "11;16" PEND "- both-screen-text " ANSI BRIGHT ASEP BLUE CEND "libctru" CRESET " example";
+	std::cout << ANSI "12;16" PEND "- colored-text " ANSI BRIGHT ASEP BLUE CEND "libctru" CRESET " example";
+	std::cout << ANSI "13;16" PEND "- read-controls " ANSI BRIGHT ASEP BLUE CEND "libctru" CRESET " example";
+	std::cout << ANSI "14;16" PEND "- touch-screen " ANSI BRIGHT ASEP BLUE CEND "libctru" CRESET " example";
+	std::cout << ANSI "15;16" PEND "- multiple-windows-text " ANSI BRIGHT ASEP BLUE CEND "libctru" CRESET;
+	std::cout << ANSI "16;43" PEND "example";
+	std::cout << ANSI "17;4" PEND "fincs - software-keyboard " ANSI BRIGHT ASEP BLUE CEND "libctru" CRESET " example";
+	std::cout << ANSI "18;14" PEND "And the people over at " ANSI BRIGHT ASEP YELLOW CEND "sourceforge," CRESET;
+	std::cout << ANSI "19;12" PEND "helping me learn " ANSI GREEN CEND "C" CRESET " and " ANSI BRIGHT ASEP GREEN CEND "C++" CRESET;
 	//int step = 0;
 	//int buttonDown = false;
 	for (int i = 0; i < 420; i++)
@@ -1026,6 +798,8 @@ int credits()
 				buttonDown = true;
 			}
 		}*/
+		gfxFlushBuffers();
+		gfxSwapBuffers();
 		gspWaitForVBlank();
 	}
 	return 0;
@@ -1090,10 +864,12 @@ int aboutDisplay(int method)
 			printf("\x1b[0;21H-About-");
 			for(int n = 0; n < 4; n++)
 			{
-				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 4), aboutStrings(i, (n + 2), 0).c_str());
-				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 9), aboutStrings(i, (n + 7), 0).c_str());
+				printf(ANSI "%d;19" PEND, (n + 4));
+				std::cout << ANSI BRIGHT ASEP WHITE CEND << aboutStrings(i, (n + 2), 0).c_str();
+				printf(ANSI "%d;19" PEND, (n + 9));
+				std::cout << ANSI BRIGHT ASEP WHITE CEND << aboutStrings(i, (n + 7), 0).c_str();
 			}
-			printf("\x1b[8;19H" RESET "%s", aboutStrings(i, 6, 0).c_str());
+			std::cout << ANSI "8;19" PEND CRESET << aboutStrings(i, 6, 0).c_str();
 			gspWaitForVBlank();
 		}
 		method = 0;
@@ -1103,13 +879,15 @@ int aboutDisplay(int method)
 	{
 		for (int i = 0; i < 22; i++)
 		{
-			printf("\x1b[0;21H-About-");
+			std::cout << ANSI "0;21" PEND "-About-";
 			for(int n = 0; n < 4; n++)
 			{
-				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 4), aboutStrings(i, (n + 2), 1).c_str());
-				printf("\x1b[%d;19H" COLOR BRIGHT CSEP WHITE CEND "%s", (n + 9), aboutStrings(i, (n + 7), 1).c_str());
+				printf(ANSI "%d;19" PEND, (n + 4));
+				std::cout << ANSI BRIGHT ASEP WHITE CEND << aboutStrings(i, (n + 2), 1).c_str();
+				printf(ANSI "%d;19" PEND, (n + 9));
+				std::cout << ANSI BRIGHT ASEP WHITE CEND << aboutStrings(i, (n + 7), 1).c_str();
 			}
-			printf("\x1b[8;19H" RESET "%s", aboutStrings(i, 6, 1).c_str());
+			std::cout << ANSI "8;19" PEND CRESET << aboutStrings(i, 6, 1).c_str();
 			gspWaitForVBlank();
 		}
 		method = 0;
@@ -1119,16 +897,16 @@ int aboutDisplay(int method)
 		strcpy(aboutMenu[i], aboutArray[selAbout + i - 2]);
 	if (method == 0)
 	{
-		printf("\x1b[0;21H-About-");
-		printf(RESET "\x1b[4;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[2]);
-		printf(RESET "\x1b[5;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[3]);
-		printf(RESET "\x1b[6;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[4]);
-		printf(RESET "\x1b[7;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[5]);
-		printf(RESET "\x1b[8;19H" COLOR WHITE CEND "%s", aboutMenu[6]);
-		printf(RESET "\x1b[9;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[7]);
-		printf(RESET "\x1b[10;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[8]);
-		printf(RESET "\x1b[11;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[9]);
-		printf(RESET "\x1b[12;19H" COLOR BRIGHT CSEP WHITE CEND "%s", aboutMenu[10]);
+		std::cout << ANSI "0;21" PEND "-About-";
+		std::cout << CRESET ANSI "4;19" PEND ANSI BRIGHT ASEP WHITE CEND << aboutMenu[2];
+		std::cout << CRESET ANSI "5;19" PEND ANSI BRIGHT ASEP WHITE CEND << aboutMenu[3];
+		std::cout << CRESET ANSI "6;19" PEND ANSI BRIGHT ASEP WHITE CEND << aboutMenu[4];
+		std::cout << CRESET ANSI "7;19" PEND ANSI BRIGHT ASEP WHITE CEND << aboutMenu[5];
+		std::cout << CRESET ANSI "8;19" PEND ANSI WHITE CEND << aboutMenu[6];
+		std::cout << CRESET ANSI "9;19" PEND ANSI BRIGHT ASEP WHITE CEND << aboutMenu[7];
+		std::cout << CRESET ANSI "10;19" PEND ANSI BRIGHT ASEP WHITE CEND << aboutMenu[8];
+		std::cout << CRESET ANSI "11;19" PEND ANSI BRIGHT ASEP WHITE CEND << aboutMenu[9];
+		std::cout << CRESET ANSI "12;19" PEND ANSI BRIGHT ASEP WHITE CEND << aboutMenu[10];
 	}
 	return 0;
 }
@@ -1199,7 +977,7 @@ int about(int upperrv)
 	consoleSelect(&bottomScreen);
 	if (upperrv != 1)
 		if (debugTF)
-			printf("about opened\n");
+			std::cout << "about opened\n";
 	consoleSelect(&topScreen);
 	consoleClear();
 	int aboutMax = 4;
@@ -1212,27 +990,13 @@ int about(int upperrv)
 		hidScanInput();
 		hidWaitForEvent(HIDEVENT_PAD0, false);
 		u32 kDown = hidKeysDown();
-		u32 kDownOld = hidKeysDown();
-		u32 kHeldOld = hidKeysHeld();
-		u32 kUpOld = hidKeysHeld();
 		if (selAbout < aboutMax)
 		{
 			if (kDown & KEY_DOWN)
 			{
 				
 				sprintf(returnvalue, "DOWN");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						aboutDisp = 1;
-						break;
-					}
-				}
+				aboutDisp = 1;
 				break;
 			}
 		}
@@ -1241,35 +1005,13 @@ int about(int upperrv)
 			if (kDown & KEY_UP)
 			{
 				sprintf(returnvalue, "UP");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						aboutDisp = 2;
-						break;
-					}
-				}
+				aboutDisp = 2;
 				break;
 			}
 		}
 		if (kDown & KEY_START)
 		{
 			sprintf(returnvalue, "START");
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-				{
-					break;
-				}
-			}
 			break;
 		}
 		if (kDown & KEY_A)
@@ -1277,23 +1019,12 @@ int about(int upperrv)
 			sprintf(returnvalue, "A");
 			while(true)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				int result = aboutOption();
+				if (result == 0)
+					break;
+				if (result == 2)
 				{
-					while(true)
-					{
-						int result = aboutOption();
-						if (result == 0)
-							break;
-						if (result == 2)
-						{
-							sprintf(returnvalue, "START");
-							break;
-						}
-					}
+					sprintf(returnvalue, "START");
 					break;
 				}
 			}
@@ -1302,17 +1033,6 @@ int about(int upperrv)
 		if (kDown & KEY_B)
 		{
 			sprintf(returnvalue, "B");
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-				{
-					break;
-				}
-			}
 			break;
 		}
 	}

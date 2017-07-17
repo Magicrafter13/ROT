@@ -4,30 +4,30 @@ int matthew()
 {
 	consoleSelect(&bottomScreen);
 	if (debugTF)
-		printf("matthew [about] opened\n");
+		std::cout << "matthew [about] opened\n";
 	consoleSelect(&topScreen);
 	int returnvalue = 0;
 	consoleClear();
 	gspWaitForVBlank();
-	printf(RESET "My name is Matthew,\n");
-	printf("I've been interested in computers since\n");
-	printf("I was really young. My first game (written\n");
-	printf("in batch) was called Dungeon Escape, and was\n");
-	printf("a 'first person' maze game. Though it was\n");
-	printf("still static 2d ascii images.\n\n");
-	printf("I then made RFGEP which if you know what that\n");
-	printf("is, then you know where I got the inspiration\n");
-	printf("for ROT.\n\n");
-	printf("I have made other games, but the only one\n");
-	printf("worth mentioning is '1946' made in GameMaker\n");
-	printf("Studio. It's on the steam workshop if you're\n");
-	printf("interested. Although I haven't updated the\n");
-	printf("Steam version in a while, and it doesn't have\n");
-	printf("a lot of the cool things I added to it. I\n");
-	printf("can't update it either because I lost the\n");
-	printf("source files.\n\n");
-	printf("If you got any questions for me, feel free\n");
-	printf("to contact me via social media or otherwise.\n");
+	std::cout << CRESET "My name is Matthew,\n";
+	std::cout << "I've been interested in computers since\n";
+	std::cout << "I was really young. My first game (written\n";
+	std::cout << "in batch) was called Dungeon Escape, and was\n";
+	std::cout << "a 'first person' maze game. Though it was\n";
+	std::cout << "still static 2d ascii images.\n\n";
+	std::cout << "I then made RFGEP which if you know what that\n";
+	std::cout << "is, then you know where I got the inspiration\n";
+	std::cout << "for ROT.\n\n";
+	std::cout << "I have made other games, but the only one\n";
+	std::cout << "worth mentioning is '1946' made in GameMaker\n";
+	std::cout << "Studio. It's on the steam workshop if you're\n";
+	std::cout << "interested. Although I haven't updated the\n";
+	std::cout << "Steam version in a while, and it doesn't have\n";
+	std::cout << "a lot of the cool things I added to it. I\n";
+	std::cout << "can't update it either because I lost the\n";
+	std::cout << "source files.\n\n";
+	std::cout << "If you got any questions for me, feel free\n";
+	std::cout << "to contact me via social media or otherwise.\n";
 	gspWaitForVBlank();
 	for(int i = 0; i < 1200; i++)
 	{
@@ -49,22 +49,22 @@ int rot()
 {
 	consoleSelect(&bottomScreen);
 	if (debugTF)
-		printf("rot [about] opened\n");
+		std::cout << "rot [about] opened\n";
 	consoleSelect(&topScreen);
 	int returnvalue = 0;
 	consoleClear();
 	gspWaitForVBlank();
-	printf(RESET "ROT, for those who don't know:\n");
-	printf("RFGEP On ThreeDS\n");
-	printf("RFGEP which in and of itself stands for\n");
-	printf("Rease Family Gaming Entertainment Package\n");
-	printf("If you're curious about this batch program\n");
-	printf("look it up on sourceforge.net\n\n");
-	printf("Other than that, (as I've told many people\n");
-	printf("before) what this program is/does is hard\n");
-	printf("to explain.\n\n");
-	printf("So feel free to come up with a definition\n");
-	printf("for yourself. Have fun!\n");
+	std::cout << CRESET "ROT, for those who don't know:\n";
+	std::cout << "RFGEP On ThreeDS\n";
+	std::cout << "RFGEP which in and of itself stands for\n";
+	std::cout << "Rease Family Gaming Entertainment Package\n";
+	std::cout << "If you're curious about this batch program\n";
+	std::cout << "look it up on sourceforge.net\n\n";
+	std::cout << "Other than that, (as I've told many people\n";
+	std::cout << "before) what this program is/does is hard\n";
+	std::cout << "to explain.\n\n";
+	std::cout << "So feel free to come up with a definition\n";
+	std::cout << "for yourself. Have fun!\n";
 	gspWaitForVBlank();
 	for(int i = 0; i < 900; i++)
 	{
@@ -84,7 +84,7 @@ int rot()
 
 int commitDetail()
 {
-	printf("test success\n");
+	std::cout << "test success\n";
 	return 0;
 }
 
@@ -122,7 +122,7 @@ char timelineArray[10][851] =
 
 int timelineDisplay()
 {
-	printf(RESET);
+	printf(CRESET);
 	for (int i = 0; i < height; i++)
 	{
 		std::string temp1;
@@ -132,26 +132,26 @@ int timelineDisplay()
 	for (int i = 0; i < height; i++)
 	{
 		if (i == 0)
-			printf(COLOR RED CEND);
+			printf(ANSI RED CEND);
 		if (i == 1)
-			printf(RESET);
+			printf(CRESET);
 		if (i == 2)
-			printf(COLOR GREEN CEND);
+			printf(ANSI GREEN CEND);
 		if (i == 3)
-			printf(RESET);
+			printf(CRESET);
 		if (i == 4)
-			printf(COLOR BLUE CEND);
+			printf(ANSI BLUE CEND);
 		if (i == 5)
-			printf(RESET);
+			printf(CRESET);
 		if (i == 6)
-			printf(COLOR MAGENTA CEND);
+			printf(ANSI MAGENTA CEND);
 		if (i == 7)
-			printf(RESET);
+			printf(CRESET);
 		if (i == 8 || i == 9)
-			printf(COLOR YELLOW CEND);
-		printf("%s", dispArray[i]);
+			printf(ANSI YELLOW CEND);
+		std::cout << dispArray[i];
 	}
-	printf("\n" COLOR CYAN CEND "           Use Left and Right to move.\n           Or use L and R to fast move.\n        Or use ZL and ZR to move one page.");
+	std::cout << "\n" ANSI CYAN CEND "           Use Left and Right to move.\n           Or use L and R to fast move.\n        Or use ZL and ZR to move one page.";
 	int twoPercent = (length / 49);
 	int area = (selTimeline / twoPercent);
 	int otherNumber = (49 - area);
@@ -161,11 +161,11 @@ int timelineDisplay()
 	scrollBar.append("|");
 	for (int i = 0; i < otherNumber; i++)
 		scrollBar.append(" ");
-	printf("\x1b[18;0H       To view details of specific commits.");
-	printf("\x1b[19;0H                     Press Y");
-	printf("\x1b[22;0H" RESET "+------------------------------------------------+");
-	printf("\x1b[23;0H" RESET "" COLOR BRIGHT CSEP WHITE CEND "%s" RESET "|", scrollBar.c_str());
-	printf("\x1b[24;0H" RESET "+------------------------------------------------+");
+	std::cout << ANSI "18;0" PEND "       To view details of specific commits.";
+	std::cout << ANSI "19;0" PEND "                     Press Y";
+	std::cout << ANSI "22;0" PEND CRESET "+------------------------------------------------+";
+	std::cout << ANSI "23;0" PEND CRESET ANSI BRIGHT ASEP WHITE CEND << scrollBar.c_str() << CRESET "|";
+	std::cout << ANSI "24;0" PEND CRESET "+------------------------------------------------+";
 	return 0;
 }
 
@@ -179,7 +179,7 @@ int timeline(int upperrv)
 	consoleSelect(&bottomScreen);
 	if (upperrv != 1)
 		if (debugTF)
-			printf("timeline [about] opened\n");
+			std::cout << "timeline [about] opened\n";
 	consoleSelect(&topScreen);
 	consoleClear();
 	timelineDisplay();
@@ -189,7 +189,6 @@ int timeline(int upperrv)
 		gspWaitForVBlank();
 		hidScanInput();
 		u32 kDown = hidKeysDown();
-		u32 kDownOld = hidKeysDown();
 		u32 kHeld = hidKeysHeld();
 		if (selTimeline > tlMin)
 		{
@@ -227,54 +226,28 @@ int timeline(int upperrv)
 		}
 		if (kDown & KEY_B)
 		{
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				if (kDown != kDownOld)
-				{
-					sprintf(returnvalue, "B");
-					break;
-				}
-			}
+			sprintf(returnvalue, "B");
 			break;
 		}
 		if (kDown & KEY_Y)
 		{
+			sprintf(returnvalue, "Y");
 			while(true)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				if (kDown != kDownOld)
-				{
-					sprintf(returnvalue, "Y");
-					while(true)
-					{
-						int result = commitDetail();
-						if (result == 2)
-						{
-							sprintf(returnvalue, "START");
-							break;
-						}
-						if (result == 0)
-							break;
-					}
-					break;
-				}
-			}
-		}
-		if (kDown & KEY_START)
-		{
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				if (kDown != kDownOld)
+				int result = commitDetail();
+				if (result == 2)
 				{
 					sprintf(returnvalue, "START");
 					break;
 				}
+				if (result == 0)
+					break;
 			}
+			break;
+		}
+		if (kDown & KEY_START)
+		{
+			sprintf(returnvalue, "START");
 			break;
 		}
 	}

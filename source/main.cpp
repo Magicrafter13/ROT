@@ -1,6 +1,18 @@
 #include "header.h"
 
 //init
+FS_Archive sdmcArchive;
+
+void openSD()
+{
+	FSUSER_OpenArchive(&sdmcArchive, ARCHIVE_SDMC, fsMakePath(PATH_EMPTY, ""));
+}
+
+void closeSD()
+{
+	FSUSER_CloseArchive(sdmcArchive);
+}
+
 int selTool = 0;
 int selGame = 0;
 int selStore = 0;
@@ -15,7 +27,42 @@ int versionnum = 0;
 int vernumqik = 2;
 int settingsVersion = 5;
 
+int rotError()
+{
+	consoleSelect(&bottomScreen);
+	std::cout << "ROT Error!\n" << "Check logs.\n";
+	consoleSelect(&topScreen);
+	consoleClear();
+	std::cout << ANSI B_BLUE CEND;
+	for(int i = 0; i < 1500; i++)
+		std::cout << " ";
+	std::cout << ANSI "2;11" PEND "ROT HAS ENCOUNTERED AN ERROR";
+	std::cout << ANSI "5;16" PEND "Due to unknown circumstances:";
+	std::cout << ANSI "6;5" PEND "One of ROT's subroutines returned with";
+	std::cout << ANSI "7;5" PEND "an error code.";
+	std::cout << ANSI "9;5" PEND "Common Questions:";
+	std::cout << ANSI "10;5" PEND "What now? Either restart ROT, or submit";
+	std::cout << ANSI "11;27" PEND "the log file.";
+	std::cout << ANSI "12;5" PEND "Why did this happen? We have not yet";
+	std::cout << ANSI "13;16" PEND "implemented an error handler.";
+	std::cout << ANSI "14;5" PEND "Where is the log file? We have not yet";
+	std::cout << ANSI "15;15" PEND "implemented a log file system.";
+	std::cout << ANSI "27;14" PEND "Press any key to exit.";
+	while(true)
+	{
+		hidScanInput();
+		u32 kDown = hidKeysDown();
+		if (kDown & KEY_START || kDown & KEY_SELECT || kDown & KEY_A || kDown & KEY_B || kDown & KEY_X || kDown & KEY_Y || kDown & KEY_UP || kDown & KEY_DOWN || kDown & KEY_LEFT || kDown & KEY_RIGHT || kDown & KEY_L || kDown & KEY_R || kDown & KEY_ZL || kDown & KEY_ZR || kDown & KEY_CSTICK_UP || kDown & KEY_CSTICK_DOWN || kDown & KEY_CSTICK_LEFT || kDown & KEY_CSTICK_RIGHT)
+			break;
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+	}
+	return 0;
+}
+
 char menOption[5][25] = {"         Games          ", "        Tool Box        ", "        XP Store        ", "        Credits         ", "         About          "};
+char setArray[9][17] = {"                ", "                ", "Change Password ", "Change Username ", "Delete Save Data", "      DLC       ", "  Toggle Debug  ", "                ", "                "};
 
 bool touchInBox(touchPosition touch, int x, int y, int w, int h)
 {
@@ -134,8 +181,10 @@ int menuOption()
 			}
 		}
 	}
-	printf(RESET "\n");
+	std::cout << RESET "\n";
 	consoleClear();
+	gfxFlushBuffers();
+	gfxSwapBuffers();
 	gspWaitForVBlank();
 	return returnvalue;
 }
@@ -190,6 +239,11 @@ int settingsOption()
 			if (result == 2)
 			{
 				returnvalue = 1;
+				break;
+			}
+			if (result == 3)
+			{
+				returnvalue = 2;
 				break;
 			}
 		}
@@ -275,93 +329,40 @@ int settings(int upperrv)
 		newSettingsFile(hasEOF);
 		return 1;
 	}
-	char setOption[17], setOptionP1[17], setOptionN1[17], setOptionP2[17], setOptionN2[17];
 	char dummy[30], username[30];
 	fscanf(userFile, "%s %s %s", dummy, dummy, username);
 	fclose(userFile);
 	consoleSelect(&bottomScreen);
 	if (upperrv != 1)
 		if (debugTF)
-			printf("%s Opened Settings\n", username);
-	if (setsel == 0)
-	{
-		strcpy(setOption, "Change Password ");
-		strcpy(setOptionP1, "                ");
-		strcpy(setOptionN1, "Change Username ");
-		strcpy(setOptionP2, "                ");
-		strcpy(setOptionN2, "Delete Save Data");
-	}
-	if (setsel == 1)
-	{
-		strcpy(setOption, "Change Username ");
-		strcpy(setOptionP1, "Change Password ");
-		strcpy(setOptionN1, "Delete Save Data");
-		strcpy(setOptionP2, "                ");
-		strcpy(setOptionN2, "      DLC       ");
-	}
-	if (setsel == 2)
-	{
-		strcpy(setOption, "Delete Save Data");
-		strcpy(setOptionP1, "Change Username ");
-		strcpy(setOptionN1, "      DLC       ");
-		strcpy(setOptionP2, "Change Password ");
-		strcpy(setOptionN2, "  Toggle Debug  ");
-	}
-	if (setsel == 3)
-	{
-		strcpy(setOption, "      DLC       ");
-		strcpy(setOptionP1, "Delete Save Data");
-		strcpy(setOptionN1, "  Toggle Debug  ");
-		strcpy(setOptionP2, "Change Username ");
-		strcpy(setOptionN2, "                ");
-	}
-	if (setsel == 4)
-	{
-		strcpy(setOption, "  Toggle Debug  ");
-		strcpy(setOptionP1, "      DLC       ");
-		strcpy(setOptionN1, "                ");
-		strcpy(setOptionP2, "Delete Save Data");
-		strcpy(setOptionN2, "                ");
-	}
+			std::cout << username << " Opened Settings\n";
+	char setOption[5][17];
+	for (int i = 0; i < 5; i++)
+		strcpy(setOption[i], setArray[setsel + i]);
 	consoleSelect(&topScreen);
 	consoleClear();
-	printf("\n\n\n\n\n\n\n\n");
-	printf("                 \x1b[2;37m%s\x1b[0m\n\n", setOptionP2);
-	printf("                 %s\n\n", setOptionP1);
-	printf("        [A] Select   [B] Back to mainmenu         \n");
-	printf("               \x1b[47;30m                    \x1b[0m               ");
-	printf("===============\x1b[47;30m  %s  \x1b[0m===============", setOption);
-	printf("               \x1b[47;30m                    \x1b[0m               ");
-	printf("                   [Start] Exit                   \n");
-	printf("                 %s\n\n", setOptionN1);
-	printf("                 \x1b[2;37m%s\x1b[0m\n\n", setOptionN2);
+	std::cout << "\n\n\n\n\n\n\n\n";
+	std::cout << "                 " ANSI BRIGHT ASEP WHITE CEND << setOption[0] << CRESET "\n\n";
+	std::cout << "                 " << setOption[1] << "\n\n";
+	std::cout << "        [A] Select   [B] Back to mainmenu         \n";
+	std::cout << "               " ANSI B_WHITE ASEP BLACK CEND "                    " CRESET "               ";
+	std::cout << "===============" ANSI B_WHITE ASEP BLACK CEND "  " << setOption[2] << "  " CRESET "===============";
+	std::cout << "               " ANSI B_WHITE ASEP BLACK CEND "                    " CRESET "               ";
+	std::cout << "                   [Start] Exit                   \n";
+	std::cout << "                 " << setOption[3] << "\n\n";
+	std::cout << "                 " ANSI BRIGHT ASEP WHITE CEND << setOption[4] << CRESET "\n\n";
 	char returnvalue[30];
 	while(true)
 	{
 		hidScanInput();
 		u32 kDown = hidKeysDown();
-		u32 kDownOld = hidKeysDown();
-		u32 kHeldOld = hidKeysHeld();
-		u32 kUpOld = hidKeysHeld();
 		SMAX = 4;
 		if (setsel < SMAX)
 		{
 			if (kDown & KEY_DOWN)
 			{
-				
 				sprintf(returnvalue, "DOWN");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						setsel += 1;
-						break;
-					}
-				}
+				setsel += 1;
 				break;
 			}
 		}
@@ -371,35 +372,13 @@ int settings(int upperrv)
 			if (kDown & KEY_UP)
 			{
 				sprintf(returnvalue, "UP");
-				while(true)
-				{
-					hidScanInput();
-					u32 kDown = hidKeysDown();
-					u32 kHeld = hidKeysHeld();
-					u32 kUp = hidKeysUp();
-					if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-					{
-						setsel -= 1;
-						break;
-					}
-				}
+				setsel -= 1;
 				break;
 			}
 		}
 		if (kDown & KEY_START)
 		{
 			sprintf(returnvalue, "START");
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-				{
-					break;
-				}
-			}
 			break;
 		}
 		if (kDown & KEY_A)
@@ -407,23 +386,17 @@ int settings(int upperrv)
 			sprintf(returnvalue, "A");
 			while(true)
 			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+				result = settingsOption();
+				if (result == 0)
+					break;
+				if (result == 1)
 				{
-					while(true)
-					{
-						result = settingsOption();
-						if (result == 0)
-							break;
-						if (result == 1)
-						{
-							sprintf(returnvalue, "START");
-							break;
-						}
-					}
+					sprintf(returnvalue, "START");
+					break;
+				}
+				if (result == 2)
+				{
+					sprintf(returnvalue, "ERROR");
 					break;
 				}
 			}
@@ -432,19 +405,18 @@ int settings(int upperrv)
 		if (kDown & KEY_B)
 		{
 			sprintf(returnvalue, "B");
-			while(true)
-			{
-				hidScanInput();
-				u32 kDown = hidKeysDown();
-				u32 kHeld = hidKeysHeld();
-				u32 kUp = hidKeysUp();
-				if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-				{
-					break;
-				}
-			}
 			break;
 		}
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+	}
+	if (strcmp(returnvalue, "ERROR") == 0)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+		gspWaitForVBlank();
+		ireturnvalue = 3;
 	}
 	if (strcmp(returnvalue, "START") == 0)
 	{
@@ -486,8 +458,13 @@ int settings(int upperrv)
 
 int main(int argc, char **argv)
 {
+	std::ofstream testFile("sdmc:/3ds/testFile.txt");
+	testFile << "test 2\n";
+	testFile.close();
 	hidInit();
 	gfxInitDefault();
+	fsInit();
+	sdmcInit();
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 	consoleInit(GFX_BOTTOM, &versionWin);
@@ -495,16 +472,16 @@ int main(int argc, char **argv)
 	consoleSetWindow(&versionWin, 13, 29, 27, 1);
 
 	consoleSelect(&topScreen);
-	printf("ROT\n");
+	std::cout << "ROT\n";
 
 	consoleSelect(&bottomScreen);
-	printf("Loading...\n");
+	std::cout << "Loading...\n";
 	
 	consoleSelect(&versionWin);
-	printf("ROT Version: " COLOR GREEN CEND "%s" RESET " " COLOR YELLOW CEND "%s", versiontxtt, versiontxtn);
+	std::cout << "ROT Version: " ANSI GREEN CEND << versiontxtt << CRESET " " ANSI YELLOW CEND << versiontxtn;
 
 	consoleSelect(&topScreen);
-	printf("\x1b[29;15Hby Matthew Rease\n");
+	std::cout << ANSI "29;15" PEND "by Matthew Rease\n";
 	
 	if(access("sdmc:/3ds/ROT_Data/isset.rvf", F_OK) == -1)
 	{
@@ -512,43 +489,37 @@ int main(int argc, char **argv)
 		bool usepass = false;
 		char mybuf[21];
 		consoleSelect(&bottomScreen);
-		printf("First Time Setup is Running\n");
+		std::cout << "First Time Setup is Running\n";
 		consoleSelect(&topScreen);
 		consoleClear();
-		printf("Welcome to ROT!\n");
-		printf("Welcome, user\n");
-		printf("ROT is a hub of sorts, it will contain games,\ntools, etc. ");
-		printf("ROT stands for RFGEP On ThreeDS\n");
-		printf("RFGEP was a program I used to work on for Windows,if you want to check it out, go search it on\nsourceforge. However I no longer update it,\nbecause I got bored, and I lost my flashdrive containing all the code :/\n");
-		printf("You will now be guided through the setup process.\n");
-		printf("Press A to continue with setup.");
+		std::cout << "Welcome to ROT!\n";
+		std::cout << "Welcome, user\n";
+		std::cout << "ROT is a hub of sorts, it will contain games,\ntools, etc. ";
+		std::cout << "ROT stands for RFGEP On ThreeDS\n";
+		std::cout << "RFGEP was a program I used to work on for Windows,if you want to check it out, go search it on\n";
+		std::cout << "sourceforge. However I no longer update it,\n";
+		std::cout << "because I got bored, and I lost my flashdrive containing all the code :/\n";
+		std::cout << "You will now be guided through the setup process.\n";
+		std::cout << "Press A to continue with setup.";
 		while (true)
 		{
 			hidScanInput();
 			u32 kDown = hidKeysDown();
-
 			if (kDown & KEY_A) break;
-
 			gfxFlushBuffers();
 			gfxSwapBuffers();
-
 			gspWaitForVBlank();
 		}
 		consoleClear();
-		printf("You are using ROT version: ");
-		printf(versiontxtt);
-		printf(versiontxtn);
-		printf("\n");
-		printf("Would you like a password?\n");
-		printf("A - Yes | B - No\n");
+		std::cout << "You are using ROT version: " << versiontxtt << versiontxtn << "\n";
+		std::cout << "Would you like a password?\n";
+		std::cout << "A - Yes | B - No\n";
 		while (true)
 		{
 			hidScanInput();
 			u32 kDown = hidKeysDown();
 			if (kDown & KEY_START)
 				break;
-			//static SwkbdState swkbd;
-			//SwkbdButton button = SWKBD_BUTTON_NONE;
 			bool didit = false;
 			if (kDown & KEY_A)
 			{
@@ -572,10 +543,7 @@ int main(int argc, char **argv)
 				if (usepass)
 				{
 					consoleSelect(&bottomScreen);
-					printf("Password set to: ");
-					std::cout << mybuf;
-					//printf(mybuf);
-					printf("\n");
+					std::cout << "Password set to: " << mybuf << "\n";
 					consoleSelect(&topScreen);
 				}
 				break;
@@ -583,7 +551,6 @@ int main(int argc, char **argv)
 
 			gfxFlushBuffers();
 			gfxSwapBuffers();
-
 			gspWaitForVBlank();
 		}
 		mkdir("sdmc:/3ds/ROT_Data/", 0777);
@@ -597,47 +564,43 @@ int main(int argc, char **argv)
 		}else{
 			fprintf(fp, "%s %s %s \n", "pass", "=", "none");
 		}
-		fprintf(fp, "version = %d\n", vernumqik);
+		fprintf(fp, "version = %d \n", vernumqik);
 		fprintf(fp, "color = 40 37 \n");
-		fprintf(fp, "XP = %d \n", 100);
-		fprintf(fp, "XPEarned = %d \n", 100);
-		fprintf(fp, "lvl = %d \n", 1);
-		fprintf(fp, "Battleship = %d \n", 0);
-		fprintf(fp, "Blackjack = %d \n", 0);
-		fprintf(fp, "Chess = %d \n", 0);
-		fprintf(fp, "ConnectFour = %d \n", 0);
-		fprintf(fp, "Sudoku = %d \n", 0);
-		fprintf(fp, "DodgeFall = %d \n", 0);
-		fprintf(fp, "Minesweeper = %d \n", 0);
-		fprintf(fp, "Mastermind = %d \n", 0);
-		fprintf(fp, "War = %d \n", 0);
-		fprintf(fp, "Nanogram = %d \n", 0);
-		fprintf(fp, "TTT = %d \n", 0);
-		fprintf(fp, "Timer = %d \n", 0);
-		fprintf(fp, "Mancala = %d \n", 0);
-		fprintf(fp, "Monopoly = %d \n", 0);
-		fprintf(fp, "Journal = %d \n", 0);
-		fprintf(fp, "Pawn = %d \n", 0);
-		fprintf(fp, "SlotMach = %d \n", 0);
-		fprintf(fp, "Snake = %d \n", 0);
-		fprintf(fp, "Alarm = %d \n", 0);
-		fprintf(fp, "msg = %d \n", 0);
-		fprintf(fp, "Media = %d\n", 1);
+		fprintf(fp, "XP = 100 \n");
+		fprintf(fp, "XPEarned = 100 \n");
+		fprintf(fp, "lvl = 1 \n");
+		fprintf(fp, "Battleship = 0 \n");
+		fprintf(fp, "Blackjack = 0 \n");
+		fprintf(fp, "Chess = 0 \n");
+		fprintf(fp, "ConnectFour = 0 \n");
+		fprintf(fp, "Sudoku = 0 \n");
+		fprintf(fp, "DodgeFall = 0 \n");
+		fprintf(fp, "Minesweeper = 0 \n");
+		fprintf(fp, "Mastermind = 0 \n");
+		fprintf(fp, "War = 0 \n");
+		fprintf(fp, "Nanogram = 0 \n");
+		fprintf(fp, "TTT = 0 \n");
+		fprintf(fp, "Timer = 0 \n");
+		fprintf(fp, "Mancala = 0 \n");
+		fprintf(fp, "Monopoly = 0 \n");
+		fprintf(fp, "Journal = 0 \n");
+		fprintf(fp, "Pawn = 0 \n");
+		fprintf(fp, "SlotMach = 0 \n");
+		fprintf(fp, "Snake = 0 \n");
+		fprintf(fp, "Alarm = 0 \n");
+		fprintf(fp, "msg = 0 \n");
+		fprintf(fp, "Media = 1 \n");
 		fprintf(fp, "-EOF-");
 		fclose(fp);
 		fp = fopen("sdmc:/3ds/ROT_Data/isset.rvf", "w");
 		fprintf(fp, "c");
 		fclose(fp);
-		//Remember this for colors:
-		//\x1b[back;textm(then the text)
-		//30-37 for text 40-47 for back
-		//0 = Black 1 = Red 2 = Green 3 = Yellow 4 = Blue 5 = Magenta 6 = Cyan 7 = White
 		consoleClear();
 		consoleSelect(&bottomScreen);
-		printf("Option: ");
+		std::cout << "Option: ";
 		consoleSelect(&topScreen);
-		printf("Press \x1b[40;31mA \x1b[40;37mto begin the walkthrough. Not added yet.\n");
-		printf("Press \x1b[40;33mB \x1b[40;37mto continue to program.\n");
+		std::cout << "Press " ANSI RED CEND "A " RESET "to begin the walkthrough. Not added yet.\n";
+		std::cout << "Press " ANSI YELLOW CEND "B " RESET "to continue to program.\n";
 		bool walkthrough;
 		while(true)
 		{
@@ -647,22 +610,28 @@ int main(int argc, char **argv)
 			{
 				walkthrough = true;
 				consoleSelect(&bottomScreen);
-				printf("A\n");
+				std::cout << "A\n";
 				consoleSelect(&topScreen);
+				gfxFlushBuffers();
+				gfxSwapBuffers();
+				gspWaitForVBlank();
 				break;
 			}
 			if (kDown & KEY_B)
 			{
 				walkthrough = false;
 				consoleSelect(&bottomScreen);
-				printf("B\n");
+				std::cout << "B\n";
 				consoleSelect(&topScreen);
+				gfxFlushBuffers();
+				gfxSwapBuffers();
+				gspWaitForVBlank();
 				break;
 			}
 		}
 		if (walkthrough)
 		{
-			printf("NOT ADDED YET\n");
+			std::cout << "NOT ADDED YET\n";
 		}
 	}
 	
@@ -677,17 +646,17 @@ int main(int argc, char **argv)
 			if ((fp = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r")) == NULL)
 			{
 				fclose(fp);
-				printf("USER DATA NOT FOUND :(\n");
-				printf("Multi User Feature not added yet.\n");
+				std::cout << "USER DATA NOT FOUND :(\n";
+				std::cout << "Multi User Feature not added yet.\n";
 				break;
 			} else {
-				printf("Data found\n");
+				std::cout << "Data found\n";
 				userFile = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r");
 				char t1[4], t2[1], t3[30], t4[4], t5[1], t6[30];
-				fscanf(userFile, "%s %s %s %s %s %s", t1, t2, t3, t4, t5, t6);
+				fscanf(userFile, "%s %s %s %s %s %s", t1, t2, username, t4, t5, t6);
 				sprintf(sendusername, "%s", t3);
 				bool incorrect = true;
-				printf("Press A to open keyboard to enter password\n");
+				std::cout << "Press A to open keyboard to enter password\n";
 				static char mybuf[21];
 				bool didit = false;
 				while (incorrect)
@@ -698,7 +667,7 @@ int main(int argc, char **argv)
 					{
 						logged = true;
 						consoleSelect(&bottomScreen);
-						printf("%s Logged in\n", t3);
+						std::cout << t3 << " Logged in\n";
 						incorrect = false;
 						break;
 					}
@@ -714,6 +683,9 @@ int main(int argc, char **argv)
 						{
 							didit = true;
 						}
+						gfxFlushBuffers();
+						gfxSwapBuffers();
+						gspWaitForVBlank();
 					}
 				}
 			}
@@ -731,7 +703,6 @@ int main(int argc, char **argv)
 			settingsFile = fopen(setfil, "r");
 			userFile = fopen(usrfil, "r");
 			consoleSelect(&bottomScreen);
-			//printf("&userdir/userdata.ruf");
 			sprintf(tempvar, "%s/userdata.ruf", userdir);
 			userfile = fopen(tempvar, "r");
 			fscanf(userfile, "%s %s %s", dummy, dummy, username);
@@ -757,66 +728,56 @@ int main(int argc, char **argv)
 			consoleSelect(&topScreen);
 			consoleClear();
 			gspWaitForVBlank();
-			printf("###                                            ###");
-			printf(" ###                                          ### ");
-			printf("  ###            [Select] Log-off            ###  ");
-			printf("   ###                                      ###   ");
-			printf("    ###                                    ###    ");
-			printf("     ###                                  ###     ");
-			printf("      ###                                ###      ");
-			printf("       ###         [X] Settings         ###       ");
-			printf("        ###                            ###        ");
-			printf("         ###                          ###         ");
-			printf("          ###                        ###          ");
-			printf("           ############################           ");
-			printf("           ##                        ##           ");
-			printf("           ##                        ##           ");
-			printf(" [<] Left  ##\x1b[3%dm%s\x1b[0m## Right [>] ", (mensel + 1), menOption[mensel]);
-			printf("           ##                        ##           ");
-			printf("           ##                        ##           ");
-			printf("           ############################           ");
-			printf("          ###                        ###          ");
-			printf("         ###        [A] Select        ###         ");
-			printf("        ###                            ###        ");
-			printf("       ###                              ###       ");
-			printf("      ###                                ###      ");
-			printf("     ###             Messages             ###     ");
-			printf("    ###                [00]                ###    ");
-			printf("   ###               [Y] View               ###   ");
-			printf("  ###                                        ###  ");
-			printf(" ###                                          ### ");
-			printf("###                                            ###");
-			printf("%s Logged in:", username);
+			std::cout << "###                                            ###";
+			std::cout << " ###                                          ### ";
+			std::cout << "  ###            [Select] Log-off            ###  ";
+			std::cout << "   ###                                      ###   ";
+			std::cout << "    ###                                    ###    ";
+			std::cout << "     ###                                  ###     ";
+			std::cout << "      ###                                ###      ";
+			std::cout << "       ###         [X] Settings         ###       ";
+			std::cout << "        ###                            ###        ";
+			std::cout << "         ###                          ###         ";
+			std::cout << "          ###                        ###          ";
+			std::cout << "           ############################           ";
+			std::cout << "           ##                        ##           ";
+			std::cout << "           ##                        ##           ";
+			std::cout << " [<] Left  ##";
+			printf("\x1b[%dm", mensel + 31);
+			std::cout << menOption[mensel] << CRESET "## Right [>] ";
+			std::cout << "           ##                        ##           ";
+			std::cout << "           ##                        ##           ";
+			std::cout << "           ############################           ";
+			std::cout << "          ###                        ###          ";
+			std::cout << "         ###        [A] Select        ###         ";
+			std::cout << "        ###                            ###        ";
+			std::cout << "       ###                              ###       ";
+			std::cout << "      ###                                ###      ";
+			std::cout << "     ###             Messages             ###     ";
+			std::cout << "    ###                [00]                ###    ";
+			std::cout << "   ###               [Y] View               ###   ";
+			std::cout << "  ###                                        ###  ";
+			std::cout << " ###                                          ### ";
+			std::cout << "###                                            ###";
+			std::cout << username << " Logged in:";
 			gspWaitForVBlank();
 			//hidWaitForEvent(HIDEVENT_PAD0, false);
 			while(true)
 			{
 				hidScanInput();
 				u32 kDown = hidKeysDown();
-				u32 kDownOld = hidKeysDown();
-				u32 kHeldOld = hidKeysHeld();
-				u32 kUpOld = hidKeysHeld();
 				if (kDown & KEY_Y)
 				{
 					while(true)
 					{
-						hidScanInput();
-						u32 kDown = hidKeysDown();
-						if (kDown != kDownOld)
+						result = mail(userdir);
+						if (result == 2)
 						{
-							while(true)
-							{
-								result = mail(userdir);
-								if (result == 2)
-								{
-									killROT = true;
-									break;
-								}
-								if (result == 0)
-								{
-									break;
-								}
-							}
+							killROT = true;
+							break;
+						}
+						if (result == 0)
+						{
 							break;
 						}
 					}
@@ -824,17 +785,6 @@ int main(int argc, char **argv)
 				}
 				if (kDown & KEY_SELECT)
 				{
-					while(true)
-					{
-						hidScanInput();
-						u32 kDown = hidKeysDown();
-						u32 kHeld = hidKeysHeld();
-						u32 kUp = hidKeysUp();
-						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-						{
-							break;
-						}
-					}
 					logged = false;
 					break;
 				}
@@ -843,19 +793,7 @@ int main(int argc, char **argv)
 				{
 					if (kDown & KEY_RIGHT)
 					{
-						
-						while(true)
-						{
-							hidScanInput();
-							u32 kDown = hidKeysDown();
-							u32 kHeld = hidKeysHeld();
-							u32 kUp = hidKeysUp();
-							if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-							{
-								mensel += 1;
-								break;
-							}
-						}
+						mensel += 1;
 						break;
 					}
 				}
@@ -864,58 +802,25 @@ int main(int argc, char **argv)
 				{
 					if (kDown & KEY_LEFT)
 					{
-						while(true)
-						{
-							hidScanInput();
-							u32 kDown = hidKeysDown();
-							u32 kHeld = hidKeysHeld();
-							u32 kUp = hidKeysUp();
-							if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-							{
-								mensel -= 1;
-								break;
-							}
-						}
+						mensel -= 1;
 						break;
 					}
 				}
 				if (kDown & KEY_START)
 				{
-					while(true)
-					{
-						hidScanInput();
-						u32 kDown = hidKeysDown();
-						u32 kHeld = hidKeysHeld();
-						u32 kUp = hidKeysUp();
-						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
-						{
-							killROT = true;
-							break;
-						}
-					}
+					killROT = true;
 					break;
 				}
 				if (kDown & KEY_A)
 				{
 					while(true)
 					{
-						hidScanInput();
-						u32 kDown = hidKeysDown();
-						u32 kHeld = hidKeysHeld();
-						u32 kUp = hidKeysUp();
-						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						result = menuOption();
+						if (result == 0)
+							break;
+						if (result == 2)
 						{
-							while(true)
-							{
-								result = menuOption();
-								if (result == 0)
-									break;
-								if (result == 2)
-								{
-									killROT = true;
-									break;
-								}
-							}
+							killROT = true;
 							break;
 						}
 					}
@@ -926,28 +831,26 @@ int main(int argc, char **argv)
 					setsel = 0;
 					while(true)
 					{
-						hidScanInput();
-						u32 kDown = hidKeysDown();
-						u32 kHeld = hidKeysHeld();
-						u32 kUp = hidKeysUp();
-						if (kDown != kDownOld && kHeld != kHeldOld && kUp != kUpOld)
+						result = settings(result);
+						if (result == 0)
+							break;
+						if (result == 2)
 						{
-							while(true)
-							{
-								result = settings(result);
-								if (result == 0)
-									break;
-								if (result == 2)
-								{
-									killROT = true;
-									break;
-								}
-							}
+							killROT = true;
+							break;
+						}
+						if (result == 3)
+						{
+							rotError();
+							killROT = true;
 							break;
 						}
 					}
 					break;
 				}
+				gfxFlushBuffers();
+				gfxSwapBuffers();
+				gspWaitForVBlank();
 			}
 		}
 
@@ -971,6 +874,8 @@ int main(int argc, char **argv)
 	// Exit services
 	hidExit();
 	gfxExit();
+	fsExit();
+	sdmcExit();
 	
 	return 0;
 }

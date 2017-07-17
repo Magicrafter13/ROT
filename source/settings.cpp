@@ -15,7 +15,7 @@ int debugView(char userDir[30])
 	fscanf(settingsFile, "%d %d", &dummy, &thing);
 	consoleSelect(&bottomScreen);
 	if (thing)
-		printf("debugView opened\n");
+		std::cout << "debugView opened\n";
 	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
@@ -26,16 +26,20 @@ int debugView(char userDir[30])
 		rewind(settingsFile);
 		sprintf(thing3, "%d\n%d\n", settingsVersion, 0);
 		fputs(thing3, settingsFile);
-		printf("Debug View turned off.");
+		std::cout << "Debug View turned off.";
 	} else {
 		rewind(settingsFile);
 		sprintf(thing3, "%d\n%d\n", settingsVersion, 1);
 		fputs(thing3, settingsFile);
-		printf("Debug View turned on.");
+		std::cout << "Debug View turned on.";
 	}
 	fclose(settingsFile);
 	for(int i = 0; i < 120; i++)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
 		gspWaitForVBlank();
+	}
 	return 0;
 }
 
@@ -49,14 +53,18 @@ int DLC(char userDir[30])
 	fscanf(settingsFile, "%d %d", &dummy, &thing);
 	consoleSelect(&bottomScreen);
 	if (thing)
-		printf("DLC opened\n");
+		std::cout << "DLC opened\n";
 	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
-	printf("Feature will be added in future release.\n");
-	printf("Will return to settings menu in 5 seconds.\n");
+	std::cout << "Feature will be added in future release.\n";
+	std::cout << "Will return to settings menu in 5 seconds.\n";
 	for(int I = 0; I < 300; I++)
+	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
 		gspWaitForVBlank();
+	}
 	return 0;
 }
 
@@ -77,7 +85,7 @@ int deleteData(char userDir[30])
 	fscanf(userFile, "%s %s %s %s %s %s", dummys, dummys, name, dummys, dummys, pass);
 	consoleSelect(&bottomScreen);
 	if (thing)
-		printf("deleteData opened\n");
+		std::cout << "deleteData opened\n";
 	fclose(settingsFile);
 	fclose(userFile);
 	consoleSelect(&topScreen);
@@ -85,8 +93,8 @@ int deleteData(char userDir[30])
 	if ((fp = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r")) == NULL)
 	{
 	} else {
-		printf("%s\n", name);
-		printf("Press A to delete all ROT data, press B to return");
+		std::cout << name << "\n";
+		std::cout << "Press A to delete all ROT data, press B to return";
 		while(true)
 		{
 			hidScanInput();
@@ -97,36 +105,42 @@ int deleteData(char userDir[30])
 				char * tempcs = new char[tempss.size() + 1];
 				std::copy(tempss.begin(), tempss.end(), tempcs);
 				tempcs[tempss.size()] = '\0';
-				for (int i = 0; i < 5; i++)
+				FILE *userFile;
+				userFile = fopen("sdmc:/3ds/ROT_Data/userdata.ruf", "r");
+				char dummy[21];
+				fscanf(userFile, "%s %s %s %s %s %s", dummy, dummy, dummy, dummy, dummy, dummy);
+				int i;
+				for (i = 0; i < 5; i++)
 				{
 					strcpy(tempcs, keyBoard(tempcs, 0, false));
+					if (strcmp(dummy, tempcs) == 0)
+						i = 6;
+				}
+				if (i == 5)
+				{
+					returnvaluei = 1;
+					break;
 				}
 				delete[] tempcs;
-				//remove("sdmc:/3ds/ROT_Data/*.*");
-				//rmdir("sdmc:/3ds/ROT_Data/");
-				std::string tempdsps = "sdmc:/3ds/ROT_Data/";
-				char * tempds = new char[tempdsps.size() + 1];
-				std::copy(tempdsps.begin(), tempdsps.end(), tempds);
-				tempds[tempdsps.size()] = '\0';
-				/*
-				if (PathDelete(tempds))
-					returnvaluei = 2;
-				else
-					returnvaluei = 0;
-				*/
-				FS_Archive sdArch;
-				if (FSUSER_DeleteDirectoryRecursively(sdArch, fsMakePath(PATH_ASCII, tempds)))
-					returnvaluei = 2;
-				else
-					returnvaluei = 0;
-				for (int i = 0; i < 180; i++)
+				s32 delcomp = 0;
+				openSD();
+				s32 delcomp2 = FSUSER_DeleteDirectoryRecursively(sdmcArchive, fsMakePath(PATH_ASCII, "/3ds/ROT_Data"));
+				closeSD();
+				std::cout << delcomp2;
+				for (int i = 0; i < 120; i++)
 					gspWaitForVBlank();
-				delete[] tempds;
+				if (delcomp2 == delcomp)
+					returnvaluei = 2;
+				else
+					returnvaluei = 3;
 				break;
 			}
 			if (kDown & KEY_B)
 			{
 				returnvaluei = 0;
+				gfxFlushBuffers();
+				gfxSwapBuffers();
+				gspWaitForVBlank();
 				break;
 			}
 		}
@@ -149,7 +163,7 @@ int changePassword(char userDir[30])
 	fscanf(settingsFile, "%d %d", &dummy11, &thing);
 	consoleSelect(&bottomScreen);
 	if (thing)
-		printf("changePassword opened\n");
+		std::cout << "changePassword opened\n";
 	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();
@@ -223,7 +237,7 @@ int changePassword(char userDir[30])
 		remove(ustring2);
 		return 0;
 	} else {
-		printf("Passwords did not match");
+		std::cout << "Passwords did not match";
 		return 1;
 	}
 }
@@ -238,7 +252,7 @@ int changeUsername(char userDir[30])
 	fscanf(settingsFile, "%d %d", &dummy11, &thing);
 	consoleSelect(&bottomScreen);
 	if (thing)
-		printf("changePassword opened\n");
+		std::cout << "changePassword opened\n";
 	fclose(settingsFile);
 	consoleSelect(&topScreen);
 	consoleClear();

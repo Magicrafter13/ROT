@@ -8,7 +8,7 @@ int updateUF(char userDir[30], int oldvernum)
 	userFile = fopen(tmpSTR, "r");
 	if (oldvernum == 0)
 	{
-		printf("Updating File Version to 1\n");
+		std::cout << "Updating File Version to 1\n";
 		FILE *fp;
 		char ustring[30];
 		char ustring2[30];
@@ -69,7 +69,7 @@ int updateUF(char userDir[30], int oldvernum)
 	}
 	if (oldvernum == 1)
 	{
-		printf("Updating File Version 1 to 2\n");
+		std::cout << "Updating File Version 1 to 2\n";
 		FILE *fp;
 		char ustring[30];
 		char ustring2[30];

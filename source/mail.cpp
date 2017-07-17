@@ -13,12 +13,14 @@ int mail(char userDir[30])
 	int dummy = 0;
 	fscanf(settingsFile, "%d %d", &dummy, &debugTF);
 	if (debugTF)
-		printf("mail opened\n");
+		std::cout << "mail opened\n";
 	consoleSelect(&topScreen);
 	consoleClear();
-	printf("Feature not added yet, and probably not for a while :(\nSorry!");
+	std::cout << "Feature not added yet, and probably not for a while :(\nSorry!";
 	for (int i = 0; i < 120; i++)
 	{
+		gfxFlushBuffers();
+		gfxSwapBuffers();
 		gspWaitForVBlank();
 	}
 	fclose(userFile);

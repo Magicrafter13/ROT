@@ -34,7 +34,7 @@ DATA		:=	data
 INCLUDES	:=	include
 #ROMFS		:=	romfs
 APP_TITLE   :=  ROT
-APP_DESCRIPTION := ROT Alpha Release
+APP_DESCRIPTION := ROT Beta Release
 APP_AUTHOR  :=  Matthew Rease
 
 #---------------------------------------------------------------------------------
@@ -141,8 +141,22 @@ $(BUILD):
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf
+	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf $(TARGET)-strip.elf $(TARGET).cia $(TARGET).3ds
 
+#---------------------------------------------------------------------------------
+$(TARGET)-strip.elf: $(BUILD)
+
+	@$(STRIP) $(TARGET).elf -o $(TARGET)-strip.elf
+
+#---------------------------------------------------------------------------------
+cia: $(TARGET)-strip.elf
+	@makerom -f cia -o $(TARGET).cia -elf $(TARGET)-strip.elf -rsf resources/$(TARGET).rsf -exefslogo -target t
+	@echo "built ... sfil_sample.cia"
+
+#---------------------------------------------------------------------------------
+send: $(BUILD)
+
+	@3dslink -a 10.0.0.114 $(TARGET).3dsx
 
 #---------------------------------------------------------------------------------
 else

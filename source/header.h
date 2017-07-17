@@ -12,6 +12,8 @@ using std::string;
 #include <sys/types.h>
 #include <unistd.h>
 #include <iostream>
+#include <fstream>
+#include <vector>
 
 extern PrintConsole topScreen, bottomScreen, versionWin;
 
@@ -20,6 +22,7 @@ extern char versiontxtn[9];
 extern int vernumqik;
 extern int versionnum;
 extern int settingsVersion;
+extern FS_Archive sdmcArchive;
 int mail(char userDir[30]);
 int toggleMultiUser();
 int debugView(char userDir[30]);
@@ -37,6 +40,8 @@ int updateSF(char userDir[30], bool hasRunU);
 int matthew();
 int rot();
 int timeline(int upperrv);
+void openSD();
+void closeSD();
 //int PathDelete(const char* path);
 extern int selTool;
 extern int selGame;
@@ -49,7 +54,10 @@ extern int aboutDisp;
 const char * keyBoard(char * hintTxt, int maxNumbers, bool multiLine);
 int mkdir(const char *pathname, mode_t mode);
 
+#define ANSI "\x1b["
 #define COLOR "\x1b["
+#define BLACK "30"
+#define B_BLACK "40"
 #define RED "31"
 #define B_RED "41"
 #define GREEN "32"
@@ -65,8 +73,12 @@ int mkdir(const char *pathname, mode_t mode);
 #define WHITE "37"
 #define B_WHITE "47"
 #define BRIGHT "2"
+#define CRESET "\x1b[0m"
+#define PRESET "\x1b[0;0H"
 #define RESET "\x1b[0m"
+#define ASEP ";"
 #define CSEP ";"
 #define CEND "m"
+#define PEND "H"
 
 #endif
