@@ -52,7 +52,7 @@ int rotError()
 	{
 		hidScanInput();
 		u32 kDown = hidKeysDown();
-		if (kDown & (KEY_START | KEY_SELECT | KEY_A | KEY_B | KEY_X | KEY_Y | KEY_UP | KEY_DOWN | KEY_LEFT | KEY_RIGHT | KEY_L | KEY_R | KEY_ZL | KEY_ZR | KEY_CSTICK_UP | KEY_CSTICK_DOWN | KEY_CSTICK_LEFT | KEY_CSTICK_RIGHT))
+		if (kDown & KEY_START || kDown & KEY_SELECT || kDown & KEY_A || kDown & KEY_B || kDown & KEY_X || kDown & KEY_Y || kDown & KEY_UP || kDown & KEY_DOWN || kDown & KEY_LEFT || kDown & KEY_RIGHT || kDown & KEY_L || kDown & KEY_R || kDown & KEY_ZL || kDown & KEY_ZR || kDown & KEY_CSTICK_UP || kDown & KEY_CSTICK_DOWN || kDown & KEY_CSTICK_LEFT || kDown & KEY_CSTICK_RIGHT)
 			break;
 		gfxFlushBuffers();
 		gfxSwapBuffers();
@@ -468,7 +468,7 @@ int main(int argc, char **argv)
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 	consoleInit(GFX_BOTTOM, &versionWin);
-
+	
 	consoleSetWindow(&versionWin, 13, 29, 27, 1);
 
 	consoleSelect(&topScreen);
@@ -476,13 +476,13 @@ int main(int argc, char **argv)
 
 	consoleSelect(&bottomScreen);
 	std::cout << "Loading...\n";
-
+	
 	consoleSelect(&versionWin);
 	std::cout << "ROT Version: " ANSI GREEN CEND << versiontxtt << CRESET " " ANSI YELLOW CEND << versiontxtn;
 
 	consoleSelect(&topScreen);
 	std::cout << ANSI "29;15" PEND "by Matthew Rease\n";
-
+	
 	if(access("sdmc:/3ds/ROT_Data/isset.rvf", F_OK) == -1)
 	{
 		fclose(fp);
@@ -634,7 +634,7 @@ int main(int argc, char **argv)
 			std::cout << "NOT ADDED YET\n";
 		}
 	}
-
+	
 	// Main loop
 	while (aptMainLoop())
 	{
@@ -690,7 +690,7 @@ int main(int argc, char **argv)
 				}
 			}
 		}else{
-
+			
 			//Main Program
 			if (multiuser)
 			{
@@ -855,7 +855,7 @@ int main(int argc, char **argv)
 		}
 
 		if (kDown & KEY_START) killROT = true; // break in order to return to hbmenu
-
+		
 		if (killROT) break;
 
 		// Flush and swap framebuffers
@@ -864,7 +864,7 @@ int main(int argc, char **argv)
 
 		//Wait for VBlank
 		gspWaitForVBlank();
-
+		
 		/*if(touchInBox(touch, 239, 217, 81, 24)) {
 			printf("touched");
 			break;
@@ -876,6 +876,6 @@ int main(int argc, char **argv)
 	gfxExit();
 	fsExit();
 	sdmcExit();
-
+	
 	return 0;
 }
